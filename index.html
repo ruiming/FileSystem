@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="asd">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="static/css/app.css">
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="app/common/app.js"></script>
+    <script src="app/controllers/indexCtrl.js"></script>
+    <script src="app/controllers/fileCtrl.js"></script>
+</head>
+<body>
+<div ui-view="system" class="system"></div>
+<div ui-view="files" class="file"></div>
+</body>
+</html>

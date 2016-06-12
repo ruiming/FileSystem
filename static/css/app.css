@@ -1,0 +1,53 @@
+body {
+  font-family: Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif; }
+
+p,
+span,
+label {
+  padding: 0;
+  margin: 0; }
+
+.system,
+.files {
+  float: left;
+  width: 280px;
+  padding: 20px;
+  border: 1px solid #eee;
+  color: #000;
+  overflow: hidden; }
+  .system header,
+  .files header {
+    font-size: 22px;
+    padding: 5px 0;
+    font-weight: 800; }
+  .system section,
+  .files section {
+    font-size: 14px;
+    margin: 5px 0;
+    line-height: 1.8;
+    overflow: hidden; }
+
+.system .cpu {
+  text-align: center;
+  display: block;
+  width: 50%;
+  float: left;
+  margin: 10px 0; }
+  .system .cpu img {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 10px; }
+    .system .cpu img .cpu-message {
+      font-size: 12px; }
+
+.system .bar {
+  overflow: hidden;
+  margin: 10px 0 0 0;
+  display: block; }
+  .system .bar .progress {
+    margin: 0; }
+  .system .bar span {
+    line-height: 1.45;
+    margin: 0;
+    padding: 0;
+    width: 70px; }

@@ -1,0 +1,26 @@
+{
+  "name": "filesystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-packager . FileSystem --platform=win32 --arch=x64 --version=0.32.3"
+  },
+  "author": "Ruiming Zhuang",
+  "license": "ISC",
+  "dependencies": {
+    "app": "^0.1.0",
+    "koa": "^1.2.0"
+  },
+  "devDependencies": {
+    "bower": "^1.7.9",
+    "electron": "^0.4.1",
+    "electron-packager": "^7.0.3",
+    "electron-prebuilt": "^1.2.1",
+    "gulp": "^3.9.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sass": "^2.2.0"
+  }
+}

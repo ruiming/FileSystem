@@ -1,0 +1,57 @@
+<article class="basic">
+    <header>· 操作系统信息</header>
+    <section>
+        <p class="type">操作系统名称: {{system.type}}</p>
+        <p class="hostname">操作系统主机名: {{system.hostname}}</p>
+        <p class="username">用户名: {{system.username}}</p>
+        <p class="release">操作系统版本: {{system.release}}</p>
+        <p class="platform">操作系统类型: {{system.platform}}</p>
+        <p class="endianness">字节序: {{system.endianness}}</p>
+        <p class="uptime">计算机运行时间: {{system.uptime | number: 0}} 秒</p>
+    </section>
+</article>
+<article class="cpus">
+    <header>· CPU信息</header>
+    <section>
+        <p>型号: {{system.cpus[0].model}}</p>
+        <p>架构: {{system.arch}}</p>
+        <!--
+        <div ng-repeat="x in system.cpus">
+            <div class="cpu">
+                <img src="./static/images/cpu.png">
+                <div class="cpu-message">
+                    <p>Speed: {{x.speed}}</p>
+                    <p>User: {{x.times.user}}</p>
+                    <p>Sys: {{x.times.sys}}</p>
+                    <p>Irq: {{x.times.irq}}</p>
+                </div>
+            </div>
+        </div>
+        -->
+    </section>
+</article>
+<article class="memory">
+    <header>· 内存信息</header>
+    <section>
+        <p>已使用内存: {{(system.totalmem - system.freemen) / 1024 | number: 0}} KB</p>
+        <p>空闲内存字节: {{system.freemen / 1024 | number: 0}} KB</p>
+        <p>系统总内存: {{system.totalmem / 1024 | number: 0}} KB</p>
+    </section>
+</article>
+<article class="usedbar">
+    <header>· 使用情况</header>
+    <section>
+        <div class="bar menbar">
+            <span class="col-xs-4">内存使用: </span>
+            <uib-progressbar class="progress-striped active" max="system.totalmem" value="system.totalmem - system.freemen" type="info">
+                <i>{{(system.totalmem - system.freemen) / system.totalmem * 100 | number: 0}}</i>
+            </uib-progressbar>
+        </div>
+        <div class="bar cpubar">
+            <span class="col-xs-4">CPU使用: </span>
+            <uib-progressbar class="progress-striped active" max="100" value="system.cpuload" type="success">
+                <i>{{system.cpuload}}</i>
+            </uib-progressbar>
+        </div>
+    </section>
+</article>
