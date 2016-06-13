@@ -39,7 +39,7 @@ routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http
         })
     }, 1000);
 
-    // 获取BIOS制造商和版本
+    // 获取BIOS制造商和版本，CPU核心数
     $scope.bios = [];
     (function(){
         exec('wmic bios get Manufacturer', function(err, stdout, stderr) {
@@ -55,6 +55,13 @@ routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http
                 return;
             }
             $scope.bios.name = stdout.replace(/(Name)|(s+)/g, '').replace(/(\s+)/g, '').trim();
+        });
+        exec('wmic cpu get NumberOfCores,NumberOfLogicalProcessors', function(err, stdout, stderr) {
+            if(err || stderr){
+                console.log("error: " + err + stderr);
+                return;
+            }
+            $scope.cpuCore = stdout.replace(/(NumberOfCores)|(NumberOfLogicalProcessors)/g, '').replace(/(\s+)/g, '#').trim().split('#');
         })
     })();
 }]);
