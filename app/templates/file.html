@@ -1,11 +1,24 @@
-<article class="basic">
+<article class="disks">
     <header>· 磁盘信息</header>
-    <section>
-        <ul ng-repeat="x in disks" class="hard-disk">
-            <li>{{x.FileSystem}}</li>
-            <li>{{x.Name}}</li>
-            <li>{{x.FreeSpace}}</li>
-            <li>{{x.Size}}</li>
+    <section class="file-center">
+        <ul class="disk-list">
+            <li>
+                <div class="disk-info disk-menu">
+                    <span>Name</span>
+                    <span>FileSystem</span>
+                    <span>FreeSpace</span>
+                    <span>Size</span>
+                </div>
+            </li>
+            <li ng-repeat="x in disks" class="disk">
+                <img src="./static/images/disk.png">
+                <div class="disk-info">
+                    <span>{{x.Name}}</span>
+                    <span>{{x.FileSystem}}</span>
+                    <span>{{x.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</span>
+                    <span>{{x.Size / 1024 / 1024 / 1024 | number: 0}} GB</span>
+                </div>
+            </li>
         </ul>
     </section>
 </article>

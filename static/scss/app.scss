@@ -7,10 +7,16 @@ label {
   padding: 0;
   margin: 0;
 }
+ul,
+li {
+  list-style: none;
+  padding-left: 0;
+}
+$hover: #e2f2ff;
+
 .system,
 .files {
   float: left;
-  width: 280px;
   padding: 20px;
   border: 1px solid #eee;
   color: #000;
@@ -55,6 +61,42 @@ label {
       margin: 0;
       padding: 0;
       width: 70px;
+    }
+  }
+}
+.files {
+  .disks {
+    img {
+      height: 15px;
+      margin: 5px 10px 5px 0;
+      float: left;
+    }
+    .disk {
+      &:hover,
+      &:active {
+        background-color: $hover;
+      }
+    }
+    .disk-info {
+      overflow: hidden;
+      display: block;
+      span {
+        float: left;
+        width: 25%;
+        text-align: right;
+        &:first-child{
+          text-align: left;
+        }
+      }
+    }
+    .disk-menu {
+      padding-left: 40px;
+      span {
+        &:hover,
+        &:active {
+          background-color: $hover;
+        }
+      }
     }
   }
 }

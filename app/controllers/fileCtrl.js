@@ -14,7 +14,8 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
     $scope.disks = [];
     $scope.disk = {};
     // 获取固定分区盘符和基本信息
-    $interval(function(stdout){
+    //$interval(
+    (function(stdout){
         exec('wmic logicaldisk where "drivetype=3" get name,filesystem,freespace,size', function(err, stdout, stderr) {
             if(err || stderr){
                 console.log("error: " + err + stderr);
@@ -42,7 +43,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
                     }
                 }
             }
-        })
-    }, 1000);
+        })})();
+    //}, 1000);
 
 }]);
