@@ -91,13 +91,23 @@ $hover: #e2f2ff;
         }
       }
     }
-    .disk-menu {
+    .disk-menu,
+    .file-menu {
       span {
         &:hover,
         &:active {
           background-color: $hover;
         }
       }
+    }
+  }
+  .action-bar {
+    margin: 10px 0;
+    overflow: hidden;
+    display: block;
+    button {
+      border-radius: 0;
+      padding: 6px 15px;
     }
   }
 }

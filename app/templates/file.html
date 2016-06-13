@@ -1,6 +1,10 @@
 <article class="disks-files">
-    <header>· 磁盘信息</header>
+    <header>文件管理器</header>
     <section class="file-center">
+        <div class="action-bar">
+            <button class="btn btn-info" ng-click="home()">主页 < </button>
+            <button class="btn btn-info" ng-click="backward()">后退 < </button>
+        </div>
         <ul class="disk-list" ng-if="_index">
             <li>
                 <div class="disk-info disk-menu">
@@ -20,10 +24,21 @@
             </li>
         </ul>
         <ul class="file-list" ng-if="!_index">
-            <button class="btn btn-info" ng-click="backward()">后退 < </button>
-            <li ng-repeat="x in files" class="file" ng-dblclick="forward_folder(x)" ng-if="!_index">
+            <li>
+                <div class="file-info file-menu">
+                    <span>Name</span>
+                    <span>Mtime</span>
+                    <span>Type</span>
+                    <span>Size</span>
+                </div>
+            </li>
+            <li ng-repeat="x in files track by $index" class="file" ng-dblclick="forward_folder(x.name)" ng-if="!_index">
                 <div class="file-info">
-                    <span>{{x}}</span>
+                    <span>{{x.name}}</span>
+                    <span>{{x.mtime | date:'yyyy-MM-dd HH:mm:ss'}}</span>    <!--修改时间 修改文件内容-->
+                    <span ng-if="x.isDirectory()">文件夹</span>
+                    <span ng-if="x.isFile()">文件</span>
+                    <span>{{x.size}}</span>
                 </div>
             </li>
         </ul>

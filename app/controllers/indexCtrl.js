@@ -18,20 +18,30 @@ routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http
         };
     }, 1000);                                                   // 每隔1秒自动重新获取
 
-    // 获取windows CPU使用率
-    $interval(function(stdout){
+    // 获取windows CPU使用率和CPU温度
+    $interval(function(){
         exec('wmic cpu get loadpercentage', function(err, stdout, stderr) {
             if(err || stderr){
                 console.log("error: " + err + stderr);
                 return;
             }
             $scope.cpuload = parseInt(stdout.replace(/(LoadPercentage)/, '').trim());
+        });
+        exec('wmic /namespace:\\\\root\\WMI path MSAcpi_ThermalZoneTemperature GET CriticalTripPoint,CurrentTemperature', function(err, stdout, stderr) {
+            if(err || stderr){
+               console.log("error: " + err + stderr);
+                   return;
+            }
+            var out = stdout.replace(/(CriticalTripPoint)|(CurrentTemperature)/g, '').replace(/(\s+)/g, '#').trim().split('#');
+            out.pop();
+            out.shift();
+            $scope.cpuTemperature = out;
         })
     }, 1000);
 
     // 获取BIOS制造商和版本
     $scope.bios = [];
-    (function(stdout){
+    (function(){
         exec('wmic bios get Manufacturer', function(err, stdout, stderr) {
             if(err || stderr){
                 console.log("error: " + err + stderr);

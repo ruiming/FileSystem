@@ -17,6 +17,8 @@
     <section>
         <p>型号: {{system.cpus[0].model}}</p>
         <p>架构: {{system.arch}}</p>
+        <p>CPU温度: {{(cpuTemperature[1] - 2732) / 10}} ℃</p>
+        <p>CPU警戒温度: {{(cpuTemperature[0] - 2732) / 10}} ℃</p>
         <!--
         <div ng-repeat="x in system.cpus">
             <div class="cpu">
