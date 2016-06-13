@@ -56,25 +56,28 @@ li {
     padding: 0;
     width: 70px; }
 
-.files .disks img {
+.files .disks-files img {
   height: 15px;
   margin: 5px 10px 5px 0;
   float: left; }
 
-.files .disks .disk:hover, .files .disks .disk:active {
+.files .disks-files .disk:hover, .files .disks-files .disk:active,
+.files .disks-files .file:hover,
+.files .disks-files .file:active {
   background-color: #e2f2ff; }
 
-.files .disks .disk-info {
+.files .disks-files .disk-info,
+.files .disks-files .file-info {
   overflow: hidden;
   display: block; }
-  .files .disks .disk-info span {
+  .files .disks-files .disk-info span,
+  .files .disks-files .file-info span {
     float: left;
     width: 25%;
     text-align: right; }
-    .files .disks .disk-info span:first-child {
+    .files .disks-files .disk-info span:first-child,
+    .files .disks-files .file-info span:first-child {
       text-align: left; }
 
-.files .disks .disk-menu {
-  padding-left: 40px; }
-  .files .disks .disk-menu span:hover, .files .disks .disk-menu span:active {
-    background-color: #e2f2ff; }
+.files .disks-files .disk-menu span:hover, .files .disks-files .disk-menu span:active {
+  background-color: #e2f2ff; }

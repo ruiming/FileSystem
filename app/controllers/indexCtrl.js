@@ -38,7 +38,6 @@ routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http
                 return;
             }
             $scope.bios.manufacturer = stdout.replace(/(Manufacturer)|(s+)/g, '').replace(/(\s+)/g, '').trim();
-            console.log($scope.bios.manufacturer);
         });
         exec('wmic bios get Name', function(err, stdout, stderr) {
             if(err || stderr){
@@ -46,7 +45,6 @@ routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http
                 return;
             }
             $scope.bios.name = stdout.replace(/(Name)|(s+)/g, '').replace(/(\s+)/g, '').trim();
-            console.log($scope.bios.name);
         })
     })();
 }]);

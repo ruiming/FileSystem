@@ -1,7 +1,7 @@
-<article class="disks">
+<article class="disks-files">
     <header>· 磁盘信息</header>
     <section class="file-center">
-        <ul class="disk-list">
+        <ul class="disk-list" ng-if="_index">
             <li>
                 <div class="disk-info disk-menu">
                     <span>Name</span>
@@ -10,13 +10,20 @@
                     <span>Size</span>
                 </div>
             </li>
-            <li ng-repeat="x in disks" class="disk">
-                <img src="./static/images/disk.png">
+            <li ng-repeat="x in disks" class="disk" ng-dblclick="forward(x.Name)">
                 <div class="disk-info">
                     <span>{{x.Name}}</span>
                     <span>{{x.FileSystem}}</span>
                     <span>{{x.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</span>
                     <span>{{x.Size / 1024 / 1024 / 1024 | number: 0}} GB</span>
+                </div>
+            </li>
+        </ul>
+        <ul class="file-list" ng-if="!_index">
+            <button class="btn btn-info" ng-click="backward()">后退 < </button>
+            <li ng-repeat="x in files" class="file" ng-dblclick="forward_folder(x)" ng-if="!_index">
+                <div class="file-info">
+                    <span>{{x}}</span>
                 </div>
             </li>
         </ul>

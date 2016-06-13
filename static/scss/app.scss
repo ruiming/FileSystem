@@ -65,19 +65,21 @@ $hover: #e2f2ff;
   }
 }
 .files {
-  .disks {
+  .disks-files{
     img {
       height: 15px;
       margin: 5px 10px 5px 0;
       float: left;
     }
-    .disk {
+    .disk,
+    .file {
       &:hover,
       &:active {
         background-color: $hover;
       }
     }
-    .disk-info {
+    .disk-info,
+    .file-info {
       overflow: hidden;
       display: block;
       span {
@@ -90,7 +92,6 @@ $hover: #e2f2ff;
       }
     }
     .disk-menu {
-      padding-left: 40px;
       span {
         &:hover,
         &:active {
