@@ -1,8 +1,11 @@
 <article class="basic">
-    <header>· 操作系统信息</header>
+    <header>· 磁盘信息</header>
     <section>
-        <ul ng-repeat="x in file">
-            <li>{{x}}</li>
+        <ul ng-repeat="x in disks" class="hard-disk">
+            <li>{{x.FileSystem}}</li>
+            <li>{{x.Name}}</li>
+            <li>{{x.FreeSpace}}</li>
+            <li>{{x.Size}}</li>
         </ul>
     </section>
 </article>

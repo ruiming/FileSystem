@@ -8,6 +8,8 @@
         <p class="platform">操作系统类型: {{system.platform}}</p>
         <p class="endianness">字节序: {{system.endianness}}</p>
         <p class="uptime">计算机运行时间: {{system.uptime | number: 0}} 秒</p>
+        <p class="bios-manufacturer">BIOS制造商: {{bios.manufacturer}}</p>
+        <p class="bios-name">BIOS版本: {{bios.name}}</p>
     </section>
 </article>
 <article class="cpus">
@@ -49,8 +51,8 @@
         </div>
         <div class="bar cpubar">
             <span class="col-xs-4">CPU使用: </span>
-            <uib-progressbar class="progress-striped active" max="100" value="system.cpuload" type="success">
-                <i>{{system.cpuload}}</i>
+            <uib-progressbar class="progress-striped active" max="100" value="cpuload" type="success">
+                <i>{{cpuload}}</i>
             </uib-progressbar>
         </div>
     </section>

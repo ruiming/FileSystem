@@ -1,4 +1,4 @@
-routeApp.controller('fileCtrl', ['$scope', function($scope){
+routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interval){
     var fs = require("fs");
     $scope.file = [];
     fs.readdir("/",function(err, files){
@@ -11,23 +11,38 @@ routeApp.controller('fileCtrl', ['$scope', function($scope){
     });
     exec = require('child_process').exec;
 
-    // Win32 API测试
-    
-
-
-    // 获取Windows的盘符
-    function showLetter(callback) {
-        exec('wmic LOGICALDISK get name, filesystem, size, freespace', function(err, stdout, stderr) {
-            if(err || stderr) {
-                console.log("root path open failed" + err + stderr);
+    $scope.disks = [];
+    $scope.disk = {};
+    // 获取固定分区盘符和基本信息
+    $interval(function(stdout){
+        exec('wmic logicaldisk where "drivetype=3" get name,filesystem,freespace,size', function(err, stdout, stderr) {
+            if(err || stderr){
+                console.log("error: " + err + stderr);
                 return;
             }
-            callback(stdout);
+            $scope.diskStr = stdout.replace(/(FileSystem)|(FreeSpace)|(Name)|(Size)/g, '').replace(/(\s+)/g, '#').trim().split('#');
+            $scope.diskStr.pop();
+            $scope.diskStr.shift();
+            $scope.disks = [];
+            for(var i in $scope.diskStr){
+                if($scope.diskStr.hasOwnProperty(i)){
+                    if(i%4 == 0){
+                        $scope.disk.FileSystem = $scope.diskStr[i];
+                    }
+                    else if(i%4 == 1){
+                        $scope.disk.FreeSpace = $scope.diskStr[i];
+                    }
+                    else if(i%4 == 2){
+                        $scope.disk.Name = $scope.diskStr[i];
+                    }
+                    else if(i%4 == 3){
+                        $scope.disk.Size = $scope.diskStr[i];
+                        $scope.disks.push($scope.disk);
+                        $scope.disk = {};
+                    }
+                }
+            }
         })
-    }
-    showLetter(function(stdout){
-        $scope.disk = [];
-        var letter = stdout.replace(/(FileSystem)|(FreeSpace)|(Name)|(Size)|(:)/g, '').replace(/(\s+)/g, '#').trim().split('#');
-        console.log(letter);
-    });
+    }, 1000);
+
 }]);

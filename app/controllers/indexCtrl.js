@@ -1,5 +1,6 @@
 routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http, $scope, $interval){
     var os = require('os');
+    exec = require('child_process').exec;
     $interval(function() {
         $scope.system = {
             arch: os.arch(),                                    // 处理器架构
@@ -13,9 +14,39 @@ routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http
             release: os.release(),                              // 操作系统版本
             type: os.type(),                                    // 操作系统名称
             uptime: os.uptime(),                                // 计算机正常运行时间
-            username: os.userInfo().username,
-            cpuload: 50
+            username: os.userInfo().username
         };
     }, 1000);                                                   // 每隔1秒自动重新获取
 
+    // 获取windows CPU使用率
+    $interval(function(stdout){
+        exec('wmic cpu get loadpercentage', function(err, stdout, stderr) {
+            if(err || stderr){
+                console.log("error: " + err + stderr);
+                return;
+            }
+            $scope.cpuload = parseInt(stdout.replace(/(LoadPercentage)/, '').trim());
+        })
+    }, 1000);
+
+    // 获取BIOS制造商和版本
+    $scope.bios = [];
+    (function(stdout){
+        exec('wmic bios get Manufacturer', function(err, stdout, stderr) {
+            if(err || stderr){
+                console.log("error: " + err + stderr);
+                return;
+            }
+            $scope.bios.manufacturer = stdout.replace(/(Manufacturer)|(s+)/g, '').replace(/(\s+)/g, '').trim();
+            console.log($scope.bios.manufacturer);
+        });
+        exec('wmic bios get Name', function(err, stdout, stderr) {
+            if(err || stderr){
+                console.log("error: " + err + stderr);
+                return;
+            }
+            $scope.bios.name = stdout.replace(/(Name)|(s+)/g, '').replace(/(\s+)/g, '').trim();
+            console.log($scope.bios.name);
+        })
+    })();
 }]);

@@ -10,15 +10,12 @@
   },
   "author": "Ruiming Zhuang",
   "license": "ISC",
-  "dependencies": {
-    "app": "^0.1.0",
-    "koa": "^1.2.0"
-  },
   "devDependencies": {
     "bower": "^1.7.9",
     "electron": "^0.4.1",
     "electron-packager": "^7.0.3",
     "electron-prebuilt": "^1.2.1",
+    "ffi": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-plumber": "^1.1.0",
     "gulp-sass": "^2.2.0"
