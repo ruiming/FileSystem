@@ -38,7 +38,9 @@
                     <span>{{x.mtime | date:'yyyy-MM-dd HH:mm:ss'}}</span>    <!--修改时间 修改文件内容-->
                     <span ng-if="x.isDirectory()">文件夹</span>
                     <span ng-if="x.isFile()">文件</span>
-                    <span>{{x.size}}</span>
+                    <span ng-if="x.size < 1024 && x.size > 0">{{x.size | number: 2}} B</span>
+                    <span ng-if="x.size >= 1024 && x.size < 1024*1024">{{x.size / 1024 | number: 2}} KB</span>
+                    <span ng-if="x.size >= 1024*1024">{{x.size / 1024 / 1024 | number: 2}} MB</span>
                 </div>
             </li>
         </ul>

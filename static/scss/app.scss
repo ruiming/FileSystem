@@ -91,6 +91,22 @@ $hover: #e2f2ff;
         }
       }
     }
+    .file-info {
+      span {
+        &:nth-child(1){
+          width: 50%;
+        }
+        &:nth-child(2){
+          width: 20%;
+        }
+        &:nth-child(3){
+          width: 15%;
+        }
+        &:nth-child(4){
+          width: 15%;
+        }
+      }
+    }
     .disk-menu,
     .file-menu {
       span {
