@@ -1,5 +1,6 @@
 # 资源管理器
   使用Angular, Node.js, Electron编写的Windows下的资源管理器
+
   实现功能：
   - 文件和文件夹的增删查改
   - 搜索功能
