@@ -62,6 +62,13 @@ routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http
                 return;
             }
             $scope.cpuCore = stdout.replace(/(NumberOfCores)|(NumberOfLogicalProcessors)/g, '').replace(/(\s+)/g, '#').trim().split('#');
+        });
+        exec('wmic baseboard get Product', function(err, stdout, stderr) {
+            if(err || stderr){
+                console.log("error: " + err + stderr);
+                return;
+            }
+            $scope.name = stdout.replace(/(Product)/g, '').replace(/(\s+)/g, '').trim().toString();
         })
     })();
 }]);
