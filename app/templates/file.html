@@ -2,8 +2,15 @@
     <header>文件管理器</header>
     <section class="file-center">
         <div class="action-bar">
-            <button class="btn btn-primary" ng-click="home()">主页 < </button>
-            <button class="btn btn-primary" ng-click="backward()">后退 < </button>
+            <button class="btn btn-primary" ng-click="home()">
+                <span class="glyphicon glyphicon-home"></span>
+            </button>
+            <button class="btn btn-primary" ng-click="Hbackward()">
+                <span class="glyphicon glyphicon-menu-left"></span>
+            </button>
+            <buton class="btn btn-primary" ng-click="Hforward()">
+                <span class="glyphicon glyphicon-menu-right"></span>
+            </buton>
         </div>
         <ul class="disk-list" ng-if="_index">
             <li>
