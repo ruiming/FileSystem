@@ -2,7 +2,8 @@ body {
   font-family: Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;
   -webkit-user-select: none;
   cursor: default;
-  min-width: 450px; }
+  min-width: 450px;
+  background-color: white; }
 
 p,
 span,
@@ -31,7 +32,6 @@ li {
 .files {
   float: left;
   padding: 20px;
-  border: 1px solid #eee;
   color: #000;
   overflow: hidden; }
   .system header,
@@ -64,7 +64,9 @@ li {
   margin: 10px 0 0 0;
   display: block; }
   .system .bar .progress {
-    margin: 0; }
+    margin: 0;
+    height: 20px;
+    background-color: #f1f1f1; }
   .system .bar span {
     line-height: 1.45;
     margin: 0;

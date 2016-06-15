@@ -3,6 +3,7 @@ body{
   -webkit-user-select: none;
   cursor: default;
   min-width: 450px;
+  background-color: white;
 }
 p,
 span,
@@ -35,7 +36,6 @@ $hover: #e2f2ff;
 .files {
   float: left;
   padding: 20px;
-  border: 1px solid #eee;
   color: #000;
   overflow: hidden;
   header {
@@ -72,6 +72,8 @@ $hover: #e2f2ff;
     display: block;
     .progress {
       margin: 0;
+      height: 20px;
+      background-color: #f1f1f1;
     }
     span {
       line-height: 1.45;

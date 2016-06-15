@@ -31,7 +31,6 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
     $scope.home = function() {
         $scope.path = "index";
         $scope.history.push($scope.path);        // 每次跳转前记录要访问的路径
-        console.log($scope.history);
         $scope._index = true;
         $scope.files = [];
         getDisk();
