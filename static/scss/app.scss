@@ -90,13 +90,6 @@ $hover: #e2f2ff;
       margin: 5px 10px 5px 0;
       float: left;
     }
-    .disk,
-    .file {
-      &:hover,
-      &:active {
-        background-color: $hover;
-      }
-    }
     ul {
       overflow-x: auto;
       overflow-y: hidden;
@@ -105,12 +98,35 @@ $hover: #e2f2ff;
         display: block;
       }
     }
-    .disk-info,
-    .file-info {
+    table,
+    thead,
+    tbody {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      tbody {
+        tr {
+          &:hover,
+          &:active {
+            background-color: $hover;
+          }
+        }
+      }
+      thead {
+        th {
+          &:hover,
+          &:active {
+            background-color: $hover;
+          }
+        }
+      }
+    }
+    tr {
       min-width: 400px;
       overflow: hidden;
       display: block;
-      span {
+      td,
+      th{
         float: left;
         width: 25%;
         text-align: right;

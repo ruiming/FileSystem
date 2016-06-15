@@ -78,11 +78,6 @@ li {
   margin: 5px 10px 5px 0;
   float: left; }
 
-.files .disks-files .disk:hover, .files .disks-files .disk:active,
-.files .disks-files .file:hover,
-.files .disks-files .file:active {
-  background-color: #e2f2ff; }
-
 .files .disks-files ul {
   overflow-x: auto;
   overflow-y: hidden;
@@ -90,18 +85,36 @@ li {
   .files .disks-files ul li {
     display: block; }
 
-.files .disks-files .disk-info,
-.files .disks-files .file-info {
+.files .disks-files table,
+.files .disks-files thead,
+.files .disks-files tbody {
+  display: block;
+  width: 100%;
+  overflow: hidden; }
+  .files .disks-files table tbody tr:hover, .files .disks-files table tbody tr:active,
+  .files .disks-files thead tbody tr:hover,
+  .files .disks-files thead tbody tr:active,
+  .files .disks-files tbody tbody tr:hover,
+  .files .disks-files tbody tbody tr:active {
+    background-color: #e2f2ff; }
+  .files .disks-files table thead th:hover, .files .disks-files table thead th:active,
+  .files .disks-files thead thead th:hover,
+  .files .disks-files thead thead th:active,
+  .files .disks-files tbody thead th:hover,
+  .files .disks-files tbody thead th:active {
+    background-color: #e2f2ff; }
+
+.files .disks-files tr {
   min-width: 400px;
   overflow: hidden;
   display: block; }
-  .files .disks-files .disk-info span,
-  .files .disks-files .file-info span {
+  .files .disks-files tr td,
+  .files .disks-files tr th {
     float: left;
     width: 25%;
     text-align: right; }
-    .files .disks-files .disk-info span:first-child,
-    .files .disks-files .file-info span:first-child {
+    .files .disks-files tr td:first-child,
+    .files .disks-files tr th:first-child {
       text-align: left; }
 
 .files .disks-files .file-info {

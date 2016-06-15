@@ -2,54 +2,54 @@
     <header>文件管理器</header>
     <section class="file-center">
         <div class="action-bar">
-            <button class="btn btn-default" ng-click="home()" ng-disabled="_index">
+            <button class="btn btn-info" ng-click="home()" ng-disabled="_index">
                 <span class="glyphicon glyphicon-home"></span>
             </button>
-            <button class="btn btn-default" ng-click="Hbackward()" ng-disabled="history.length==1">
+            <button class="btn btn-info" ng-click="Hbackward()" ng-disabled="history.length==1">
                 <span class="glyphicon glyphicon-menu-left"></span>
             </button>
-            <button class="btn btn-default" ng-click="Hforward()" ng-disabled="temp.length==0">
+            <button class="btn btn-info" ng-click="Hforward()" ng-disabled="temp.length==0">
                 <span class="glyphicon glyphicon-menu-right"></span>
             </button>
         </div>
-        <ul class="disk-list" ng-if="_index">
-            <li>
-                <div class="disk-info disk-menu">
-                    <span>Name</span>
-                    <span>FileSystem</span>
-                    <span>FreeSpace</span>
-                    <span>Size</span>
-                </div>
-            </li>
-            <li ng-repeat="x in disks" class="disk" ng-dblclick="forward(x.Name)">
-                <div class="disk-info">
-                    <span>{{x.Name}}</span>
-                    <span>{{x.FileSystem}}</span>
-                    <span>{{x.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</span>
-                    <span>{{x.Size / 1024 / 1024 / 1024 | number: 0}} GB</span>
-                </div>
-            </li>
-        </ul>
-        <ul class="file-list" ng-if="!_index">
-            <li>
-                <div class="file-info file-menu">
-                    <span ng-click="col='Name';desc=!desc">Name</span>
-                    <span ng-click="col='Mtime';desc=!desc">Mtime</span>
-                    <span ng-click="col='Type';desc=!desc">Type</span>
-                    <span ng-click="col='Size';desc=!desc">Size</span>
-                </div>
-            </li>
-            <li ng-repeat="x in files | orderBy:col:desc" class="file" ng-dblclick="forward_folder(x.name)" ng-if="!_index">
-                <div class="file-info">
-                    <span>{{x.name}}</span>
-                    <span>{{x.mtime | date:'yyyy-MM-dd HH:mm:ss'}}</span>    <!--修改时间 修改文件内容-->
-                    <span ng-if="x.isDirectory()">文件夹</span>
-                    <span ng-if="x.isFile()">文件</span>
-                    <span ng-if="x.size < 1024 && x.size > 0">{{x.size | number: 2}} B</span>
-                    <span ng-if="x.size >= 1024 && x.size < 1024*1024">{{x.size / 1024 | number: 2}} KB</span>
-                    <span ng-if="x.size >= 1024*1024">{{x.size / 1024 / 1024 | number: 2}} MB</span>
-                </div>
-            </li>
-        </ul>
+        <table ng-if="_index">
+            <thead>
+                <tr class="disk-menu">
+                    <th>Name</th>
+                    <th>FileSystem</th>
+                    <th>FreeSpace</th>
+                    <th>Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="x in disks"  ng-dblclick="forward(x.Name)">
+                    <td>{{x.Name}}</td>
+                    <td>{{x.FileSystem}}</td>
+                    <td>{{x.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</td>
+                    <td>{{x.Size / 1024 / 1024 / 1024 | number: 0}} GB</td>
+                </tr>
+            </tbody>
+        </table>
+        <table ng-if="!_index">
+            <thead>
+                <tr class="file-menu">
+                    <th ng-click="col='Name';desc=!desc">Name</th>
+                    <th ng-click="col='Mtime';desc=!desc">Mtime</th>
+                    <th ng-click="col='Type';desc=!desc">Type</th>
+                    <th ng-click="col='Size';desc=!desc">Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="x in files | orderBy:col:desc" ng-dblclick="forward_folder(x.name)" ng-if="!_index">
+                    <td>{{x.name}}</td>
+                    <td>{{x.mtime | date:'yyyy-MM-dd HH:mm:ss'}}</td>    <!--修改时间 修改文件内容-->
+                    <td ng-if="x.isDirectory()">文件夹</td>
+                    <td ng-if="x.isFile()">文件</td>
+                    <td ng-if="x.size < 1024 && x.size > 0">{{x.size | number: 2}} B</td>
+                    <td ng-if="x.size >= 1024 && x.size < 1024*1024">{{x.size / 1024 | number: 2}} KB</td>
+                    <td ng-if="x.size >= 1024*1024">{{x.size / 1024 / 1024 | number: 2}} MB</td>
+                </tr>
+            </tbody>
+        </table>
     </section>
 </article>
