@@ -1,7 +1,8 @@
 body {
   font-family: Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;
   -webkit-user-select: none;
-  cursor: default; }
+  cursor: default;
+  min-width: 450px; }
 
 p,
 span,
@@ -13,6 +14,18 @@ ul,
 li {
   list-style: none;
   padding-left: 0; }
+
+::-webkit-scrollbar {
+  height: 12px;
+  width: 12px; }
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
+  border-radius: 10px; }
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5); }
 
 .system,
 .files {
@@ -68,8 +81,16 @@ li {
 .files .disks-files .file:active {
   background-color: #e2f2ff; }
 
+.files .disks-files ul {
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: block; }
+  .files .disks-files ul li {
+    display: block; }
+
 .files .disks-files .disk-info,
 .files .disks-files .file-info {
+  min-width: 400px;
   overflow: hidden;
   display: block; }
   .files .disks-files .disk-info span,
@@ -81,17 +102,16 @@ li {
     .files .disks-files .file-info span:first-child {
       text-align: left; }
 
-.files .disks-files .file-info span:nth-child(1) {
-  width: 50%; }
-
-.files .disks-files .file-info span:nth-child(2) {
-  width: 20%; }
-
-.files .disks-files .file-info span:nth-child(3) {
-  width: 15%; }
-
-.files .disks-files .file-info span:nth-child(4) {
-  width: 15%; }
+.files .disks-files .file-info {
+  min-width: 768px; }
+  .files .disks-files .file-info span:nth-child(1) {
+    width: 50%; }
+  .files .disks-files .file-info span:nth-child(2) {
+    width: 20%; }
+  .files .disks-files .file-info span:nth-child(3) {
+    width: 15%; }
+  .files .disks-files .file-info span:nth-child(4) {
+    width: 15%; }
 
 .files .disks-files .disk-menu span:hover, .files .disks-files .disk-menu span:active,
 .files .disks-files .file-menu span:hover,
