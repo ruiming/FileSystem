@@ -112,23 +112,23 @@ $hover: #e8e8e8;
     table,
     thead,
     tbody {
+      overflow: hidden;
       display: block;
       width: 100%;
-      overflow: hidden;
-      tbody {
-        tr {
-          &:hover,
-          &:active {
-            background-color: $hover;
-          }
+    }
+    tbody {
+      tr {
+        &:hover,
+        &:active {
+          background-color: $hover;
         }
       }
-      thead {
-        th {
-          &:hover,
-          &:active {
-            background-color: $hover;
-          }
+    }
+    thead {
+      th {
+        &:hover,
+        &:active {
+          background-color: $hover;
         }
       }
     }
@@ -138,11 +138,25 @@ $hover: #e8e8e8;
       display: block;
       td,
       th{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         float: left;
-        width: 25%;
         text-align: right;
-        &:first-child{
+        &:first-child {
           text-align: left;
+        }
+        &:nth-child(1) {
+          width: 50%;
+        }
+        &:nth-child(2) {
+          width: 20%;
+        }
+        &:nth-child(3) {
+          width: 15%;
+        }
+        &:nth-child(4) {
+          width: 15%;
         }
       }
     }
