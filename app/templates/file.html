@@ -26,13 +26,13 @@
         <ul class="file-list" ng-if="!_index">
             <li>
                 <div class="file-info file-menu">
-                    <span>Name</span>
-                    <span>Mtime</span>
-                    <span>Type</span>
-                    <span>Size</span>
+                    <span ng-click="col='Name';desc=!desc">Name</span>
+                    <span ng-click="col='Mtime';desc=!desc">Mtime</span>
+                    <span ng-click="col='Type';desc=!desc">Type</span>
+                    <span ng-click="col='Size';desc=!desc">Size</span>
                 </div>
             </li>
-            <li ng-repeat="x in files track by $index" class="file" ng-dblclick="forward_folder(x.name)" ng-if="!_index">
+            <li ng-repeat="x in files | orderBy:col:desc" class="file" ng-dblclick="forward_folder(x.name)" ng-if="!_index">
                 <div class="file-info">
                     <span>{{x.name}}</span>
                     <span>{{x.mtime | date:'yyyy-MM-dd HH:mm:ss'}}</span>    <!--修改时间 修改文件内容-->

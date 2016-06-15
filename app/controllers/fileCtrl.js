@@ -5,6 +5,8 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
     $scope.path = null;
     $scope.files = [];
     $scope.history = ["index"];
+    $scope.col = 'Name';
+    $scope.desc = 0;
 
     getDisk();
 
@@ -58,7 +60,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
                 $scope.filename = files;
                 $scope.files = [];
                 for(var i in $scope.filename){
-                    if($scope.filename.hasOwnProperty(i)){
+                    if($scope.filename.hasOwnProperty(i)){         // fixme 改成异步方式
                         try{
                         $scope.file = fs.statSync($scope.path + "////" + $scope.filename[i]);
                         }catch(err){
