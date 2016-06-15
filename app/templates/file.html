@@ -1,17 +1,23 @@
 <article class="disks-files">
     <header>文件管理器</header>
     <section class="file-center">
-        <div class="action-bar">
+        <div class="action">
             <button class="btn btn-info" ng-click="home()" ng-disabled="_index">
-                <span class="glyphicon glyphicon-home"></span>
+                <i class="material-icons">home</i>
             </button>
             <button class="btn btn-info" ng-click="Hbackward()" ng-disabled="history.length==1">
-                <span class="glyphicon glyphicon-menu-left"></span>
+                <i class="material-icons">keyboard_arrow_left</i>
             </button>
             <button class="btn btn-info" ng-click="Hforward()" ng-disabled="temp.length==0">
-                <span class="glyphicon glyphicon-menu-right"></span>
+                <i class="material-icons">keyboard_arrow_right</i>
             </button>
         </div>
+        <!-- todo 路径导航-->
+        <ul class="breadcrumb">
+            <li><a href="javascript:void(0)">Home</a></li>
+            <li><a href="javascript:void(0)">Library</a></li>
+            <li class="active">Data</li>
+        </ul>
         <table ng-if="_index">
             <thead>
                 <tr class="disk-menu">
