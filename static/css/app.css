@@ -76,6 +76,8 @@ a:hover {
 .system {
   width: 300px;
   float: left; }
+  .system p {
+    margin: 0 0 5px; }
   .system .cpu {
     text-align: center;
     display: block;

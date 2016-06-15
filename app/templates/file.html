@@ -18,7 +18,7 @@
             <li><a href="javascript:void(0)">Library</a></li>
             <li class="active">Data</li>
         </ul>
-        <table ng-if="_index">
+        <table ng-show="_index">
             <thead>
                 <tr class="disk-menu">
                     <th>Name</th>
@@ -36,13 +36,13 @@
                 </tr>
             </tbody>
         </table>
-        <table ng-if="!_index">
+        <table ng-show="!_index">
             <thead>
                 <tr class="file-menu">
-                    <th ng-click="col='Name';desc=!desc">Name</th>
-                    <th ng-click="col='Mtime';desc=!desc">Mtime</th>
-                    <th ng-click="col='Type';desc=!desc">Type</th>
-                    <th ng-click="col='Size';desc=!desc">Size</th>
+                    <th ng-click="col='name';desc=!desc">Name</th>
+                    <th ng-click="col='mtime';desc=!desc">Mtime</th>
+                    <th ng-click="col='type';desc=!desc">Type</th>
+                    <th ng-click="col='size';desc=!desc">Size</th>
                 </tr>
             </thead>
             <tbody>

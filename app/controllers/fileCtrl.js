@@ -9,6 +9,10 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
     $scope.col = 'Name';
     $scope.desc = 0;
 
+    $interval(function(){
+        console.log($scope.col);
+    }, 1000);
+
     getDisk();
 
     // 跳进相应磁盘

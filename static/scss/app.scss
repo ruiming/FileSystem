@@ -83,6 +83,9 @@ $hover: #e8e8e8;
 .system {
   width: 300px;
   float: left;
+  p {
+    margin: 0 0 5px;
+  }
   .cpu {
     text-align: center;
     display: block;
