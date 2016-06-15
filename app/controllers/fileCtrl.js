@@ -136,6 +136,6 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
                     }
                 }
             }
-        })};
+        })}
 
 }]);
