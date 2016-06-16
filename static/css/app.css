@@ -16,9 +16,13 @@ li {
   list-style: none;
   padding-left: 0; }
 
-a:active,
-a:hover {
-  outline: 0; }
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  outline: 0;
+  text-decoration: none; }
 
 ::-webkit-scrollbar {
   height: 12px;

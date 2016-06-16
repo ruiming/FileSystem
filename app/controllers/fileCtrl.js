@@ -32,6 +32,34 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         $scope.read_folder();
     };
 
+    // 导航栏跳转
+    $scope.turnto = function(x) {
+        var currentPath = $scope.path;
+        if(x == "Computer" && currentPath != "Computer") {
+            $scope.home();
+            return;
+        }
+        else if(x == "Computer" && currentPath == "Computer") {
+            return;
+        }
+        $scope.path = "";
+        for(var i=0; i<$scope.breadcrumbs.length; i++){
+            if($scope.breadcrumbs[i] != x){
+                $scope.path += $scope.breadcrumbs[i] + "\\\\";
+            }
+            else {
+                $scope.path += $scope.breadcrumbs[i] + "\\\\";
+                break;
+            }
+        }
+        if(currentPath == $scope.path){
+            return;
+        }
+        $scope.history.push($scope.path);
+        $scope.temp = [];
+        $scope.read_folder();
+    };
+
     // 跳到主页
     $scope.home = function() {
         $scope.path = "Computer";
@@ -42,7 +70,12 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     };
 
     $scope.breadcrumb = function(){
-        $scope.breadcrumbs = $scope.path.split("\\\\");
+        if($scope.path == "Computer"){
+            $scope.breadcrumbs = [];
+        }
+        else{
+            $scope.breadcrumbs = $scope.path.split("\\\\");
+        }
     };
 
     // 后退
@@ -124,20 +157,20 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             else {
                 $scope.filenames = files;
                 $scope.files = [];
+                $scope.breadcrumb();
                 $scope.filenames.forEach(function(filename){
                     var promise = getFileInfo(filename);
                     promise.then(function(stat){
                         $scope.files.push(stat);
-                        $scope.breadcrumb();
                     });
                 });
-
             }
         });
     };
 
     // 获取固定分区盘符和基本信息
     function getDisk(){
+        $scope.breadcrumb();
         exec('wmic logicaldisk where "drivetype=3" get name,filesystem,freespace,size', function(err, stdout, stderr) {
             if(err || stderr){
                 console.log("error: " + err + stderr);
@@ -165,7 +198,6 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                     }
                 }
             }
-            $scope.breadcrumb();
         })}
 
 

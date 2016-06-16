@@ -14,8 +14,8 @@
         </div>
         <!-- todo 路径导航-->
         <ul class="breadcrumb">
-            <li><a href="javascript:void(0)">Computer</a></li>
-            <li ng-repeat="bread in breadcrumbs" ng-if="bread != 'Computer'"><a href="javascript:void(0)">{{bread}}</a></li>
+            <li><a href="javascript:void(0)" ng-click="turnto('Computer')">Computer</a></li>
+            <li ng-repeat="bread in breadcrumbs track by $index" ng-if="bread != 'Computer'"><a href="javascript:void(0)" ng-click="turnto(bread)">{{bread}}</a></li>
         </ul>
         <table ng-show="_index">
             <thead>
