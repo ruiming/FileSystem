@@ -1,7 +1,7 @@
 {
   "name": "filesystem",
   "version": "1.0.0",
-  "description": "",
+  "description": "FileSystem",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js",
