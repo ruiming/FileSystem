@@ -1,6 +1,9 @@
-routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interval){
+routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $interval, $q){
     var fs = require("fs"),
-        path = require('path');
+        path = require('path'),
+        mmm = require('mmmagic'),
+        Magic = mmm.Magic;
+
     $scope._index = true;
     $scope.path = null;
     $scope.files = [];
@@ -8,10 +11,6 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
     $scope.temp = [];               // 保存后退记录
     $scope.col = 'Name';
     $scope.desc = 0;
-
-    $interval(function(){
-        console.log($scope.col);
-    }, 1000);
 
     getDisk();
 
@@ -79,6 +78,21 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
         }
     };
 
+    function getFileInfo(filename) {
+        return $q(function(resolve, reject) {
+            var path = $scope.path + "////" + filename;
+            fs.stat(path, function(err, stat){
+                if(err){
+                    reject(err);
+                }
+                else {
+                    stat.name = filename;
+                    resolve(stat);
+                }
+            });
+        });
+    }
+
     // 读取路径下的所有文件
     $scope.read_folder = function(){
         fs.readdir($scope.path,function(err, files){
@@ -86,23 +100,20 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', function($scope, $interv
                 console.error(err);
             }
             else {
-                $scope.filename = files;
+                $scope.filenames = files;
                 $scope.files = [];
-                for(var i in $scope.filename){
-                    if($scope.filename.hasOwnProperty(i)){         // fixme 改成异步方式
-                        try{
-                            $scope.file = fs.statSync($scope.path + "////" + $scope.filename[i]);
-                        }catch(err){
-                            continue;
-                        }
-                        $scope.file.name = $scope.filename[i];
-                        $scope.files.push($scope.file);
-                    }
-                }
+                $scope.filenames.forEach(function(filename){
+                    var promise = getFileInfo(filename);
+                    promise.then(function(stat){
+                        $scope.files.push(stat);
+                    }, function(err){
+                        console.log(err);
+                    });
+                });
+
             }
         });
     };
-
 
 
     exec = require('child_process').exec;
