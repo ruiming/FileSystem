@@ -2,7 +2,8 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     var fs = require("fs"),
         path = require('path'),
         mmm = require('mmmagic'),
-        Magic = mmm.Magic;
+        Magic = mmm.Magic,
+        magic = new Magic(mmm.MAGIC_MIME_TYPE);
 
     $scope._index = true;
     $scope.path = null;
@@ -80,24 +81,40 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
 
     function getFileInfo(filename) {
         return $q(function(resolve, reject) {
-            var path = $scope.path + "////" + filename;
+            let path = $scope.path + "////" + filename;
             fs.stat(path, function(err, stat){
                 if(err){
                     reject(err);
                 }
                 else {
                     stat.name = filename;
-                    resolve(stat);
+                    resolve(getFileType(stat));
                 }
             });
         });
+    }
+
+    function getFileType(stat) {
+        return $q(function(resolve, reject) {
+            let path = $scope.path + "////" + stat.name;
+            magic.detectFile(path, function(err, result) {
+                if (err){
+                    stat.type = "Folder";
+                    resolve(stat);
+                }
+                else {
+                    stat.type = result;
+                    resolve(stat);
+                }
+            });
+        })
     }
 
     // 读取路径下的所有文件
     $scope.read_folder = function(){
         fs.readdir($scope.path,function(err, files){
             if (err) {
-                console.error(err);
+                
             }
             else {
                 $scope.filenames = files;
@@ -106,8 +123,6 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                     var promise = getFileInfo(filename);
                     promise.then(function(stat){
                         $scope.files.push(stat);
-                    }, function(err){
-                        console.log(err);
                     });
                 });
 

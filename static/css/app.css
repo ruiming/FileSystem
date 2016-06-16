@@ -127,13 +127,13 @@ a:hover {
       text-align: left; }
     .files .disks-files tr td:nth-child(1),
     .files .disks-files tr th:nth-child(1) {
-      width: 50%; }
+      width: 40%; }
     .files .disks-files tr td:nth-child(2),
     .files .disks-files tr th:nth-child(2) {
       width: 20%; }
     .files .disks-files tr td:nth-child(3),
     .files .disks-files tr th:nth-child(3) {
-      width: 15%; }
+      width: 25%; }
     .files .disks-files tr td:nth-child(4),
     .files .disks-files tr th:nth-child(4) {
       width: 15%; }
@@ -141,11 +141,11 @@ a:hover {
 .files .disks-files .file-info {
   min-width: 768px; }
   .files .disks-files .file-info span:nth-child(1) {
-    width: 50%; }
+    width: 40%; }
   .files .disks-files .file-info span:nth-child(2) {
     width: 20%; }
   .files .disks-files .file-info span:nth-child(3) {
-    width: 15%; }
+    width: 25%; }
   .files .disks-files .file-info span:nth-child(4) {
     width: 15%; }
 
