@@ -20,8 +20,9 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         click: function () {
             var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             var obj = JSON.parse(selectedElement.attributes.value.nodeValue);
+            var path = $scope.path + obj.name;
             if(obj.type != "Folder"){
-                fs.unlink($scope.path + obj.name, function(err){
+                fs.unlink(path, function(err){
                     if(err){
                         throw err;
                     }
@@ -35,6 +36,10 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                     }
                     selectedElement.remove();
                 })
+            }
+            // 避免前进到不存在的文件夹
+            if(path == $scope.temp[$scope.temp.length-1] || path + "\\\\" == $scope.temp[$scope.temp.length-1]){
+                $scope.temp = [];
             }
         }
     }));
@@ -130,6 +135,9 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         }
         $scope.temp.push($scope.path);                                      // 记录当前的路径
         $scope.history.pop();                                               // 从历史记录中移除目前路径
+        while($scope.history[$scope.history.length-1] != "Computer" &&!fs.existsSync($scope.history[$scope.history.length-1])){
+            $scope.history.pop();
+        }
         $scope.path = $scope.history[$scope.history.length - 1];            // 取出要后退到的路径
         $scope.files = [];
         if($scope.path == "Computer") {
@@ -148,6 +156,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         if($scope.temp == null || $scope.temp.length < 1){
             return;
         }
+        console.log($scope.temp);
         $scope.path = $scope.temp[$scope.temp.length - 1];  // 获取前进的路径
         $scope.history.push($scope.path);                   // 每次跳转前记录要访问的路径
         $scope.temp.pop();                                  // 前进记录出栈
