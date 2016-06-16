@@ -3,17 +3,17 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         path = require('path'),
         mmm = require('mmmagic'),
         Magic = mmm.Magic,
-        magic = new Magic(mmm.MAGIC_MIME_TYPE);
+        magic = new Magic(mmm.MAGIC_MIME_TYPE),
+        exec = require('child_process').exec;
 
     $scope._index = true;
-    $scope.path = null;
+    $scope.path = "Computer";
     $scope.files = [];
-    $scope.history = ["index"];     // 记录访问的页面，默认在index页面
+    $scope.history = ["Computer"];     // 记录访问的页面，默认在Computer页面
     $scope.temp = [];               // 保存后退记录
     $scope.col = 'Name';
     $scope.desc = 0;
 
-    getDisk();
 
     // 跳进相应磁盘
     $scope.forward = function(disk) {
@@ -24,20 +24,25 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     };
 
     // 跳进相应文件夹
-    $scope.forward_folder = function(path) {
-        $scope.path += path + "\\\\";
-        $scope.history.push($scope.path);   // 每次跳转前记录要访问的路径
-        $scope.temp = [];                   // 点击进入文件夹会破坏后退记录
+    $scope.forward_folder = function(x) {
+        if(x.isFile())  return;                 // 若是文件，则直接返回
+        $scope.path += x.name + "\\\\";
+        $scope.history.push($scope.path);       // 每次跳转前记录要访问的路径
+        $scope.temp = [];                       // 点击进入文件夹会破坏后退记录
         $scope.read_folder();
     };
 
     // 跳到主页
     $scope.home = function() {
-        $scope.path = "index";
+        $scope.path = "Computer";
         $scope.history.push($scope.path);        // 每次跳转前记录要访问的路径
         $scope._index = true;
         $scope.files = [];
         getDisk();
+    };
+
+    $scope.breadcrumb = function(){
+        $scope.breadcrumbs = $scope.path.split("\\\\");
     };
 
     // 后退
@@ -45,11 +50,11 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         if($scope.history == null || $scope.history.length == 1){
             return;
         }
-        $scope.temp.push($scope.path);          // 记录当前的路径
-        $scope.history.pop();                   // 从历史记录中移除目前路径
-        $scope.path = $scope.history[$scope.history.length - 1];          // 取出要后退到的路径
+        $scope.temp.push($scope.path);                                      // 记录当前的路径
+        $scope.history.pop();                                               // 从历史记录中移除目前路径
+        $scope.path = $scope.history[$scope.history.length - 1];            // 取出要后退到的路径
         $scope.files = [];
-        if($scope.path == "index") {
+        if($scope.path == "Computer") {
             $scope.filename = null;
             getDisk();
             $scope._index = true;
@@ -68,7 +73,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         $scope.path = $scope.temp[$scope.temp.length - 1];  // 获取前进的路径
         $scope.history.push($scope.path);                   // 每次跳转前记录要访问的路径
         $scope.temp.pop();                                  // 前进记录出栈
-        if($scope.path == "index") {
+        if($scope.path == "Computer") {
             $scope.filename = null;
             getDisk();
             $scope._index = true;
@@ -110,11 +115,11 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         })
     }
 
-    // 读取路径下的所有文件
+    // 异步读取路径下的所有文件并获取文件信息
     $scope.read_folder = function(){
         fs.readdir($scope.path,function(err, files){
             if (err) {
-                
+                console.log(err);
             }
             else {
                 $scope.filenames = files;
@@ -123,18 +128,13 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                     var promise = getFileInfo(filename);
                     promise.then(function(stat){
                         $scope.files.push(stat);
+                        $scope.breadcrumb();
                     });
                 });
 
             }
         });
     };
-
-
-    exec = require('child_process').exec;
-
-    $scope.disks = [];
-    $scope.disk = {};
 
     // 获取固定分区盘符和基本信息
     function getDisk(){
@@ -165,6 +165,13 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                     }
                 }
             }
+            $scope.breadcrumb();
         })}
+
+
+    $scope.disks = [];
+    $scope.disk = {};
+    getDisk();
+
 
 }]);

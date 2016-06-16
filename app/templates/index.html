@@ -19,21 +19,9 @@
         <p>架构: {{system.arch}}</p>
         <p>CPU核心数: {{cpuCore[1]}}</p>
         <p>CPU逻辑核心数: {{cpuCore[2]}}</p>
+        <p>CPU频率: {{system.cpus[0].speed}} MHZ</p>
         <p>CPU温度: {{(cpuTemperature[1] - 2732) / 10}} ℃</p>
         <p>CPU警戒温度: {{(cpuTemperature[0] - 2732) / 10}} ℃</p>
-        <!--
-        <div ng-repeat="x in system.cpus">
-            <div class="cpu">
-                <img src="./static/images/cpu.png">
-                <div class="cpu-message">
-                    <p>Speed: {{x.speed}}</p>
-                    <p>User: {{x.times.user}}</p>
-                    <p>Sys: {{x.times.sys}}</p>
-                    <p>Irq: {{x.times.irq}}</p>
-                </div>
-            </div>
-        </div>
-        -->
     </section>
 </article>
 <article class="memory">

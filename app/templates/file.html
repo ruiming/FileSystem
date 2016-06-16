@@ -14,9 +14,8 @@
         </div>
         <!-- todo 路径导航-->
         <ul class="breadcrumb">
-            <li><a href="javascript:void(0)">Home</a></li>
-            <li><a href="javascript:void(0)">Library</a></li>
-            <li class="active">Data</li>
+            <li><a href="javascript:void(0)">Computer</a></li>
+            <li ng-repeat="bread in breadcrumbs" ng-if="bread != 'Computer'"><a href="javascript:void(0)">{{bread}}</a></li>
         </ul>
         <table ng-show="_index">
             <thead>
@@ -46,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="x in files | orderBy:col:desc" ng-dblclick="forward_folder(x.name)" ng-if="!_index">
+                <tr ng-repeat="x in files | orderBy:col:desc"  ng-dblclick="forward_folder(x)" ng-if="!_index">
                     <td>{{x.name}}</td>
                     <td>{{x.mtime | date:'yyyy-MM-dd HH:mm:ss'}}</td>    <!--修改时间 修改文件内容-->
                     <td>{{x.type}}</td>
