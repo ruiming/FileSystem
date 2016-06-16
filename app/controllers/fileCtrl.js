@@ -1,11 +1,56 @@
-routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $interval, $q){
+routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $interval, $q) {
     var fs = require("fs"),
         path = require('path'),
         mmm = require('mmmagic'),
+        exec = require('child_process').exec,
         Magic = mmm.Magic,
         magic = new Magic(mmm.MAGIC_MIME_TYPE),
-        exec = require('child_process').exec;
+        remote = require('electron').remote,
+        Menu = remote.Menu,
+        MenuItem = remote.MenuItem;
 
+    ///////////////////////////////////////
+    // 文件右键菜单
+    let rightClickPosition = null;
+    const menu = new Menu();
+
+    // 删除文件或文件夹     fixme 文件夹删除
+    menu.append(new MenuItem({
+        label: 'Delete',
+        click: function () {
+            var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+            var obj = JSON.parse(selectedElement.attributes.value.nodeValue);
+            if(obj.type != "Folder"){
+                fs.unlink($scope.path + obj.name, function(err){
+                    if(err){
+                        throw err;
+                    }
+                    selectedElement.remove();
+                })
+            }
+            else {
+                fs.rmdir($scope.path + obj.name, function(err){
+                    if(err){
+                        throw err;
+                    }
+                    selectedElement.remove();
+                })
+            }
+        }
+    }));
+
+
+    var FILE = document.getElementById("file");
+    FILE.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        rightClickPosition = {x: e.x, y: e.y};
+        menu.popup(remote.getCurrentWindow())
+    }, false);
+
+    ///////////////////////////////////////
+
+
+    // 其他
     $scope._index = true;
     $scope.path = "Computer";
     $scope.files = [];
