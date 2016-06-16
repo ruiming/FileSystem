@@ -142,15 +142,17 @@ $hover: #e8e8e8;
     tr {
       min-width: 400px;
       overflow: hidden;
-      display: block;
+      display: flex;
       td,
       th{
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         float: left;
+        padding-left: 10px;
         text-align: right;
         &:first-child {
+          padding-left: 0;
           text-align: left;
         }
         &:nth-child(1) {
@@ -163,6 +165,7 @@ $hover: #e8e8e8;
           width: 25%;
         }
         &:nth-child(4) {
+          min-width: 80px;
           width: 15%;
         }
       }

@@ -118,16 +118,18 @@ a:active {
 .files .disks-files tr {
   min-width: 400px;
   overflow: hidden;
-  display: block; }
+  display: flex; }
   .files .disks-files tr td,
   .files .disks-files tr th {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     float: left;
+    padding-left: 10px;
     text-align: right; }
     .files .disks-files tr td:first-child,
     .files .disks-files tr th:first-child {
+      padding-left: 0;
       text-align: left; }
     .files .disks-files tr td:nth-child(1),
     .files .disks-files tr th:nth-child(1) {
@@ -140,6 +142,7 @@ a:active {
       width: 25%; }
     .files .disks-files tr td:nth-child(4),
     .files .disks-files tr th:nth-child(4) {
+      min-width: 80px;
       width: 15%; }
 
 .files .disks-files .file-info {
