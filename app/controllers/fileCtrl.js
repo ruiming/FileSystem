@@ -1,5 +1,7 @@
 routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $interval, $q) {
 
+    ///////////////////////////////////////
+    // @引入模块
     const   fs = require("fs"),
             path = require('path'),
             mmm = require('mmmagic'),
@@ -9,35 +11,42 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             remote = require('electron').remote,
             dialog = require('electron').remote.dialog,
             Menu = remote.Menu,
-            MenuItem = remote.MenuItem;
+            MenuItem = remote.MenuItem,
+            iconv = require('iconv-lite');
+
 
     ///////////////////////////////////////
-    // 文件右键菜单
+    // @文件右键菜单
     let rightClickPosition = null;
     const menu = new Menu();
 
     // 删除文件或文件夹     fixme 文件夹删除
     menu.append(new MenuItem({
         label: 'Delete',
-        click: function () {
-            var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
-            var obj = JSON.parse(selectedElement.attributes.value.nodeValue);
-            var path = $scope.path + obj.name;
+        click: () => {
+            let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+            let obj = JSON.parse(selectedElement.attributes.value.nodeValue);
+            let path = $scope.path + obj.name;
             if(obj.type != "Folder"){
-                fs.unlink(path, function(err){
-                    if(err){
-                        throw err;
+                let buttons = ['OK', 'Cancel'];
+                dialog.showMessageBox({type: 'question', title: '删除文件', buttons: buttons, message: '确认要删除吗? 此操作不可逆!'}, (index) => {
+                    if(index == 0){
+                        fs.unlink(path, (err) => {
+                            if (err) {
+                                throw err;
+                            }
+                            selectedElement.remove();
+                        })
                     }
-                    selectedElement.remove();
-                })
+                });
             }
             else {
-                var buttons = ['OK', 'Cancel'];
-                dialog.showMessageBox({type: 'question', title: '删除文件夹', buttons: buttons, message: '确认要删除吗? 此操作不可逆!'}, function(index){
+                let buttons = ['OK', 'Cancel'];
+                dialog.showMessageBox({type: 'question', title: '删除文件夹', buttons: buttons, message: '确认要删除吗? 此操作不可逆!'}, (index) => {
                     if(index == 0){
-                        exec('rmdir "' + path + '" /S /Q', function(err, stdout, stderr){
-                            if(err || stderr){
-                                dialog.showErrorBox("删除失败",  stdout + stderr);
+                        exec('rmdir "' + path + '" /S /Q', {encoding: 'GB2312'}, (err, stdout, stderr) => {
+                            if(err || iconv.decode(stderr, 'GB2312')){
+                                dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
                                 return;
                             }
                             selectedElement.remove();
@@ -45,13 +54,59 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                     }
                 })
             }
-            // 避免前进到不存在的文件夹
             if(path == $scope.temp[$scope.temp.length-1] || path + "\\\\" == $scope.temp[$scope.temp.length-1]){
                 $scope.temp = [];
             }
         }
     }));
 
+    // 复制文件或文件夹
+    menu.append(new MenuItem({
+        label: 'Copy',
+        click: ()=>{
+            let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+            let obj = JSON.parse(selectedElement.attributes.value.nodeValue);
+            $scope.src = $scope.path + obj.name;
+            $scope.srcType = obj.type;
+            console.log($scope.srcType);
+        }
+    }));
+
+    // 粘贴文件或文件夹
+    menu.append(new MenuItem({
+        label: 'Paste',
+        click: ()=>{
+            let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+            let obj = JSON.parse(selectedElement.attributes.value.nodeValue);
+            $scope.dist = $scope.path + obj.name;
+            // 粘贴文件夹
+            if($scope.srcType == 'Folder'){
+                console.log("jeje");
+                // 具体参数配置 todo 可选?
+                exec('xcopy "' + $scope.src + '" "' + $scope.dist + '" /E /C /Y /H', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                    if(err || iconv.decode(stderr, 'GB2312')) {
+                        dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
+                        return;
+                    }
+                    if(iconv.decode(stdout, 'GB2312')) {
+                        dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
+                    }
+                });
+            }
+            // 粘贴文件
+            else {
+                exec('copy "' + $scope.src + '" "' + $scope.dist + '" /Y', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                    if(err || iconv.decode(stderr, 'GB2312')) {
+                        dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
+                        return;
+                    }
+                    if(iconv.decode(stdout, 'GB2312')) {
+                        dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
+                    }
+                });
+            }
+        }
+    }));
 
     var FILE = document.getElementById("file");
     FILE.addEventListener('contextmenu', (e) => {
@@ -61,20 +116,19 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     }, false);
 
     ///////////////////////////////////////
-
-
-    // 其他
+    // @全局变量
     $scope._index = true;
     $scope.path = "Computer";
     $scope.files = [];
-    $scope.history = ["Computer"];     // 记录访问的页面，默认在Computer页面
-    $scope.temp = [];               // 保存后退记录
+    $scope.history = ["Computer"];       // 记录访问的页面，默认在Computer页面
+    $scope.temp = [];                    // 保存后退记录
     $scope.col = 'Name';
     $scope.desc = 0;
 
-
+    ///////////////////////////////////////
+    // @功能函数
     // 跳进相应磁盘
-    $scope.forward = function(disk) {
+    $scope.forward = (disk) => {
         $scope.path = disk + "\\\\";
         $scope.history.push($scope.path);        // 每次跳转前记录要访问的路径
         $scope._index = false;
@@ -82,7 +136,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     };
 
     // 跳进相应文件夹
-    $scope.forward_folder = function(x) {
+    $scope.forward_folder = (x) => {
         if(x.isFile())  return;                 // 若是文件，则直接返回
         $scope.path += x.name + "\\\\";
         $scope.history.push($scope.path);       // 每次跳转前记录要访问的路径
@@ -91,7 +145,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     };
 
     // 导航栏跳转
-    $scope.turnto = function(x) {
+    $scope.turnto = (x) => {
         var currentPath = $scope.path;
         if(x == "Computer" && currentPath != "Computer") {
             $scope.home();
@@ -119,7 +173,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     };
 
     // 跳到主页
-    $scope.home = function() {
+    $scope.home = () => {
         $scope.path = "Computer";
         $scope.history.push($scope.path);        // 每次跳转前记录要访问的路径
         $scope._index = true;
@@ -127,7 +181,8 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         getDisk();
     };
 
-    $scope.breadcrumb = function(){
+    // 设置路径导航
+    $scope.breadcrumb = () => {
         if($scope.path == "Computer"){
             $scope.breadcrumbs = [];
         }
@@ -137,7 +192,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     };
 
     // 后退
-    $scope.Hbackward = function() {
+    $scope.Hbackward = () => {
         if($scope.history == null || $scope.history.length == 1){
             return;
         }
@@ -160,11 +215,10 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     };
 
     // 前进
-    $scope.Hforward = function(){
+    $scope.Hforward = () => {
         if($scope.temp == null || $scope.temp.length < 1){
             return;
         }
-        console.log($scope.temp);
         $scope.path = $scope.temp[$scope.temp.length - 1];  // 获取前进的路径
         $scope.history.push($scope.path);                   // 每次跳转前记录要访问的路径
         $scope.temp.pop();                                  // 前进记录出栈
@@ -211,7 +265,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     }
 
     // 异步读取路径下的所有文件并获取文件信息
-    $scope.read_folder = function(){
+    $scope.read_folder = () => {
         fs.readdir($scope.path,function(err, files){
             if (err) {
                 console.log(err);
@@ -221,7 +275,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                 $scope.files = [];
                 $scope.breadcrumb();
                 // fixme 读取文件过慢
-                $scope.filenames.forEach(function(filename){
+                $scope.filenames.forEach((filename) => {
                     var promise = getFileInfo(filename);
                     promise.then(function(stat){
                         $scope.files.push(stat);
@@ -234,7 +288,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     // 获取固定分区盘符和基本信息
     function getDisk(){
         $scope.breadcrumb();
-        exec('wmic logicaldisk where "drivetype=3" get name,filesystem,freespace,size', function(err, stdout, stderr) {
+        exec('wmic logicaldisk where "drivetype=3" get name,filesystem,freespace,size', (err, stdout, stderr) => {
             if(err || stderr){
                 console.log("error: " + err + stderr);
                 return;
@@ -263,10 +317,10 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             }
         })}
 
-
+    ///////////////////////////////////////
+    // @初始执行
     $scope.disks = [];
     $scope.disk = {};
     getDisk();
-
 
 }]);

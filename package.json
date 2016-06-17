@@ -20,6 +20,7 @@
     "gulp": "^3.9.1",
     "gulp-plumber": "^1.1.0",
     "gulp-sass": "^2.2.0",
+    "iconv-lite": "^0.4.13",
     "mime-magic": "^5.14.0",
     "mmmagic": "^0.4.4"
   }
