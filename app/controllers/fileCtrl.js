@@ -1,4 +1,4 @@
-routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $interval, $q) {
+routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', '$timeout', function($scope, $interval, $q, $timeout) {
     var fs = require("fs"),
         path = require('path'),
         mmm = require('mmmagic'),
@@ -212,6 +212,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                 $scope.filenames = files;
                 $scope.files = [];
                 $scope.breadcrumb();
+                // fixme 读取文件过慢
                 $scope.filenames.forEach(function(filename){
                     var promise = getFileInfo(filename);
                     promise.then(function(stat){

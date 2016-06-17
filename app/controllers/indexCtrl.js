@@ -13,8 +13,7 @@ routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http
             platform: os.platform(),                            // 操作系统类型
             release: os.release(),                              // 操作系统版本
             type: os.type(),                                    // 操作系统名称
-            uptime: os.uptime(),                                // 计算机正常运行时间
-            username: os.userInfo().username
+            uptime: os.uptime()                                 // 计算机正常运行时间
         };
     }, 1000);                                                   // 每隔1秒自动重新获取
 
