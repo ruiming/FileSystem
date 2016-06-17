@@ -1,13 +1,15 @@
-routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', '$timeout', function($scope, $interval, $q, $timeout) {
-    var fs = require("fs"),
-        path = require('path'),
-        mmm = require('mmmagic'),
-        exec = require('child_process').exec,
-        Magic = mmm.Magic,
-        magic = new Magic(mmm.MAGIC_MIME_TYPE),
-        remote = require('electron').remote,
-        Menu = remote.Menu,
-        MenuItem = remote.MenuItem;
+routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $interval, $q) {
+
+    const   fs = require("fs"),
+            path = require('path'),
+            mmm = require('mmmagic'),
+            exec = require('child_process').exec,
+            Magic = mmm.Magic,
+            magic = new Magic(mmm.MAGIC_MIME_TYPE),
+            remote = require('electron').remote,
+            dialog = require('electron').remote.dialog,
+            Menu = remote.Menu,
+            MenuItem = remote.MenuItem;
 
     ///////////////////////////////////////
     // 文件右键菜单
@@ -30,11 +32,17 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', '$timeout', functi
                 })
             }
             else {
-                fs.rmdir($scope.path + obj.name, function(err){
-                    if(err){
-                        throw err;
+                var buttons = ['OK', 'Cancel'];
+                dialog.showMessageBox({type: 'question', title: '删除文件夹', buttons: buttons, message: '确认要删除吗? 此操作不可逆!'}, function(index){
+                    if(index == 0){
+                        exec('rmdir "' + path + '" /S /Q', function(err, stdout, stderr){
+                            if(err || stderr){
+                                dialog.showErrorBox("删除失败",  stdout + stderr);
+                                return;
+                            }
+                            selectedElement.remove();
+                        });
                     }
-                    selectedElement.remove();
                 })
             }
             // 避免前进到不存在的文件夹

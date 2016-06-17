@@ -1,6 +1,5 @@
 const app = require('electron').app;
 const BrowserWindow = require('electron').BrowserWindow;
-
 var mainWindow = null;
 
 
