@@ -111,7 +111,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         }
     }));
 
-    // 粘贴文件或文件夹到此处  // fixme 文件夹粘贴到此处，文件夹拷贝删除后再拷贝的问题!文件夹删除导致拷贝的问题！
+    // 粘贴文件或文件夹到此处  // fixme 文件夹粘贴到此处，文件夹拷贝删除后再拷贝的问题!
     menu.append(new MenuItem({
         label: 'Paste Here',
         click: ()=>{
@@ -121,7 +121,6 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             // 粘贴文件夹
             if($scope.srcType == 'Folder'){
                 // 具体参数配置 todo 可选?覆盖提示?
-                console.log('xcopy "' + $scope.src + '" "' + $scope.path + '\\\\' + $scope.srcName + "_copy" + '" /E /C /Y /H /I');
                 exec('xcopy "' + $scope.src + '" "' + $scope.path + '\\\\' + $scope.srcName + "_copy" + '" /E /C /Y /H /I', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
                     if(err || iconv.decode(stderr, 'GB2312')) {
                         dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
