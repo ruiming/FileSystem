@@ -45,7 +45,7 @@
                 </tr>
             </thead>
             <tbody id="file">
-                <tr ng-repeat="x in files | orderBy:col:desc"  ng-dblclick="forward_folder(x)" ng-if="!_index" value="{{x}}">
+                <tr ng-repeat="x in files | orderBy:col:desc track by $index"  ng-dblclick="forward_folder(x)" ng-if="!_index" value="{{x}}">
                     <td ng-bind="x.name"></td>
                     <td ng-bind="x.mtime | date:'yyyy-MM-dd HH:mm:ss'"></td>    <!--修改时间 修改文件内容-->
                     <td ng-bind="x.type"></td>
