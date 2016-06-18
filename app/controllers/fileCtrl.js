@@ -68,22 +68,22 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             let obj = JSON.parse(selectedElement.attributes.value.nodeValue);
             $scope.src = $scope.path + obj.name;
             $scope.srcType = obj.type;
-            console.log($scope.srcType);
+            $scope.srcName = obj.name;
         }
     }));
 
     // 粘贴文件或文件夹
     menu.append(new MenuItem({
-        label: 'Paste',
+        label: 'Paste Into',
         click: ()=>{
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let obj = JSON.parse(selectedElement.attributes.value.nodeValue);
             $scope.dist = $scope.path + obj.name;
             // 粘贴文件夹
             if($scope.srcType == 'Folder'){
-                console.log("jeje");
-                // 具体参数配置 todo 可选?
-                exec('xcopy "' + $scope.src + '" "' + $scope.dist + '" /E /C /Y /H', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                // 具体参数配置 todo 可选?覆盖提示?
+                console.log('xcopy "' + $scope.src + '" "' + $scope.dist + '\\\\' + $scope.srcName + '" /E /C /Y /H /I');
+                exec('xcopy "' + $scope.src + '" "' + $scope.dist + '\\\\' + $scope.srcName + '" /E /C /Y /H /I', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
                     if(err || iconv.decode(stderr, 'GB2312')) {
                         dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                         return;
@@ -108,7 +108,51 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         }
     }));
 
-    var FILE = document.getElementById("file");
+    // 粘贴文件或文件夹到此处  // fixme 文件夹粘贴到此处，文件夹拷贝删除后再拷贝的问题!文件夹删除导致拷贝的问题！
+    menu.append(new MenuItem({
+        label: 'Paste Here',
+        click: ()=>{
+            // 粘贴文件夹
+            if($scope.srcType == 'Folder'){
+                // 具体参数配置 todo 可选?覆盖提示?
+                console.log('xcopy "' + $scope.src + '" "' + $scope.path + '\\\\' + $scope.srcName + "_copy" + '" /E /C /Y /H /I');
+                exec('xcopy "' + $scope.src + '" "' + $scope.path + '\\\\' + $scope.srcName + "_copy" + '" /E /C /Y /H /I', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                    if(err || iconv.decode(stderr, 'GB2312')) {
+                        dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
+                        return;
+                    }
+                    if(iconv.decode(stdout, 'GB2312')) {
+                        let promise = getFileInfo($scope.srcName + "_copy");
+                        promise.then(function(stat){
+                            $scope.files.push(stat);
+                        });
+                        dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
+                    }
+                });
+            }
+            // 粘贴文件
+            else {
+                let temp = $scope.srcName.split('.');
+                temp[0] += "_copy";
+                $scope.srcName = temp[0] + "." + temp[1];
+                exec('copy "' + $scope.src + '" "' + $scope.path + '\\\\' + $scope.srcName  + '" /Y', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                    if(err || iconv.decode(stderr, 'GB2312')) {
+                        dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
+                        return;
+                    }
+                    if(iconv.decode(stdout, 'GB2312')) {
+                        dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
+                        let promise = getFileInfo($scope.srcName);
+                        promise.then(function(stat){
+                            $scope.files.push(stat);
+                        });
+                    }
+                });
+            }
+        }
+    }));
+
+    let FILE = document.getElementById("file");
     FILE.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         rightClickPosition = {x: e.x, y: e.y};
@@ -146,7 +190,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
 
     // 导航栏跳转
     $scope.turnto = (x) => {
-        var currentPath = $scope.path;
+        let currentPath = $scope.path;
         if(x == "Computer" && currentPath != "Computer") {
             $scope.home();
             return;
@@ -155,7 +199,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             return;
         }
         $scope.path = "";
-        for(var i=0; i<$scope.breadcrumbs.length; i++){
+        for(let i=0; i<$scope.breadcrumbs.length; i++){
             if($scope.breadcrumbs[i] != x){
                 $scope.path += $scope.breadcrumbs[i] + "\\\\";
             }
@@ -275,8 +319,8 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                 $scope.files = [];
                 $scope.breadcrumb();
                 // fixme 读取文件过慢
-                $scope.filenames.forEach((filename) => {
-                    var promise = getFileInfo(filename);
+                $scope.filenames.map((filename) => {
+                    let promise = getFileInfo(filename);
                     promise.then(function(stat){
                         $scope.files.push(stat);
                     });
@@ -297,7 +341,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             $scope.diskStr.pop();
             $scope.diskStr.shift();
             $scope.disks = [];
-            for(var i in $scope.diskStr){
+            for(let i in $scope.diskStr){
                 if($scope.diskStr.hasOwnProperty(i)){
                     if(i%4 == 0){
                         $scope.disk.FileSystem = $scope.diskStr[i];
