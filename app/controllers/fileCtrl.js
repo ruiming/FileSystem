@@ -76,6 +76,9 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     menu.append(new MenuItem({
         label: 'Paste Into',
         click: ()=>{
+            if($scope.srcName == undefined) {
+                return;
+            }
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let obj = JSON.parse(selectedElement.attributes.value.nodeValue);
             $scope.dist = $scope.path + obj.name;
@@ -112,6 +115,9 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     menu.append(new MenuItem({
         label: 'Paste Here',
         click: ()=>{
+            if($scope.srcName == undefined) {
+                return;
+            }
             // 粘贴文件夹
             if($scope.srcType == 'Folder'){
                 // 具体参数配置 todo 可选?覆盖提示?
