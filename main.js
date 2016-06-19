@@ -1,16 +1,15 @@
-const app = require('electron').app;
-const BrowserWindow = require('electron').BrowserWindow;
+const {app, BrowserWindow} = require('electron');
 var mainWindow = null;
 
 
 // 若所有窗口关闭，则退出
-app.on('window-all-closed', function() {
+app.on('window-all-closed', () => {
     if(process.platform != 'darwin') {
         app.quit();
     }
 });
 
-app.on('ready', function() {
+app.on('ready', () => {
     // 创建浏览器窗口
     mainWindow = new BrowserWindow({
         width: 1024,
@@ -26,7 +25,7 @@ app.on('ready', function() {
     mainWindow.openDevTools();
     
     // 当window被关闭，触发下面事件
-    mainWindow.on('closed', function() {
+    mainWindow.on('closed', () => {
         mainWindow = null;
     });
     

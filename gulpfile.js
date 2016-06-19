@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var plumber = require('gulp-plumber');
 var sass = require('gulp-sass');
 
-gulp.task('sass', function(){
+gulp.task('sass', () => {
     gulp.src('static/scss/*.scss')
         .pipe(plumber())
         .pipe(sass())
