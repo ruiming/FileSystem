@@ -44,7 +44,8 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                 let buttons = ['OK', 'Cancel'];
                 dialog.showMessageBox({type: 'question', title: '删除文件夹', buttons: buttons, message: '确认要删除吗? 此操作不可逆!'}, (index) => {
                     if(index == 0){
-                        exec('rmdir "' + path + '" /S /Q', {encoding: 'GB2312'}, (err, stdout, stderr) => {
+                        console.log(`rmdir ${path} /S /Q`);
+                        exec(`rmdir "${path}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
                             if(err || iconv.decode(stderr, 'GB2312')){
                                 dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
                                 return;
@@ -85,8 +86,8 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             // 粘贴文件夹
             if($scope.srcType == 'Folder'){
                 // 具体参数配置 todo 可选?覆盖提示?
-                console.log('xcopy "' + $scope.src + '" "' + $scope.dist + '\\\\' + $scope.srcName + '" /E /C /Y /H /I');
-                exec('xcopy "' + $scope.src + '" "' + $scope.dist + '\\\\' + $scope.srcName + '" /E /C /Y /H /I', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                console.log(`xcopy "${$scope.src}" "${$scope.dist}\\\\${$scope.srcName}" /E /C /Y /H /I`);
+                exec(`xcopy "${$scope.src}" "${$scope.dist}\\\\${$scope.srcName}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
                     if(err || iconv.decode(stderr, 'GB2312')) {
                         dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                         return;
@@ -98,7 +99,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             }
             // 粘贴文件
             else {
-                exec('copy "' + $scope.src + '" "' + $scope.dist + '" /Y', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                exec(`copy "${$scope.src}" "${$scope.dist}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
                     if(err || iconv.decode(stderr, 'GB2312')) {
                         dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                         return;
@@ -121,7 +122,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             // 粘贴文件夹
             if($scope.srcType == 'Folder'){
                 // 具体参数配置 todo 可选?覆盖提示?
-                exec('xcopy "' + $scope.src + '" "' + $scope.path + '\\\\' + $scope.srcName + "_copy" + '" /E /C /Y /H /I', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                exec(`xcopy "${$scope.src}" "${$scope.path}\\\\${$scope.srcName}_copy" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
                     if(err || iconv.decode(stderr, 'GB2312')) {
                         dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                         return;
@@ -140,7 +141,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                 let temp = $scope.srcName.split('.');
                 temp[0] += "_copy";
                 $scope.srcName = temp[0] + "." + temp[1];
-                exec('copy "' + $scope.src + '" "' + $scope.path + '\\\\' + $scope.srcName  + '" /Y', {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                exec(`copy "${$scope.src}" "${$scope.path}\\\\${$scope.srcName}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
                     if(err || iconv.decode(stderr, 'GB2312')) {
                         dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                         return;
