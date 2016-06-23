@@ -18,6 +18,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     ///////////////////////////////////////
     // @文件右键菜单
     let rightClickPosition = null;
+    var selectedIndex = 0;             // 记录此时选中的ID
     const menu = new Menu();
 
     // 删除文件或文件夹     fixme 文件夹删除
@@ -25,9 +26,9 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         label: 'Delete',
         click: () => {
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
-            let obj = JSON.parse(selectedElement.attributes.value.nodeValue);
-            let path = $scope.path + obj.name;
-            if(obj.type != "Folder"){
+            let id = JSON.parse(selectedElement.attributes.id.nodeValue);
+            let path = $scope.path + $scope.files[id].name;
+            if($scope.files[id].isFile()){
                 let buttons = ['OK', 'Cancel'];
                 dialog.showMessageBox({type: 'question', title: '删除文件', buttons: buttons, message: '确认要删除吗? 此操作不可逆!'}, (index) => {
                     if(index == 0){
@@ -35,7 +36,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                             if (err) {
                                 throw err;
                             }
-                            selectedElement.remove();
+                            $scope.files.splice($scope.files.indexOf($scope.files[id]), 1);
                         })
                     }
                 });
@@ -50,7 +51,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
                                 dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
                                 return;
                             }
-                            selectedElement.remove();
+                            $scope.files.splice($scope.files.indexOf($scope.files[id]), 1);
                         });
                     }
                 })
@@ -66,36 +67,40 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         label: 'Copy',
         click: ()=>{
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
-            let obj = JSON.parse(selectedElement.attributes.value.nodeValue);
-            $scope.src = $scope.path + obj.name;
-            $scope.srcType = obj.type;
-            $scope.srcName = obj.name;
+            let id = JSON.parse(selectedElement.attributes.id.nodeValue);
+            $scope.src = $scope.path + $scope.files[id].name;
+            $scope.srcType = $scope.files[id].type;
+            $scope.srcName = $scope.files[id].name;
+            selectedIndex = id;             // todo
         }
     }));
 
-    // 粘贴文件或文件夹
+    // 粘贴文件或文件夹到里面，由于可能返回上层，当前文件列表可能变化，所以不能使用index操控
     menu.append(new MenuItem({
         label: 'Paste Into',
         click: ()=>{
-            if($scope.srcName == undefined) {
-                return;
-            }
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
-            let obj = JSON.parse(selectedElement.attributes.value.nodeValue);
-            $scope.dist = $scope.path + obj.name;
+            let id = JSON.parse(selectedElement.attributes.id.nodeValue);
+            let buttons = ['OK', 'Cancel'];
+            $scope.dist = $scope.path + $scope.files[id].name;          // 要粘贴的路径
             // 粘贴文件夹
             if($scope.srcType == 'Folder'){
                 // 具体参数配置 todo 可选?覆盖提示?
-                console.log(`xcopy "${$scope.src}" "${$scope.dist}\\\\${$scope.srcName}" /E /C /Y /H /I`);
-                exec(`xcopy "${$scope.src}" "${$scope.dist}\\\\${$scope.srcName}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                    if(err || iconv.decode(stderr, 'GB2312')) {
-                        dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                        return;
-                    }
-                    if(iconv.decode(stdout, 'GB2312')) {
-                        dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                    }
-                });
+                if(fs.existsSync($scope.dist + "\\\\" + $scope.srcName)){
+                    dialog.showMessageBox({type: 'question', title: '重名文件夹存在', buttons: buttons, message: '重名文件夹存在，继续复制会对重名文件覆盖，是否继续?'}, index => {
+                        if(index == 0){
+                            exec(`xcopy "${$scope.src}" "${$scope.dist}\\\\${$scope.srcName}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                                if(err || iconv.decode(stderr, 'GB2312')) {
+                                    dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
+                                    return;
+                                }
+                                if(iconv.decode(stdout, 'GB2312')) {
+                                    dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
+                                }
+                            });
+                        }
+                    });
+                }
             }
             // 粘贴文件
             else {
@@ -112,23 +117,20 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         }
     }));
 
-    // 粘贴文件或文件夹到此处  // fixme 文件夹粘贴到此处，文件夹拷贝删除后再拷贝的问题!
+    // 粘贴文件或文件夹到此处  // fixme 判断文件已存在和覆盖的问题
     menu.append(new MenuItem({
         label: 'Paste Here',
-        click: ()=>{
-            if($scope.srcName == undefined) {
-                return;
-            }
+        click: () => {
             // 粘贴文件夹
             if($scope.srcType == 'Folder'){
-                // 具体参数配置 todo 可选?覆盖提示?
+                // 具体参数配置 fixme 重名文件夹，覆盖问题
                 exec(`xcopy "${$scope.src}" "${$scope.path}\\\\${$scope.srcName}_copy" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
                     if(err || iconv.decode(stderr, 'GB2312')) {
                         dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                         return;
                     }
                     if(iconv.decode(stdout, 'GB2312')) {
-                        let promise = getFileInfo($scope.srcName + "_copy");
+                        let promise = getFileInfo($scope.srcName + '-' + Date.parse(new Date()));           // fixme 时间戳作为重命名
                         promise.then(function(stat){
                             $scope.files.push(stat);
                         });
@@ -139,7 +141,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             // 粘贴文件
             else {
                 let temp = $scope.srcName.split('.');
-                temp[0] += "_copy";
+                temp[0] += '-' + Date.parse(new Date());
                 $scope.srcName = temp[0] + "." + temp[1];
                 exec(`copy "${$scope.src}" "${$scope.path}\\\\${$scope.srcName}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
                     if(err || iconv.decode(stderr, 'GB2312')) {
@@ -159,7 +161,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
     }));
 
     let FILE = document.getElementById("file");
-    FILE.addEventListener('contextmenu', (e) => {
+    FILE.addEventListener('contextmenu', e => {
         e.preventDefault();
         rightClickPosition = {x: e.x, y: e.y};
         menu.popup(remote.getCurrentWindow())
