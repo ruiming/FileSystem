@@ -1,7 +1,5 @@
 routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', 'File', function($scope, $interval, $q, File) {
 
-    ///////////////////////////////////////
-    // @引入模块
     const   fs = require("fs"),
             path = require('path'),
             mmm = require('mmmagic'),
@@ -9,14 +7,10 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', 'File', function($
             Magic = mmm.Magic,
             magic = new Magic(mmm.MAGIC_MIME_TYPE),
             remote = require('electron').remote,
-            dialog = require('electron').remote.dialog,
             Menu = remote.Menu,
             MenuItem = remote.MenuItem,
             iconv = require('iconv-lite');
-
-
-    ///////////////////////////////////////
-    // @文件右键菜单
+    
     let rightClickPosition = null;
     var selectedIndex = 0;             // 记录此时选中的ID
     const menu = new Menu();
@@ -27,33 +21,21 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', 'File', function($
         click: () => {
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
-            let path = $scope.path + $scope.files[id].name;
+            let src = $scope.path + $scope.files[id].name;
             if($scope.files[id].isFile()){
-                let buttons = ['OK', 'Cancel'];
-                dialog.showMessageBox({type: 'question', title: '删除文件', buttons: buttons, message: '确认要删除吗? 此操作不可逆!'}, (index) => {
-                    if(index == 0){
-                        fs.unlink(path, (err) => {
-                            if (err) {
-                                throw err;
-                            }
-                            $scope.files.splice($scope.files.indexOf($scope.files[id]), 1);
-                        })
-                    }
-                });
+                let promise = File.deleteFile(src);
+                promise.then(function(){
+                    $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
+                }, function(err){
+                    console.log(err);
+                })
             }
             else {
-                let buttons = ['OK', 'Cancel'];
-                dialog.showMessageBox({type: 'question', title: '删除文件夹', buttons: buttons, message: '确认要删除吗? 此操作不可逆!'}, (index) => {
-                    if(index == 0){
-                        console.log(`rmdir ${path} /S /Q`);
-                        exec(`rmdir "${path}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
-                            if(err || iconv.decode(stderr, 'GB2312')){
-                                dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
-                                return;
-                            }
-                            $scope.files.splice($scope.files.indexOf($scope.files[id]), 1);
-                        });
-                    }
+               let promise = File.deleteFolder(src);
+                promise.then(function(){
+                    $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
+                }, function(err){
+                    console.log(err);
                 })
             }
             if(path == $scope.temp[$scope.temp.length-1] || path + "\\\\" == $scope.temp[$scope.temp.length-1]){
@@ -92,7 +74,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', 'File', function($
             }
         }
     }));
-    
+
     // 粘贴文件或文件夹到此处
     menu.append(new MenuItem({
         label: 'Paste Here',

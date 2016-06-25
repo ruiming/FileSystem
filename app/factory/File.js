@@ -27,7 +27,7 @@ routeApp.factory('File', ($q) => {
             }
         }
     }
-
+    
     /**
      * 生成一个目录副本路径
      * @param to
@@ -40,7 +40,7 @@ routeApp.factory('File', ($q) => {
             }
         }
     }
-
+    
     /**
      * 粘贴文件
      * @param src   源路径
@@ -81,7 +81,7 @@ routeApp.factory('File', ($q) => {
             }
         })
     }
-
+    
     /**
      * 粘贴文件夹
      * @param src   源路径
@@ -123,6 +123,48 @@ routeApp.factory('File', ($q) => {
         })
     }
 
+    function deleteFile(src) {
+        let buttons = ['OK', 'Cancel'];
+        let title = '删除文件';
+        let message = '确认要删除吗? 此操作不可逆!';
+        return $q(function(resolve, reject){
+            dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
+                if(index == 0){
+                    fs.unlink(src, (err) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        else {
+                            resolve();
+                        }
+                    })
+                }
+                resolve();
+            });
+        });
+    }
+    
+    function deleteFolder(src) {
+        let buttons = ['OK', 'Cancel'];
+        let title = '删除文件夹';
+        let message = '确认要删除吗? 此操作不可逆!';
+        return $q(function(resolve, reject){
+            dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
+                if(index == 0){
+                    exec(`rmdir "${src}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
+                        if(err || iconv.decode(stderr, 'GB2312')){
+                            dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
+                            reject(iconv.decode(stderr, 'GB2312'));
+                        }
+                        else {
+                            resolve();
+                        }
+                    });
+                }
+            });
+        });
+    }
+    
     /**
      * 调用xcopy来拷贝文件夹
      * @param src   源路径
@@ -206,7 +248,9 @@ routeApp.factory('File', ($q) => {
 
     return {
         copyFile: copyFile,
-        copyFolder: copyFolder
+        copyFolder: copyFolder,
+        deleteFile: deleteFile,
+        deleteFolder: deleteFolder
     };
 
 });
