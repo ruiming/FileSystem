@@ -103,12 +103,17 @@ routeApp.factory('File', ($q) => {
                     let title = '重名文件夹存在';
                     let message = '重名文件夹存在，继续粘贴将覆盖，是否继续?';
                     dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
-                        let promise = xcopy(src, dist);
-                        promise.then(function(result){
-                            resolve(result);
-                        }, function(err){
-                            reject(err);
-                        });
+                        if(index == 0) {
+                            let promise = xcopy(src, dist);
+                            promise.then(function(result){
+                                resolve(result);
+                            }, function(err){
+                                reject(err);
+                            });
+                        }
+                        else {
+                            resolve();
+                        }
                     })
                 }
                 else {
@@ -225,22 +230,40 @@ routeApp.factory('File', ($q) => {
 
     /**
      * 获取文件或文件夹的信息
-     * @param dist  文件或文件夹的路径
+     * @param src  文件或文件夹的路径
      * @returns {*}
      */
-    function getFileInfo(dist) {
+    function getFileInfo(src) {
         return $q(function(resolve, reject) {
-            fs.stat(dist, function(err, stat){
+            fs.stat(src, function(err, stat){
                 if(err){
                     reject(err);
                 }
                 else {
-                    let temp = dist.split('\\\\');
+                    let temp = src.split('\\\\');
                     stat.name = temp[temp.length-1];
                     resolve(stat);
                 }
             });
         });
+    }
+
+    /**
+     * 读取文件夹列表
+     * @param src
+     * @returns {*}
+     */
+    function readFolder(src) {
+        return $q(function(resolve, reject){
+            fs.readdir(src, function(err, files){
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(files);
+                }
+            })
+        })
     }
 
     /**
@@ -260,7 +283,9 @@ routeApp.factory('File', ($q) => {
         copyFile: copyFile,
         copyFolder: copyFolder,
         deleteFile: deleteFile,
-        deleteFolder: deleteFolder
+        deleteFolder: deleteFolder,
+        readFolder: readFolder,
+        getFileInfo: getFileInfo
     };
 
 });

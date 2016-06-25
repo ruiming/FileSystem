@@ -2,13 +2,13 @@
     <header>文件管理器</header>
     <section class="file-center">
         <div class="action">
-            <button class="btn btn-info" ng-click="home()" ng-disabled="_index">
+            <button class="btn btn-info" ng-click="home()" ng-disabled="path == 'Computer'">
                 <i class="material-icons">home</i>
             </button>
-            <button class="btn btn-info" ng-click="Hbackward()" ng-disabled="history.length==1">
+            <button class="btn btn-info" ng-click="Hbackward()" ng-disabled="backwardStore.length==1">
                 <i class="material-icons">keyboard_arrow_left</i>
             </button>
-            <button class="btn btn-info" ng-click="Hforward()" ng-disabled="temp.length==0">
+            <button class="btn btn-info" ng-click="Hforward()" ng-disabled="forwardStore.length==0">
                 <i class="material-icons">keyboard_arrow_right</i>
             </button>
         </div>
@@ -17,7 +17,7 @@
             <li><a href="javascript:void(0)" ng-click="turnto('Computer')">Computer</a></li>
             <li ng-repeat="bread in breadcrumbs track by $index" ng-if="bread != 'Computer'"><a href="javascript:void(0)" ng-click="turnto(bread)">{{bread}}</a></li>
         </ul>
-        <table ng-show="_index">
+        <table ng-show="path == 'Computer'">
             <thead>
                 <tr class="disk-menu">
                     <th>Name</th>
@@ -35,7 +35,7 @@
                 </tr>
             </tbody>
         </table>
-        <table ng-show="!_index">
+        <table ng-show="path != 'Computer'">
             <thead>
                 <tr class="file-menu">
                     <th ng-click="col='name';desc=!desc">Name</th>
@@ -45,7 +45,7 @@
                 </tr>
             </thead>
             <tbody id="file">
-                <tr ng-init="index = $index" ng-repeat="x in files | orderBy:col:desc track by $index"  ng-dblclick="forward_folder(x)" ng-if="!_index" id={{index}}>
+                <tr ng-init="index = $index" ng-repeat="x in files | orderBy:col:desc track by $index"  ng-dblclick="forward_folder(x)" ng-if="path != 'Computer'" id={{index}}>
                     <td ng-bind="x.name"></td>
                     <td ng-bind="x.atime | date:'yyyy-MM-dd HH:mm:ss'"></td>    <!--修改时间 修改文件内容-->
                     <td ng-bind="x.type"></td>
