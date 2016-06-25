@@ -123,6 +123,11 @@ routeApp.factory('File', ($q) => {
         })
     }
 
+    /**
+     * 删除文件
+     * @param src
+     * @returns {*}
+     */
     function deleteFile(src) {
         let buttons = ['OK', 'Cancel'];
         let title = '删除文件';
@@ -143,7 +148,12 @@ routeApp.factory('File', ($q) => {
             });
         });
     }
-    
+
+    /**
+     * 删除文件夹
+     * @param src   路径
+     * @returns {*}
+     */
     function deleteFolder(src) {
         let buttons = ['OK', 'Cancel'];
         let title = '删除文件夹';
