@@ -18,7 +18,7 @@ routeApp.factory('File', ($q) => {
 
     let buttons = ['OK', 'Cancel'];
 
-    // 副本添加后缀
+    // 文件副本添加后缀
     function duplicate(to) {
         let dist = to.split('.');
         let origin = dist[dist.length-2];
@@ -28,6 +28,15 @@ routeApp.factory('File', ($q) => {
             let checkDist = dist.join('.');
             if(!fs.existsSync(checkDist)){
                 return checkDist;
+            }
+        }
+    }
+
+    // 目录副本添加后缀
+    function duplicateFolder(to) {
+        for(let i of range(1,100)){
+            if(!fs.existsSync(to + '[' + i + ']')) {
+                return to + '[' + i + ']';
             }
         }
     }
@@ -68,6 +77,61 @@ routeApp.factory('File', ($q) => {
         })
     }
 
+    // 复制粘贴文件夹
+    function copyFolder(src, dist) {
+        return $q(function(resolve, reject) {
+            if(src == dist) {
+                let promise = xcopy(src, duplicateFolder(dist));
+                promise.then(function(result){
+                    resolve(result);
+                }, function(err){
+                    reject(err);
+                });
+            }
+            else {
+                if(fs.existsSync(dist)){
+                    let title = '重名文件夹存在';
+                    let message = '重名文件夹存在，继续粘贴将覆盖，是否继续?';
+                    dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
+                        let promise = xcopy(src, dist);
+                        promise.then(function(result){
+                            resolve(result);
+                        }, function(err){
+                            reject(err);
+                        });
+                    })
+                }
+                else {
+                    let promise = xcopy(src, dist);
+                    promise.then(function(result){
+                        resolve(result);
+                    }, function(err){
+                        reject(err);
+                    });
+                }
+            }
+        })
+    }
+
+    // 执行拷贝文件夹
+    function xcopy(src, dist) {
+        return $q(function(resolve, reject) {
+            exec(`xcopy "${src}" "${dist}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+                if(err || iconv.decode(stderr, 'GB2312')) {
+                    dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
+                    reject(iconv.decode(stderr, 'GB2312'));
+                }
+                else {
+                    dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
+                    let promise = getFileInfo(dist);
+                    promise.then(function(stat){
+                        resolve(stat);
+                    });
+                }
+            });
+        })
+    }
+
     // 执行拷贝文件
     function copy(src, dist) {
         return $q(function(resolve, reject) {
@@ -86,6 +150,7 @@ routeApp.factory('File', ($q) => {
             });
         })
     }
+
 
     // 获取文件信息
     function getFileInfo(dist) {
@@ -112,7 +177,8 @@ routeApp.factory('File', ($q) => {
     }
 
     return {
-        copyFile: copyFile
+        copyFile: copyFile,
+        copyFolder: copyFolder
     };
 
 });

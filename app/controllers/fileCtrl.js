@@ -75,141 +75,50 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', 'File', function($
         }
     }));
 
-    // 粘贴文件或文件夹到里面，由于可能返回上层，当前文件列表可能变化，所以不能使用index操控
+    // 粘贴文件或文件夹到里面
     menu.append(new MenuItem({
         label: 'Paste Into',
         click: ()=>{
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
-            let buttons = ['OK', 'Cancel'];
-            $scope.dist = $scope.path + $scope.files[id].name;          // 要粘贴的路径
-            // 粘贴文件夹到某个文件夹里面
-            if($scope.srcType == 'Folder'){
-                // 具体参数配置，重名文件夹覆盖提示
-                if(fs.existsSync($scope.dist + "\\\\" + $scope.srcName)){
-                    dialog.showMessageBox({type: 'question', title: '重名文件夹存在', buttons: buttons, message: '重名文件夹存在，继续复制会对重名文件覆盖，是否继续?'}, index => {
-                        if(index == 0){
-                            exec(`xcopy "${$scope.src}" "${$scope.dist}\\\\${$scope.srcName}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                                if(err || iconv.decode(stderr, 'GB2312')) {
-                                    dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                                    return;
-                                }
-                                if(iconv.decode(stdout, 'GB2312')) {
-                                    dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                                }
-                            });
-                        }
-                    });
-                }
-                else {
-                    exec(`xcopy "${$scope.src}" "${$scope.dist}\\\\${$scope.srcName}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                        if(err || iconv.decode(stderr, 'GB2312')) {
-                            dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                            return;
-                        }
-                        if(iconv.decode(stdout, 'GB2312')) {
-                            dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                        }
-                    });
-                }
-
+            $scope.dist = $scope.path + $scope.files[id].name;
+            if($scope.srcType == 'Folder') {
+                let promise = File.copyFolder($scope.src, $scope.dist + "\\\\" + $scope.srcName);
+                promise.then();
             }
-            // 粘贴文件到某个文件夹里面
             else {
-                if(fs.existsSync($scope.dist + "\\\\" + $scope.srcName)){           // 存在重名文件，提示覆盖
-                    dialog.showMessageBox({type: 'question', title: '重名文件存在', buttons: buttons, message: '重名文件已存在，是否覆盖?'}, index => {
-                        if(index == 0) {
-                            exec(`copy "${$scope.src}" "${$scope.dist}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                                if(err || iconv.decode(stderr, 'GB2312')) {
-                                    dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                                    return;
-                                }
-                                if(iconv.decode(stdout, 'GB2312')) {
-                                    dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                                }
-                            });
-                        }
-                    })
-                }
-                else {
-                    exec(`copy "${$scope.src}" "${$scope.dist}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                        if(err || iconv.decode(stderr, 'GB2312')) {
-                            dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                            return;
-                        }
-                        if(iconv.decode(stdout, 'GB2312')) {
-                            dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                        }
-                    });
-                }
+                let promise = File.copyFile($scope.src, $scope.dist);
+                promise.then();
             }
         }
     }));
 
-    // todo 检查paste into 问题，修复paste here问题
-    // 粘贴文件或文件夹到此处  // fixme 判断文件已存在和覆盖的问题
+
+    // 粘贴文件或文件夹到此处
     menu.append(new MenuItem({
         label: 'Paste Here',
         click: () => {
-            // 粘贴文件夹
-            let buttons = ['OK', 'Cancel'];
-            console.log($scope.srcType);
             if($scope.srcType == 'Folder') {
-                // 具体参数配置 fixme 重名文件夹，覆盖问题
-                if($scope.src == $scope.path + $scope.srcName) {                 // 同路径下粘贴，改名创建新文件夹
-                    exec(`xcopy "${$scope.src}" "${$scope.path}${$scope.srcName}-${Date.parse(new Date())}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                        if(err || iconv.decode(stderr, 'GB2312')) {
-                            dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                            return;
+                let promise = File.copyFolder($scope.src, $scope.path + $scope.srcName);
+                promise.then(function(result){
+                    for(let i in $scope.files) {
+                        if($scope.files.hasOwnProperty(i)){
+                            if ($scope.files[i].name == result.name) {
+                                $scope.files[i] = result;
+                                return 1;
+                            }
                         }
-                        if(iconv.decode(stdout, 'GB2312')) {
-                            let promise = getFileInfo($scope.srcName + '-' + Date.parse(new Date()));           // fixme 时间戳作为重命名
-                            promise.then(function(stat){
-                                $scope.files.push(stat);
-                            });
-                            dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                        }
-                    });
-                }
-                else {                                          // 不同路径下粘贴，判断是否有重名文件夹名存在
-                    console.log(`${$scope.path}${$scope.srcName}`);
-                    if(fs.existsSync($scope.path + $scope.srcName)) {           // 存在同名文件夹
-                        dialog.showMessageBox({type: 'question', title: '重名文件夹存在', buttons: buttons, message: '重名文件夹存在，继续复制会对重名文件覆盖，是否继续?'}, index => {
-                            if(index == 0) {                    // 粘贴到不同路径下，进行覆盖
-                                exec(`xcopy "${$scope.src}" "${$scope.path}${$scope.srcName}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                                    if(err || iconv.decode(stderr, 'GB2312')) {
-                                        dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                                        return;
-                                    }
-                                    if(iconv.decode(stdout, 'GB2312')) {
-                                        dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                                    }
-                                });
-                            }
-                        });
                     }
-                    else {          // 不存在同名文件夹
-                        exec(`xcopy "${$scope.src}" "${$scope.path}${$scope.srcName}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                            if(err || iconv.decode(stderr, 'GB2312')) {
-                                dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                                return;
-                            }
-                            if(iconv.decode(stdout, 'GB2312')) {
-                                let promise = getFileInfo($scope.srcName);
-                                promise.then(function(stat){
-                                    $scope.files.push(stat);
-                                });
-                                dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                            }
-                        });
+                    return result;
+                }).then(function(result){
+                    if(result !== 1) {
+                        $scope.files.push(result);
                     }
-                }
+                })
             }
-            // 粘贴文件 todo 以上均处理，待验证
             else {
                 let promise = File.copyFile($scope.src, $scope.path + $scope.srcName);
                 promise.then(function(result){
-                    console.log(result);
                     for(let i in $scope.files) {
                         if($scope.files.hasOwnProperty(i)){
                             if ($scope.files[i].name == result.name) {
