@@ -92,8 +92,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', 'File', function($
             }
         }
     }));
-
-
+    
     // 粘贴文件或文件夹到此处
     menu.append(new MenuItem({
         label: 'Paste Here',

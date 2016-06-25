@@ -1,24 +1,20 @@
+/**
+ * File Factory
+ * 提供Windows下文件或文件夹的一些操作
+ */
 routeApp.factory('File', ($q) => {
-
-    // 文件操作函数封装
-    // src  是要拷贝的文件的具体路径（包含文件名）
-    // dist 是要粘贴的具体路径（包含文件名）
-
     const   fs = require("fs"),
             path = require('path'),
-            mmm = require('mmmagic'),
             exec = require('child_process').exec,
-            Magic = mmm.Magic,
-            magic = new Magic(mmm.MAGIC_MIME_TYPE),
-            remote = require('electron').remote,
             dialog = require('electron').remote.dialog,
-            Menu = remote.Menu,
-            MenuItem = remote.MenuItem,
             iconv = require('iconv-lite');
+    const   buttons = ['OK', 'Cancel'];
 
-    let buttons = ['OK', 'Cancel'];
-
-    // 文件副本添加后缀
+    /**
+     * 生成一个文件副本路径
+     * @param to 目的路径
+     * @returns {string}
+     */
     function duplicate(to) {
         let dist = to.split('.');
         let origin = dist[dist.length-2];
@@ -32,7 +28,11 @@ routeApp.factory('File', ($q) => {
         }
     }
 
-    // 目录副本添加后缀
+    /**
+     * 生成一个目录副本路径
+     * @param to
+     * @returns {string}
+     */
     function duplicateFolder(to) {
         for(let i of range(1,100)){
             if(!fs.existsSync(to + '[' + i + ']')) {
@@ -41,7 +41,12 @@ routeApp.factory('File', ($q) => {
         }
     }
 
-    // 复制粘贴文件
+    /**
+     * 粘贴文件
+     * @param src   源路径
+     * @param dist  目的路径
+     * @returns {*}
+     */
     function copyFile(src, dist) {
         return $q(function(resolve, reject) {
             if(src == dist) {
@@ -77,7 +82,12 @@ routeApp.factory('File', ($q) => {
         })
     }
 
-    // 复制粘贴文件夹
+    /**
+     * 粘贴文件夹
+     * @param src   源路径
+     * @param dist  目的路径
+     * @returns {*}
+     */
     function copyFolder(src, dist) {
         return $q(function(resolve, reject) {
             if(src == dist) {
@@ -113,7 +123,12 @@ routeApp.factory('File', ($q) => {
         })
     }
 
-    // 执行拷贝文件夹
+    /**
+     * 调用xcopy来拷贝文件夹
+     * @param src   源路径
+     * @param dist  目的路径
+     * @returns {*}
+     */
     function xcopy(src, dist) {
         return $q(function(resolve, reject) {
             exec(`xcopy "${src}" "${dist}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
@@ -132,7 +147,12 @@ routeApp.factory('File', ($q) => {
         })
     }
 
-    // 执行拷贝文件
+    /**
+     * 调用copy来拷贝文件
+     * @param src   源路径
+     * @param dist  目的路径
+     * @returns {*}
+     */
     function copy(src, dist) {
         return $q(function(resolve, reject) {
             exec(`copy "${src}" "${dist}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
@@ -151,8 +171,11 @@ routeApp.factory('File', ($q) => {
         })
     }
 
-
-    // 获取文件信息
+    /**
+     * 获取文件或文件夹的信息
+     * @param dist  文件或文件夹的路径
+     * @returns {*}
+     */
     function getFileInfo(dist) {
         return $q(function(resolve, reject) {
             fs.stat(dist, function(err, stat){
@@ -168,7 +191,12 @@ routeApp.factory('File', ($q) => {
         });
     }
 
-    // 辅助函数
+    /**
+     * 生成可遍历的连续数字
+     * @param start
+     * @param count
+     * @returns {*|Array|{}}
+     */
     function range(start, count) {
         return Array.apply(0, Array(count))
             .map(function (element, index) {
