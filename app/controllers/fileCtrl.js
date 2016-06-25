@@ -1,4 +1,4 @@
-routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $interval, $q) {
+routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', 'File', function($scope, $interval, $q, File) {
 
     ///////////////////////////////////////
     // @引入模块
@@ -153,6 +153,7 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
         click: () => {
             // 粘贴文件夹
             let buttons = ['OK', 'Cancel'];
+            console.log($scope.srcType);
             if($scope.srcType == 'Folder') {
                 // 具体参数配置 fixme 重名文件夹，覆盖问题
                 if($scope.src == $scope.path + $scope.srcName) {                 // 同路径下粘贴，改名创建新文件夹
@@ -206,45 +207,23 @@ routeApp.controller('fileCtrl', ['$scope', '$interval', '$q', function($scope, $
             }
             // 粘贴文件 todo 以上均处理，待验证
             else {
-                if($scope.src == $scope.path) {         // 同路径粘贴，创建新文件
-                    let temp = $scope.srcName.split('.');
-                    temp[0] += '-' + Date.parse(new Date());        // 文件含有.的复制问题
-                    $scope.srcName = temp[0] + "." + temp[1];
-                    exec(`copy "${$scope.src}" "${$scope.path}\\\\${$scope.srcName}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                        if(err || iconv.decode(stderr, 'GB2312')) {
-                            dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                            return;
-                        }
-                        if(iconv.decode(stdout, 'GB2312')) {
-                            dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                            let promise = getFileInfo($scope.srcName);
-                            promise.then(function(stat){
-                                $scope.files.push(stat);
-                            });
-                        }
-                    });
-                }
-                else {
-                    if(fs.existsSync($scope.path + "\\\\" + $scope.srcName)){       // 存在重名文件
-                        dialog.showMessageBox({type: 'question', title: '重名文件存在', buttons: buttons, message: '重名文件存在，继续复制会对重名文件覆盖，是否继续?'}, index => {
-                            if(index == 0) {
-                                exec(`copy "${$scope.src}" "${$scope.path}\\\\${$scope.srcName}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
-                                    if(err || iconv.decode(stderr, 'GB2312')) {
-                                        dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
-                                        return;
-                                    }
-                                    if(iconv.decode(stdout, 'GB2312')) {
-                                        dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                                        let promise = getFileInfo($scope.srcName);
-                                        promise.then(function(stat){
-                                            $scope.files.push(stat);
-                                        });
-                                    }
-                                });
+                let promise = File.copyFile($scope.src, $scope.path + $scope.srcName);
+                promise.then(function(result){
+                    console.log(result);
+                    for(let i in $scope.files) {
+                        if($scope.files.hasOwnProperty(i)){
+                            if ($scope.files[i].name == result.name) {
+                                $scope.files[i] = result;
+                                return 1;
                             }
-                        })
+                        }
                     }
-                }
+                    return result;
+                }).then(function(result){
+                    if(result !== 1) {
+                        $scope.files.push(result);
+                    }
+                })
             }
         }
     }));
