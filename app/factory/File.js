@@ -241,12 +241,25 @@ routeApp.factory('File', ($q) => {
                 }
                 else {
                     let temp = src.split('\\\\');
+                    let type = 'unknown';
+                    let seq = temp[temp.length-1].split('.');
+                    let mime = seq[seq.length - 1];
                     stat.name = temp[temp.length-1];
+                    if(stat.isDirectory()){
+                        type = 'folder'
+                    }
+                    else if(FileTypeIcon.hasOwnProperty(mime)){
+                        type = mime;
+                    }
+                    stat.type = FileTypeIcon[type].type;
+                    stat.src = FileTypeIcon[type].src;
                     resolve(stat);
                 }
             });
         });
     }
+
+    
 
     /**
      * 读取文件夹列表

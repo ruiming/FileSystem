@@ -20,6 +20,7 @@
         <table ng-show="path == 'Computer'">
             <thead>
                 <tr class="disk-menu">
+                    <th></th>
                     <th>Name</th>
                     <th>FileSystem</th>
                     <th>FreeSpace</th>
@@ -28,6 +29,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="x in disks"  ng-dblclick="forward(x.Name)">
+                    <td><img ng-src="{{x.src}}"</td>
                     <td>{{x.Name}}</td>
                     <td>{{x.FileSystem}}</td>
                     <td>{{x.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</td>
@@ -38,6 +40,7 @@
         <table ng-show="path != 'Computer'">
             <thead>
                 <tr class="file-menu">
+                    <th></th>
                     <th ng-click="col='name';desc=!desc">Name</th>
                     <th ng-click="col='atime';desc=!desc">Atime</th>
                     <th ng-click="col='type';desc=!desc">Type</th>
@@ -46,6 +49,7 @@
             </thead>
             <tbody id="file">
                 <tr ng-init="index = $index" ng-repeat="x in files | orderBy:col:desc track by $index"  ng-dblclick="forward_folder(x)" ng-if="path != 'Computer'" id={{index}}>
+                    <td><img ng-src="{{x.src}}"></td>
                     <td ng-bind="x.name"></td>
                     <td ng-bind="x.atime | date:'yyyy-MM-dd HH:mm:ss'"></td>    <!--修改时间 修改文件内容-->
                     <td ng-bind="x.type"></td>

@@ -1,3 +1,7 @@
+/**
+ * System Factory
+ * 提供Windows下获取系统信息如固定磁盘分区，CPU负载等功能
+ */
 routeApp.factory('System', ($q) => {
     const exec = require('child_process').exec;
 
@@ -31,6 +35,8 @@ routeApp.factory('System', ($q) => {
                             }
                             else if(i%4 == 3){
                                 disk.Size = diskStr[i];
+                                disk.src = FileTypeIcon['disk'].src;
+                                disk.type = FileTypeIcon['disk'].type;
                                 disks.push(disk);
                                 disk = {};
                             }
