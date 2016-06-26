@@ -1,14 +1,9 @@
-routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http, $scope, $interval){
-
-    ///////////////////////////////////////
-    // @引入模块
+routeApp.controller('indexCtrl', function($http, $scope, $interval, System){
+    
     const os = require('os');
-    exec = require('child_process').exec;
+    $scope.bios = [];
 
-    ///////////////////////////////////////
-    // @获取数据
-    // 通过OS模块获取数据
-    $interval(() => {
+    function getOS(){
         $scope.system = {
             arch: os.arch(),                                    // 处理器架构
             cpus: os.cpus(),                                    // 获取cpu信息
@@ -22,59 +17,35 @@ routeApp.controller('indexCtrl', ['$http', '$scope', '$interval', function($http
             type: os.type(),                                    // 操作系统名称
             uptime: os.uptime()                                 // 计算机正常运行时间
         };
-    }, 1000);                                                   // 每隔1秒自动重新获取
+    }
 
-    // 获取windows CPU使用率和CPU温度
-    $interval(() => {
-        exec('wmic cpu get loadpercentage', (err, stdout, stderr) => {
-            if(err || stderr){
-                console.log("error: " + err + stderr);
-                return;
-            }
-            $scope.cpuload = parseInt(stdout.replace(/(LoadPercentage)/, '').trim());
+    function getCPU(){
+        System.getCpuLoadPercentage(function(result){
+            $scope.cpuload = result;
         });
-        exec('wmic /namespace:\\\\root\\WMI path MSAcpi_ThermalZoneTemperature GET CriticalTripPoint,CurrentTemperature', (err, stdout, stderr) => {
-            if(err || stderr){
-               console.log("error: " + err + stderr);
-                   return;
-            }
-            let out = stdout.replace(/(CriticalTripPoint)|(CurrentTemperature)/g, '').replace(/(\s+)/g, '#').trim().split('#');
-            out.pop();
-            out.shift();
-            $scope.cpuTemperature = out;
+        System.getCpuTemperature(function(result){
+            $scope.cpuTemperature = result;
         })
+    }
+
+    getCPU();
+    getOS();
+
+    $interval(function(){
+        getCPU();
+        getOS();
     }, 1000);
 
-    // 获取BIOS制造商和版本，CPU核心数
-    $scope.bios = [];
-    (() => {
-        exec('wmic bios get Manufacturer', (err, stdout, stderr) => {
-            if(err || stderr){
-                console.log("error: " + err + stderr);
-                return;
-            }
-            $scope.bios.manufacturer = stdout.replace(/(Manufacturer)|(s+)/g, '').replace(/(\s+)/g, '').trim();
-        });
-        exec('wmic bios get Name', (err, stdout, stderr) => {
-            if(err || stderr){
-                console.log("error: " + err + stderr);
-                return;
-            }
-            $scope.bios.name = stdout.replace(/(Name)|(s+)/g, '').replace(/(\s+)/g, '').trim();
-        });
-        exec('wmic cpu get NumberOfCores,NumberOfLogicalProcessors', (err, stdout, stderr) => {
-            if(err || stderr){
-                console.log("error: " + err + stderr);
-                return;
-            }
-            $scope.cpuCore = stdout.replace(/(NumberOfCores)|(NumberOfLogicalProcessors)/g, '').replace(/(\s+)/g, '#').trim().split('#');
-        });
-        exec('wmic baseboard get Product', (err, stdout, stderr) => {
-            if(err || stderr){
-                console.log("error: " + err + stderr);
-                return;
-            }
-            $scope.name = stdout.replace(/(Product)/g, '').replace(/(\s+)/g, '').trim().toString();
-        })
-    })();
-}]);
+    System.getBiosManufacturer(function(result){
+        $scope.bios.manufacturer = result;
+    });
+    System.getBiosName(function(result){
+        $scope.bios.name = result;
+    });
+    System.getCpuNumber(function(result){
+        $scope.cpuCore = result;
+    });
+    System.getProduct(function(result){
+        $scope.name = result;
+    });
+});
