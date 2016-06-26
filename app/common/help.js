@@ -1,4 +1,7 @@
-/** 文件与名称和图标的对应 */
+/**
+ * 文件与名称和图标的对应
+ * url: http://www.flaticon.com/
+ */
 const FileTypeIcon = {
     "disk": {
         "type": "磁盘",
