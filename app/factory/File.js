@@ -259,8 +259,6 @@ routeApp.factory('File', ($q) => {
         });
     }
 
-    
-
     /**
      * 读取文件夹列表
      * @param src
