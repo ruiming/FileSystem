@@ -54,6 +54,7 @@
                     ng-if="path != 'Computer'"
                     ng-click="select(index)"
                     ng-mouseleave = "leave(index)"
+                    ng-keypress="listenEnter($event, index)"
                     ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"
                     id={{index}}>
                     <td><img ng-src="{{x.src}}"></td>
@@ -70,3 +71,4 @@
         </table>
     </section>
 </article>
+

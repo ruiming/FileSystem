@@ -19,7 +19,6 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
     var selectedIndex = 0;
     const menu = new Menu();
     
-    // 删除文件或文件夹
     menu.append(new MenuItem({
         label: 'Delete',
         click: () => {
@@ -47,7 +46,6 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
             }
         }
     }));
-    // 复制文件或文件夹
     menu.append(new MenuItem({
         label: 'Copy',
         click: ()=>{
@@ -59,7 +57,6 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
             selectedIndex = id;                                                 // 选中的列表ID
         }
     }));
-    // 粘贴文件或文件夹到里面
     menu.append(new MenuItem({
         label: 'Paste Into',
         click: ()=>{
@@ -76,7 +73,6 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
             }
         }
     }));
-    // 粘贴文件或文件夹到此处
     menu.append(new MenuItem({
         label: 'Paste Here',
         click: () => {
@@ -136,6 +132,13 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         menu.popup(remote.getCurrentWindow())
     }, false);
 
+    /** enter键确认重命名 */
+    $scope.listenEnter = function(e, index) {
+        if(e.which === 13){
+            $scope.rename(index);
+        }
+    };
+
     /** 点击高亮 */
     $scope.select = function(index) {
         let status = $scope.files[index].hover;
@@ -161,10 +164,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         readFolder();
     };
 
-    /**
-     * 跳转至相应文件夹
-     * @param x
-     */
+    /** 跳转至相应文件夹 */
     $scope.forward_folder = function(x) {
         if(x.isFile())  return;
         $scope.path += x.name + "\\\\";
@@ -173,10 +173,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         readFolder();
     };
 
-    /**
-     * 导航栏跳转
-     * @param x
-     */
+    /** 导航栏跳转 */
     $scope.turnto = function(x) {
         let currentPath = $scope.path;
         if(x == "Computer" && currentPath != "Computer") {
@@ -204,9 +201,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         readFolder();
     };
 
-    /**
-     * 跳到主页
-     */
+    /** 跳到主页 */
     $scope.home = function() {
         $scope.path = "Computer";
         $scope.backwardStore.push($scope.path);
@@ -214,9 +209,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         getDisk();
     };
 
-    /**
-     * 设置路径导航
-     */
+    /** 设置路径导航 */
     $scope.breadcrumb = function() {
         if($scope.path == "Computer"){
             $scope.breadcrumbs = [];
@@ -226,9 +219,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         }
     };
 
-    /**
-     * 后退
-     */
+    /** 后退 */
     $scope.Hbackward = function() {
         if($scope.backwardStore == null || $scope.backwardStore.length == 1){
             return;
@@ -249,9 +240,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         }
     };
 
-    /**
-     * 前进
-     */
+    /** 前进 */
     $scope.Hforward = function() {
         if($scope.forwardStore == null || $scope.forwardStore.length < 1){
             return;
@@ -268,9 +257,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         }
     };
 
-    /**
-     * 获取目录里面的文件列表
-     */
+    /** 获取目录里面的文件列表 */
     function readFolder() {
         let promise = File.readFolder($scope.path);
         promise.then(function(filenames){
@@ -285,9 +272,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         })
     }
 
-    /**
-     * 获取固定磁盘分区信息
-     */
+    /** 获取固定磁盘分区信息 */
     function getDisk(){
         $scope.breadcrumb();
         let promise = System.getDisk();
