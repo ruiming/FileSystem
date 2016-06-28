@@ -120,6 +120,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
             $scope.files[id].rename = true;
+            $scope.files[id].hover = false;
             $scope.select(id);
             $scope.src = $scope.path + $scope.files[id].name;                   // 路径
             $scope.name = $scope.files[id].name;
@@ -145,7 +146,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         $scope.files.forEach(function(file){
             file.hover = false;
         });
-        $scope.files[index].hover = !status
+        $scope.files[index].hover = !status;
     };
 
     /** 重命名 */

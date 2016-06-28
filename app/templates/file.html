@@ -58,7 +58,7 @@
                     ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"
                     id={{index}}>
                     <td><img ng-src="{{x.src}}"></td>
-                    <td ng-if="x.rename"><input type="text" ng-model="x.name" autofocus ng-blur="rename(index)"></td>
+                    <td ng-if="x.rename"><input type="text" ng-model="x.name" focus-me="{{x.rename}}" ng-blur="rename(index)"></td>
                     <td ng-if="!x.rename" ng-bind="x.name"></td>
                     <td ng-bind="x.atime | date:'yyyy-MM-dd HH:mm:ss'"></td>    <!--修改时间 修改文件内容-->
                     <td ng-bind="x.type"></td>
