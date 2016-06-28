@@ -126,6 +126,20 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
             }
         }
     }));
+    menu.append(new MenuItem({
+        label: '新建',
+        submenu: [
+            {
+                label: '文件夹',
+                click: ()=>{
+                    File.createNewFolder($scope.path).then(function(stat){
+                        $scope.files.push(stat);
+                    });
+                }
+            }
+        ]
+    }));
+    
     let FILE = document.getElementById("file");
     FILE.addEventListener('contextmenu', e => {
         e.preventDefault();

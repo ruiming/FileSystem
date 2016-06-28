@@ -34,6 +34,7 @@ routeApp.factory('File', ($q) => {
      * @returns {string}
      */
     function duplicateFolder(to) {
+        if(!fs.existsSync(to))   return to;
         for(let i of range(1,100)){
             if(!fs.existsSync(to + '[' + i + ']')) {
                 return to + '[' + i + ']';
@@ -279,6 +280,18 @@ routeApp.factory('File', ($q) => {
         })
     }
 
+    function createNewFolder(src) {
+        return $q(function(resolve, reject){
+            let dist = duplicateFolder(src + '新建文件夹');
+            fs.mkdir(dist, 777, function(err){
+                if(err) reject(err);
+                else {
+                    resolve(getFileInfo(dist));
+                }
+            })
+        })
+    }
+
     /**
      * 重命名
      * @param src
@@ -317,7 +330,8 @@ routeApp.factory('File', ($q) => {
         deleteFolder: deleteFolder,
         readFolder: readFolder,
         getFileInfo: getFileInfo,
-        rename: rename
+        rename: rename,
+        createNewFolder: createNewFolder
     };
 
 });
