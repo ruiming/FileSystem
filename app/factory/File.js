@@ -16,6 +16,7 @@ routeApp.factory('File', ($q) => {
      * @returns {string}
      */
     function duplicate(to) {
+        if(!fs.existsSync(to))   return to;
         let dist = to.split('.');
         let origin = dist[dist.length-2];
         for(let i of range(1, 100)){
@@ -49,6 +50,7 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function copyFile(src, dist) {
+        log(src, dist);
         return $q(function(resolve, reject) {
             if(src == dist) {
                 let promise = copy(src, duplicate(dist));
@@ -63,12 +65,13 @@ routeApp.factory('File', ($q) => {
                     let title = '重名文件存在';
                     let message = '重名文件存在，继续粘贴将覆盖，是否继续?';
                     dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
-                        let promise = copy(src, dist);
-                        promise.then(function(result){
-                            resolve(result);
-                        }, function(err){
-                            reject(err);
-                        });
+                        if(index == 0) {
+                            copy(src, dist).then(function(result){
+                                resolve(result);
+                            }, function(err){
+                                reject(err);
+                            });
+                        }
                     })
                 }
                 else {
@@ -280,6 +283,11 @@ routeApp.factory('File', ($q) => {
         })
     }
 
+    /**
+     * 创建新文件夹
+     * @param src
+     * @returns {*}
+     */
     function createNewFolder(src) {
         return $q(function(resolve, reject){
             let dist = duplicateFolder(src + '新建文件夹');
@@ -288,6 +296,21 @@ routeApp.factory('File', ($q) => {
                 else {
                     resolve(getFileInfo(dist));
                 }
+            })
+        })
+    }
+
+    /**
+     * 创建新文档
+     * @param src
+     * @returns {*}
+     */
+    function createNewTxt(src) {
+        return $q(function(resolve, reject){
+            let dist = duplicate(src + '新文档.txt');
+            fs.appendFile(dist, '', (err) => {
+                if(err) reject(err);
+                resolve(getFileInfo(dist));
             })
         })
     }
@@ -331,7 +354,8 @@ routeApp.factory('File', ($q) => {
         readFolder: readFolder,
         getFileInfo: getFileInfo,
         rename: rename,
-        createNewFolder: createNewFolder
+        createNewFolder: createNewFolder,
+        createNewTxt: createNewTxt
     };
 
 });

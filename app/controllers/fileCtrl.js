@@ -21,37 +21,33 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
 
     menu.append(new MenuItem({
         label: '复制',
-        click: ()=>{
+        click(){
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
             $scope.src = $scope.path + $scope.files[id].name;                   // 路径
-            $scope.srcType = $scope.files[id].isFile();                             // 文件类别
+            $scope.srcType = $scope.files[id].isFile();                         // 文件类别
             $scope.srcName = $scope.files[id].name;                             // 文件名称
-            selectedIndex = id;                                                 // 选中的列表ID
         }
     }));
     menu.append(new MenuItem({
         label: '粘贴到里面',
-        click: ()=>{
+        click(){
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
             $scope.dist = $scope.path + $scope.files[id].name;
             if(!$scope.srcType) {
-                let promise = File.copyFolder($scope.src, $scope.dist + "\\\\" + $scope.srcName);
-                promise.then();
+                File.copyFolder($scope.src, $scope.dist + "\\\\" + $scope.srcName).then();
             }
             else {
-                let promise = File.copyFile($scope.src, $scope.dist);
-                promise.then();
+                File.copyFile($scope.src, $scope.dist + "\\\\" + $scope.srcName).then();
             }
         }
     }));
     menu.append(new MenuItem({
         label: '粘贴到此处',
-        click: () => {
+        click(){
             if(!$scope.srcType) {
-                let promise = File.copyFolder($scope.src, $scope.path + $scope.srcName);
-                promise.then(function(result){
+                File.copyFolder($scope.src, $scope.path + $scope.srcName).then((result) => {
                     for(let i in $scope.files) {
                         if($scope.files.hasOwnProperty(i)){
                             if ($scope.files[i].name == result.name) {
@@ -61,15 +57,14 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
                         }
                     }
                     return result;
-                }).then(function(result){
+                }).then((result) => {
                     if(result !== 1) {
                         $scope.files.push(result);
                     }
                 })
             }
             else {
-                let promise = File.copyFile($scope.src, $scope.path + $scope.srcName);
-                promise.then(function(result){
+                File.copyFile($scope.src, $scope.path + $scope.srcName).then((result) => {
                     for(let i in $scope.files) {
                         if($scope.files.hasOwnProperty(i)){
                             if ($scope.files[i].name == result.name) {
@@ -79,7 +74,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
                         }
                     }
                     return result;
-                }).then(function(result){
+                }).then((result) => {
                     if(result !== 1) {
                         $scope.files.push(result);
                     }
@@ -89,7 +84,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
     }));
     menu.append(new MenuItem({
         'label': '重命名',
-        click: ()=>{
+        click(){
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
             $scope.files[id].rename = true;
@@ -101,24 +96,22 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
     }));
     menu.append(new MenuItem({
         label: '删除',
-        click: () => {
+        click(){
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
             let src = $scope.path + $scope.files[id].name;
             if($scope.files[id].isFile()){
-                let promise = File.deleteFile(src);
-                promise.then(function(){
+                File.deleteFile(src).then(() => {
                     $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
-                }, function(err){
-                    console.log(err);
+                }, err => {
+                    log(err);
                 })
             }
             else {
-                let promise = File.deleteFolder(src);
-                promise.then(function(){
+                File.deleteFolder(src).then(() => {
                     $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
-                }, function(err){
-                    console.log(err);
+                }, err => {
+                    log(err);
                 })
             }
             if(path == $scope.forwardStore[$scope.forwardStore.length-1] || path + "\\\\" == $scope.forwardStore[$scope.forwardStore.length-1]){
@@ -131,10 +124,18 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         submenu: [
             {
                 label: '文件夹',
-                click: ()=>{
-                    File.createNewFolder($scope.path).then(function(stat){
+                click(){
+                    File.createNewFolder($scope.path).then((stat) => {
                         $scope.files.push(stat);
                     });
+                }
+            },
+            {
+                label: '文件',
+                click(){
+                    File.createNewTxt($scope.path).then((stat) => {
+                        $scope.files.push(stat);
+                    })
                 }
             }
         ]

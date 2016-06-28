@@ -25,6 +25,7 @@
   - 增加File Factory和System Factory(2016.6.26)
   - 增加文件与图片和类型的映射(2016.6.26)
   - 重命名功能(2016.6.28)
+  - 创建txt文档和新文件夹功能
 
 # 注意
   使用electron-package打包时需要改写main.js
