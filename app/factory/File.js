@@ -2,7 +2,7 @@
  * File Factory
  * 提供Windows下文件或文件夹的一些操作
  */
-routeApp.factory('File', ($q) => {
+routeApp.factory('File', $q => {
     const   fs = require("fs"),
             path = require('path'),
             exec = require('child_process').exec,
@@ -16,14 +16,16 @@ routeApp.factory('File', ($q) => {
      * @returns {string}
      */
     function duplicate(to) {
-        if(!fs.existsSync(to))   return to;
+        if(!fs.existsSync(to)) {
+            return to;
+        }
         let dist = to.split('.');
         let origin = dist[dist.length-2];
-        for(let i of range(1, 100)){
+        for(let i of range(1, 100)) {
             dist[dist.length - 2] = origin;
             dist[dist.length - 2] += '[' + i + ']';
             let checkDist = dist.join('.');
-            if(!fs.existsSync(checkDist)){
+            if(!fs.existsSync(checkDist)) {
                 return checkDist;
             }
         }
@@ -35,7 +37,9 @@ routeApp.factory('File', ($q) => {
      * @returns {string}
      */
     function duplicateFolder(to) {
-        if(!fs.existsSync(to))   return to;
+        if(!fs.existsSync(to)) {
+            return to;
+        }
         for(let i of range(1,100)){
             if(!fs.existsSync(to + '[' + i + ']')) {
                 return to + '[' + i + ']';
@@ -50,35 +54,32 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function copyFile(src, dist) {
-        log(src, dist);
-        return $q(function(resolve, reject) {
+        return $q((resolve, reject) => {
             if(src == dist) {
-                let promise = copy(src, duplicate(dist));
-                promise.then(function(result){
+                copy(src, duplicate(dist)).then(result => {
                     resolve(result);
-                }, function(err){
+                }, err => {
                     reject(err);
-                })
+                });
             }
             else {
-                if(fs.existsSync(dist)){
+                if(fs.existsSync(dist)) {
                     let title = '重名文件存在';
                     let message = '重名文件存在，继续粘贴将覆盖，是否继续?';
                     dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
                         if(index == 0) {
-                            copy(src, dist).then(function(result){
+                            copy(src, dist).then(result => {
                                 resolve(result);
-                            }, function(err){
+                            }, err => {
                                 reject(err);
                             });
                         }
                     })
                 }
                 else {
-                    let promise = copy(src, dist);
-                    promise.then(function(result){
+                    copy(src, dist).then(result => {
                         resolve(result);
-                    }, function(err){
+                    }, err => {
                         reject(err);
                     });
                 }
@@ -93,25 +94,23 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function copyFolder(src, dist) {
-        return $q(function(resolve, reject) {
+        return $q((resolve, reject) => {
             if(src == dist) {
-                let promise = xcopy(src, duplicateFolder(dist));
-                promise.then(function(result){
+                xcopy(src, duplicateFolder(dist)).then(result => {
                     resolve(result);
-                }, function(err){
+                }, err => {
                     reject(err);
                 });
             }
             else {
-                if(fs.existsSync(dist)){
+                if(fs.existsSync(dist)) {
                     let title = '重名文件夹存在';
                     let message = '重名文件夹存在，继续粘贴将覆盖，是否继续?';
                     dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
                         if(index == 0) {
-                            let promise = xcopy(src, dist);
-                            promise.then(function(result){
+                            xcopy(src, dist).then(result => {
                                 resolve(result);
-                            }, function(err){
+                            }, err => {
                                 reject(err);
                             });
                         }
@@ -121,10 +120,9 @@ routeApp.factory('File', ($q) => {
                     })
                 }
                 else {
-                    let promise = xcopy(src, dist);
-                    promise.then(function(result){
+                    xcopy(src, dist).then(result => {
                         resolve(result);
-                    }, function(err){
+                    }, err => {
                         reject(err);
                     });
                 }
@@ -141,10 +139,10 @@ routeApp.factory('File', ($q) => {
         let buttons = ['OK', 'Cancel'];
         let title = '删除文件';
         let message = '确认要删除吗? 此操作不可逆!';
-        return $q(function(resolve, reject){
+        return $q((resolve, reject) => {
             dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
                 if(index == 0){
-                    fs.unlink(src, (err) => {
+                    fs.unlink(src, err => {
                         if (err) {
                             reject(err);
                         }
@@ -167,7 +165,7 @@ routeApp.factory('File', ($q) => {
         let buttons = ['OK', 'Cancel'];
         let title = '删除文件夹';
         let message = '确认要删除吗? 此操作不可逆!';
-        return $q(function(resolve, reject){
+        return $q((resolve, reject) => {
             dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
                 if(index == 0){
                     exec(`rmdir "${src}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
@@ -191,16 +189,15 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function xcopy(src, dist) {
-        return $q(function(resolve, reject) {
-            exec(`xcopy "${src}" "${dist}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+        return $q((resolve, reject) => {
+            exec(`xcopy "${src}" "${dist}" /E /C /Y /H /I`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
                 if(err || iconv.decode(stderr, 'GB2312')) {
                     dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                     reject(iconv.decode(stderr, 'GB2312'));
                 }
                 else {
                     dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                    let promise = getFileInfo(dist);
-                    promise.then(function(stat){
+                    getFileInfo(dist).then(stat => {
                         resolve(stat);
                     });
                 }
@@ -215,16 +212,15 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function copy(src, dist) {
-        return $q(function(resolve, reject) {
-            exec(`copy "${src}" "${dist}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr)=>{
+        return $q((resolve, reject) => {
+            exec(`copy "${src}" "${dist}" /Y`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
                 if(err || iconv.decode(stderr, 'GB2312')) {
                     dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                     reject(iconv.decode(stderr, 'GB2312'));
                 }
                 else {
                     dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
-                    let promise = getFileInfo(dist);
-                    promise.then(function(stat){
+                    getFileInfo(dist).then(stat => {
                         resolve(stat);
                     });
                 }
@@ -238,8 +234,8 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function getFileInfo(src) {
-        return $q(function(resolve, reject) {
-            fs.stat(src, function(err, stat){
+        return $q((resolve, reject) => {
+            fs.stat(src, (err, stat) => {
                 if(err){
                     reject(err);
                 }
@@ -252,7 +248,7 @@ routeApp.factory('File', ($q) => {
                     if(stat.isDirectory()){
                         type = 'folder'
                     }
-                    else if(FileTypeIcon.hasOwnProperty(mime)){
+                    else if(FileTypeIcon.hasOwnProperty(mime)) {
                         type = mime;
                     }
                     stat.type = FileTypeIcon[type].type;
@@ -271,8 +267,8 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function readFolder(src) {
-        return $q(function(resolve, reject){
-            fs.readdir(src, function(err, files){
+        return $q((resolve, reject) => {
+            fs.readdir(src, (err, files) => {
                 if(err) {
                     reject(err);
                 }
@@ -289,10 +285,12 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function createNewFolder(src) {
-        return $q(function(resolve, reject){
+        return $q((resolve, reject) => {
             let dist = duplicateFolder(src + '新建文件夹');
-            fs.mkdir(dist, 777, function(err){
-                if(err) reject(err);
+            fs.mkdir(dist, 777, err => {
+                if(err) {
+                    reject(err);
+                }
                 else {
                     resolve(getFileInfo(dist));
                 }
@@ -306,11 +304,15 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function createNewTxt(src) {
-        return $q(function(resolve, reject){
+        return $q((resolve, reject) => {
             let dist = duplicate(src + '新文档.txt');
-            fs.appendFile(dist, '', (err) => {
-                if(err) reject(err);
-                resolve(getFileInfo(dist));
+            fs.appendFile(dist, '', err => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(getFileInfo(dist));
+                }
             })
         })
     }
@@ -322,13 +324,15 @@ routeApp.factory('File', ($q) => {
      * @returns {*}
      */
     function rename(src, dist) {
-        return $q(function(resolve, reject){
-            fs.rename(src, dist, function(err){
+        return $q((resolve, reject) => {
+            fs.rename(src, dist, err => {
                 if(err){
                     alert(err);
                     reject(err);
                 }
-                else resolve();
+                else {
+                    resolve();
+                }
             });
         })
     }
@@ -341,7 +345,7 @@ routeApp.factory('File', ($q) => {
      */
     function range(start, count) {
         return Array.apply(0, Array(count))
-            .map(function (element, index) {
+            .map((element, index) => {
                 return index + start;
             });
     }
