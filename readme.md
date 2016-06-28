@@ -17,7 +17,6 @@
   - 前进后退功能(2016.6.15)
   - 文件排序功能(2016.6.16)
   - 使用$q来达到异步操作从而加快读取速度(2016.6.16)
-  - ~~使用mmmagic模块获取文件类型(2016.6.16)~~
   - 路径导航(2016.6.16)
   - 右键菜单删除文件(2016.6.16)
   - 右键菜单删除文件夹(2016.6.17)
@@ -30,7 +29,7 @@
 # 注意
   使用electron-package打包时需要改写main.js
 
-  ```
+  ```javascript
     const electron = require('electron');
     const app = require('app');
     const BrowserWindow = require('browser-window')

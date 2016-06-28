@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-packager . FileSystem --platform=win32 --arch=x64 --version=0.32.3"
+    "build": "electron-packager . FileSystem --platform=win32 --arch=all --version=0.32.3"
   },
   "author": "Ruiming Zhuang",
   "license": "ISC",
@@ -20,8 +20,6 @@
     "gulp": "^3.9.1",
     "gulp-plumber": "^1.1.0",
     "gulp-sass": "^2.2.0",
-    "iconv-lite": "^0.4.13",
-    "mime-magic": "^5.14.0",
-    "mmmagic": "^0.4.4"
+    "iconv-lite": "^0.4.13"
   }
 }

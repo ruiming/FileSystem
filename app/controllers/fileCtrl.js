@@ -18,36 +18,9 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
     let rightClickPosition = null;
     var selectedIndex = 0;
     const menu = new Menu();
-    
+
     menu.append(new MenuItem({
-        label: 'Delete',
-        click: () => {
-            let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
-            let id = JSON.parse(selectedElement.attributes.id.nodeValue);
-            let src = $scope.path + $scope.files[id].name;
-            if($scope.files[id].isFile()){
-                let promise = File.deleteFile(src);
-                promise.then(function(){
-                    $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
-                }, function(err){
-                    console.log(err);
-                })
-            }
-            else {
-               let promise = File.deleteFolder(src);
-                promise.then(function(){
-                    $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
-                }, function(err){
-                    console.log(err);
-                })
-            }
-            if(path == $scope.forwardStore[$scope.forwardStore.length-1] || path + "\\\\" == $scope.forwardStore[$scope.forwardStore.length-1]){
-                $scope.forwardStore = [];
-            }
-        }
-    }));
-    menu.append(new MenuItem({
-        label: 'Copy',
+        label: '复制',
         click: ()=>{
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -58,7 +31,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         }
     }));
     menu.append(new MenuItem({
-        label: 'Paste Into',
+        label: '粘贴到里面',
         click: ()=>{
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -74,7 +47,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         }
     }));
     menu.append(new MenuItem({
-        label: 'Paste Here',
+        label: '粘贴到此处',
         click: () => {
             if(!$scope.srcType) {
                 let promise = File.copyFolder($scope.src, $scope.path + $scope.srcName);
@@ -115,7 +88,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         }
     }));
     menu.append(new MenuItem({
-        'label': 'Rename',
+        'label': '重命名',
         click: ()=>{
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -126,12 +99,49 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
             $scope.name = $scope.files[id].name;
         }
     }));
+    menu.append(new MenuItem({
+        label: '删除',
+        click: () => {
+            let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+            let id = JSON.parse(selectedElement.attributes.id.nodeValue);
+            let src = $scope.path + $scope.files[id].name;
+            if($scope.files[id].isFile()){
+                let promise = File.deleteFile(src);
+                promise.then(function(){
+                    $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
+                }, function(err){
+                    console.log(err);
+                })
+            }
+            else {
+                let promise = File.deleteFolder(src);
+                promise.then(function(){
+                    $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
+                }, function(err){
+                    console.log(err);
+                })
+            }
+            if(path == $scope.forwardStore[$scope.forwardStore.length-1] || path + "\\\\" == $scope.forwardStore[$scope.forwardStore.length-1]){
+                $scope.forwardStore = [];
+            }
+        }
+    }));
     let FILE = document.getElementById("file");
     FILE.addEventListener('contextmenu', e => {
         e.preventDefault();
         rightClickPosition = {x: e.x, y: e.y};
         menu.popup(remote.getCurrentWindow())
     }, false);
+    $interval(() => {
+        if($scope.src == undefined) {
+            menu.items[1].enabled = false;
+            menu.items[2].enabled = false;
+        }
+        else {
+            menu.items[1].enabled = true;
+            menu.items[2].enabled = true;
+        }
+    }, 1000);
 
     /** enter键确认重命名 */
     $scope.listenEnter = function(e, index) {
