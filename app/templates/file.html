@@ -48,17 +48,17 @@
                 </tr>
             </thead>
             <tbody id="file">
-                <tr ng-init="index = $index"
-                    ng-repeat="x in files | orderBy:col:desc track by $index"
+                <tr
+                    ng-repeat="x in files | index | orderBy:col:desc track by $index"
                     ng-dblclick="forward_folder(x)"
                     ng-if="path != 'Computer'"
-                    ng-click="select(index)"
-                    ng-mouseleave = "leave(index)"
-                    ng-keypress="listenEnter($event, index)"
+                    ng-click="select(x.index)"
+                    ng-mouseleave = "leave(x.index)"
+                    ng-keypress="listenEnter($event, x.index)"
                     ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"
-                    id={{index}}>
+                    id={{x.index}}>
                     <td><img ng-src="{{x.src}}"></td>
-                    <td ng-if="x.rename"><input type="text" ng-model="x.name" focus-me="{{x.rename}}" ng-blur="rename(index)"></td>
+                    <td ng-if="x.rename"><input type="text" ng-model="x.name" focus-me="{{x.rename}}" ng-blur="rename(x.index)"></td>
                     <td ng-if="!x.rename" ng-bind="x.name"></td>
                     <td ng-bind="x.atime | date:'yyyy-MM-dd HH:mm:ss'"></td>    <!--修改时间 修改文件内容-->
                     <td ng-bind="x.type"></td>
