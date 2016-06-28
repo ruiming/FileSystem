@@ -40,7 +40,7 @@ routeApp.factory('File', $q => {
         if(!fs.existsSync(to)) {
             return to;
         }
-        for(let i of range(1,100)){
+        for(let i of range(1,100)) {
             if(!fs.existsSync(to + '[' + i + ']')) {
                 return to + '[' + i + ']';
             }
@@ -141,7 +141,7 @@ routeApp.factory('File', $q => {
         let message = '确认要删除吗? 此操作不可逆!';
         return $q((resolve, reject) => {
             dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
-                if(index == 0){
+                if(index == 0) {
                     fs.unlink(src, err => {
                         if (err) {
                             reject(err);
@@ -167,9 +167,9 @@ routeApp.factory('File', $q => {
         let message = '确认要删除吗? 此操作不可逆!';
         return $q((resolve, reject) => {
             dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
-                if(index == 0){
+                if(index == 0) {
                     exec(`rmdir "${src}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
-                        if(err || iconv.decode(stderr, 'GB2312')){
+                        if(err || iconv.decode(stderr, 'GB2312')) {
                             dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
                             reject(iconv.decode(stderr, 'GB2312'));
                         }
@@ -236,7 +236,7 @@ routeApp.factory('File', $q => {
     function getFileInfo(src) {
         return $q((resolve, reject) => {
             fs.stat(src, (err, stat) => {
-                if(err){
+                if(err) {
                     reject(err);
                 }
                 else {
@@ -245,7 +245,7 @@ routeApp.factory('File', $q => {
                     let seq = temp[temp.length-1].split('.');
                     let mime = seq[seq.length - 1];
                     stat.name = temp[temp.length-1];
-                    if(stat.isDirectory()){
+                    if(stat.isDirectory()) {
                         type = 'folder'
                     }
                     else if(FileTypeIcon.hasOwnProperty(mime)) {
@@ -326,7 +326,7 @@ routeApp.factory('File', $q => {
     function rename(src, dist) {
         return $q((resolve, reject) => {
             fs.rename(src, dist, err => {
-                if(err){
+                if(err) {
                     alert(err);
                     reject(err);
                 }
