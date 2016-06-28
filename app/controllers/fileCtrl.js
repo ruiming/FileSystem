@@ -118,6 +118,17 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
             }
         }
     }));
+    menu.append(new MenuItem({
+        'label': 'Rename',
+        click: ()=>{
+            let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+            let id = JSON.parse(selectedElement.attributes.id.nodeValue);
+            $scope.files[id].rename = true;
+            $scope.select(id);
+            $scope.src = $scope.path + $scope.files[id].name;                   // 路径
+            $scope.name = $scope.files[id].name;
+        }
+    }));
     let FILE = document.getElementById("file");
     FILE.addEventListener('contextmenu', e => {
         e.preventDefault();
@@ -125,10 +136,25 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         menu.popup(remote.getCurrentWindow())
     }, false);
 
-    /**
-     * 跳转至相应磁盘
-     * @param disk
-     */
+    /** 点击高亮 */
+    $scope.select = function(index) {
+        let status = $scope.files[index].hover;
+        $scope.files.forEach(function(file){
+            file.hover = false;
+        });
+        $scope.files[index].hover = !status
+    };
+
+    /** 重命名 */
+    $scope.rename = function(index) {
+        $scope.files[index].rename = false;
+        $scope.dist = $scope.path + $scope.files[index].name;
+        File.rename($scope.src, $scope.dist).catch(function(){
+            $scope.files[index].name = $scope.name;
+        });
+    };
+
+    /** 跳转至相应磁盘 */
     $scope.forward = function(disk) {
         $scope.path = disk + "\\\\";
         $scope.backwardStore.push($scope.path);

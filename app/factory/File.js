@@ -253,6 +253,8 @@ routeApp.factory('File', ($q) => {
                     }
                     stat.type = FileTypeIcon[type].type;
                     stat.src = FileTypeIcon[type].src;
+                    stat.rename = false;
+                    stat.hover = false;
                     resolve(stat);
                 }
             });
@@ -278,6 +280,24 @@ routeApp.factory('File', ($q) => {
     }
 
     /**
+     * 重命名
+     * @param src
+     * @param dist
+     * @returns {*}
+     */
+    function rename(src, dist) {
+        return $q(function(resolve, reject){
+            fs.rename(src, dist, function(err){
+                if(err){
+                    alert(err);
+                    reject(err);
+                }
+                else resolve();
+            });
+        })
+    }
+
+    /**
      * 生成可遍历的连续数字
      * @param start
      * @param count
@@ -296,7 +316,8 @@ routeApp.factory('File', ($q) => {
         deleteFile: deleteFile,
         deleteFolder: deleteFolder,
         readFolder: readFolder,
-        getFileInfo: getFileInfo
+        getFileInfo: getFileInfo,
+        rename: rename
     };
 
 });

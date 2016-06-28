@@ -109,11 +109,14 @@ a:active {
   display: block;
   width: 100%; }
 
-.files .disks-files tbody tr:hover, .files .disks-files tbody tr:active {
-  background-color: #e8e8e8; }
+.files .disks-files .tr-active {
+  background-color: #b3e4ff !important; }
 
-.files .disks-files thead th:hover, .files .disks-files thead th:active {
-  background-color: #e8e8e8; }
+.files .disks-files .tr-inactive {
+  background-color: #ffffff; }
+
+.files .disks-files tr:hover {
+  background-color: #d7f1ff; }
 
 .files .disks-files tr {
   min-width: 400px;
@@ -123,11 +126,12 @@ a:active {
     border: 0;
     box-shadow: none;
     outline: 0;
-    padding-left: 0;
     text-align: left;
     white-space: nowrap;
     overflow: hidden;
-    float: left; }
+    float: left;
+    width: 100%;
+    padding: 0; }
   .files .disks-files tr td,
   .files .disks-files tr th {
     overflow: hidden;
