@@ -130,18 +130,22 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
     FILE.addEventListener('contextmenu', e => {
         e.preventDefault();
         rightClickPosition = {x: e.x, y: e.y};
-        menu.popup(remote.getCurrentWindow())
-    }, false);
-    $interval(() => {
-        if($scope.src == undefined) {
+        let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+        let id = JSON.parse(selectedElement.attributes.id.nodeValue);
+        if($scope.files[id].isFile()) {
             menu.items[1].enabled = false;
-            menu.items[2].enabled = false;
+            menu.items[2].enabled = true;
         }
         else {
             menu.items[1].enabled = true;
             menu.items[2].enabled = true;
         }
-    }, 1000);
+        if($scope.src == undefined) {
+            menu.items[1].enabled = false;
+            menu.items[2].enabled = false;
+        }
+        menu.popup(remote.getCurrentWindow());
+    }, false);
 
     /** enter键确认重命名 */
     $scope.listenEnter = function(e, index) {
