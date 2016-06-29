@@ -29,7 +29,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="x in disks"  ng-dblclick="forward(x.Name)">
-                    <td><img ng-src="{{x.src}}"</td>
+                    <td><img ng-src="{{x.src}}"></td>
                     <td>{{x.Name}}</td>
                     <td>{{x.FileSystem}}</td>
                     <td>{{x.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</td>
@@ -71,4 +71,3 @@
         </table>
     </section>
 </article>
-

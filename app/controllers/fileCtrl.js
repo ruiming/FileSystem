@@ -83,6 +83,27 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         }
     }));
     menu.append(new MenuItem({
+        label: '新建',
+        submenu: [
+            {
+                label: '文件夹',
+                click() {
+                    File.createNewFolder($scope.path).then((stat) => {
+                        $scope.files.push(stat);
+                    });
+                }
+            },
+            {
+                label: '文件',
+                click() {
+                    File.createNewTxt($scope.path).then((stat) => {
+                        $scope.files.push(stat);
+                    })
+                }
+            }
+        ]
+    }));
+    menu.append(new MenuItem({
         'label': '重命名',
         click() {
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
@@ -118,27 +139,6 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
                 $scope.forwardStore = [];
             }
         }
-    }));
-    menu.append(new MenuItem({
-        label: '新建',
-        submenu: [
-            {
-                label: '文件夹',
-                click() {
-                    File.createNewFolder($scope.path).then((stat) => {
-                        $scope.files.push(stat);
-                    });
-                }
-            },
-            {
-                label: '文件',
-                click() {
-                    File.createNewTxt($scope.path).then((stat) => {
-                        $scope.files.push(stat);
-                    })
-                }
-            }
-        ]
     }));
     
     let FILE = document.getElementById("file");
