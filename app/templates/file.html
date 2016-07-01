@@ -12,11 +12,15 @@
                 <i class="material-icons">keyboard_arrow_right</i>
             </button>
         </div>
-        <!-- todo 路径导航-->
-        <ul class="breadcrumb">
-            <li><a href="javascript:void(0)" ng-click="turnto('Computer')">Computer</a></li>
-            <li ng-repeat="bread in breadcrumbs track by $index" ng-if="bread != 'Computer'"><a href="javascript:void(0)" ng-click="turnto(bread)">{{bread}}</a></li>
-        </ul>
+        <form>
+            <div class="form-group">
+                <label for="search" hidden>搜索</label>
+                <input type="text" ng-model="wanted" class="form-control" id="search" placeholder="请输入您要搜索的内容">
+            </div>
+            <button class="btn btn-default" ng-click="search(wanted)">
+                <i class="material-icons">search</i>
+            </button>
+        </form>
         <table ng-show="path == 'Computer'">
             <thead>
                 <tr class="disk-menu">
@@ -71,16 +75,8 @@
         </table>
     </section>
 </article>
-<form>
-    <div>
-        <label>搜索</label><input type="text" ng-model="wanted">
-        <input type="button" ng-click="search(wanted)">
-    </div>
-    <table>
-        <tbody>
-            <tr ng-repeat="x in result">
-                <td>{{x}}</td>
-            </tr>
-        </tbody>
-    </table>
-</form>
+<ul class="breadcrumb">
+    <li><a href="javascript:void(0)" ng-click="turnto('Computer')">Computer</a></li>
+    <li ng-repeat="bread in breadcrumbs track by $index" ng-if="bread != 'Computer'"><a href="javascript:void(0)" ng-click="turnto(bread)">{{bread}}</a></li>
+    <li class="number" ng-show="path != 'Computer'">共{{files.length}}个项目</li>
+</ul>

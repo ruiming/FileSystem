@@ -196,9 +196,32 @@ a:active {
     padding: 6px 15px;
     float: left; }
 
+.files form {
+  float: right;
+  display: flex; }
+  .files form .form-group,
+  .files form #search {
+    margin: 0;
+    padding: 0 0 0 5px; }
+  .files form button {
+    padding: 0 10px;
+    margin: 0; }
+
 .files .breadcrumb {
+  display: block;
+  width: 100%;
+  z-index: 1500;
+  position: fixed;
+  bottom: 0;
   background-color: #FFF;
   margin-bottom: 0;
   float: left;
-  line-height: 4;
+  line-height: 3.5;
   padding: 0 0 0 25px; }
+
+.files .number {
+  float: right;
+  z-index: 1500;
+  position: fixed;
+  bottom: 0;
+  right: 20px; }

@@ -368,13 +368,19 @@ routeApp.factory('File', $q => {
                     fs.stat(path + file, function(err, stat){
                         if(stat && stat.isDirectory()){
                             if(file.toLowerCase().includes(wanted.toLowerCase())) {
-                                result.push(path + file + "\\\\");
+                                getFileInfo(path + file).then(function(stat){
+                                    stat.where = path + file + "\\\\";
+                                    result.push(stat);
+                                });
                             }
                             search(path + file + "\\\\", wanted, result).then();
                         }
                         else if(stat && stat.isFile()){
                             if(file.toLowerCase().includes(wanted.toLowerCase())) {
-                                result.push(path + file);
+                                getFileInfo(path + file).then(function(stat){
+                                    stat.where = path + file;
+                                    result.push(stat);
+                                });
                             }
                         }
                     })

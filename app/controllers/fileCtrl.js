@@ -1,4 +1,4 @@
-routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
+routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $timeout) {
 
     const   fs = require("fs"),
             path = require('path'),
@@ -162,10 +162,12 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         menu.popup(remote.getCurrentWindow());
     }, false);
 
-
+    
     $scope.search = wanted => {
+        $scope.backwardStore.push($scope.path);
+        $scope.forwardStore = [];
         File.search($scope.path, wanted).then(function(result){
-            $scope.result = result;
+            $scope.files = result;
         });
     };
 
@@ -204,7 +206,12 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
     /** 跳转至相应文件夹 */
     $scope.forward_folder = x => {
         if(x.isFile())  return;
-        $scope.path += x.name + "\\\\";
+        if(x.where != undefined) {
+            $scope.path = x.where;
+        }
+        else {
+            $scope.path += x.name + "\\\\";
+        }
         $scope.backwardStore.push($scope.path);
         $scope.forwardStore = [];
         readFolder();
