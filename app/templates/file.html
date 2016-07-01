@@ -46,11 +46,12 @@
                 <tr class="file-menu">
                     <th></th>
                     <th ng-click="col='name';desc=!desc">Name</th>
-                    <th ng-click="col='size';desc=!desc">Size</th>
-                    <th ng-click="col='type';desc=!desc">Type</th>
                     <th ng-click="col='atime';desc=!desc">Atime</th>
+                    <th ng-click="col='type';desc=!desc">Type</th>
+                    <th ng-click="col='size';desc=!desc">Size</th>
                 </tr>
             </thead>
+            <!-- fixme 样式表-->
             <tbody id="file">
                 <tr
                     ng-repeat="x in files | index | orderBy:col:desc track by $index"
@@ -64,12 +65,12 @@
                     <td><img ng-src="{{x.src}}"></td>
                     <td ng-if="x.rename"><input type="text" ng-model="x.name" focus-me="{{x.rename}}" ng-blur="rename(x.index)"></td>
                     <td ng-if="!x.rename" ng-bind="x.name"></td>
+                    <td ng-bind="x.atime | date:'yyyy-MM-dd HH:mm:ss'"></td>    <!--修改时间 修改文件内容-->
+                    <td ng-bind="x.type"></td>
                     <td ng-if="x.size < 1024 && x.size >= 0 && x.isFile()">{{x.size | number: 2}} B</td>
                     <td ng-if="x.size >= 1024 && x.size < 1024*1024">{{x.size / 1024 | number: 2}} KB</td>
                     <td ng-if="x.size >= 1024*1024">{{x.size / 1024 / 1024 | number: 2}} MB</td>
                     <td ng-if="x.isDirectory()">&nbsp;</td>
-                    <td ng-bind="x.type"></td>
-                    <td ng-bind="x.atime | date:'yyyy-MM-dd HH:mm:ss'"></td>    <!--修改时间 修改文件内容-->
                 </tr>
             </tbody>
         </table>

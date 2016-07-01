@@ -127,11 +127,12 @@ $hover: #e8e8e8;
   }
 }
 .files {
+  min-width: 470px;
   .disks-files{
     table,
     thead,
     tbody {
-      table-layout: auto;
+      min-width: 470px;
       overflow: hidden;
       display: block;
       width: 100%;
@@ -142,15 +143,17 @@ $hover: #e8e8e8;
     .tr-inactive {
       background-color: #ffffff;
     }
-    tr{
+    tbody tr,
+    th {
       &:hover {
         background-color: #d7f1ff;
       }
     }
     tr {
-      min-width: 400px;
+      min-width: 470px;
       overflow: hidden;
-      display: block;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       input {
         border: 0;
         box-shadow: none;
@@ -165,33 +168,27 @@ $hover: #e8e8e8;
       td,
       th{
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        float: left;
         padding-left: 10px;
         text-align: right;
         &:nth-child(1) {
           padding: 0 5px;
-          min-width: 26px;
           img {
             width: 16px;
           }
         }
         &:nth-child(2) {
-          padding-left: 0;
+          width: 100%;
+          margin-right: 500px;
           text-align: left;
         }
         &:nth-child(3) {
           width: 120px;
-          float: right;
         }
         &:nth-child(4) {
           width: 150px;
-          float: right;
         }
         &:nth-child(5) {
           width: 180px;
-          float: right;
         }
       }
     }
