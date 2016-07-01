@@ -24,7 +24,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
         click() {
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = JSON.parse(selectedElement.attributes.id.nodeValue);
-            $scope.src = $scope.path + $scope.files[id].name;                   // 路径
+            $scope.src = $scope.files[id].path;                                 // 路径
             $scope.srcType = $scope.files[id].isFile();                         // 文件类别
             $scope.srcName = $scope.files[id].name;                             // 文件名称
         }
@@ -47,6 +47,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
         label: '粘贴到此处',
         click() {
             if(!$scope.srcType) {
+                log($scope.src, $scope.path + $scope.srcName);
                 File.copyFolder($scope.src, $scope.path + $scope.srcName).then((result) => {
                     for(let i in $scope.files) {
                         if($scope.files.hasOwnProperty(i)) {
@@ -206,12 +207,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
     /** 跳转至相应文件夹 */
     $scope.forward_folder = x => {
         if(x.isFile())  return;
-        if(x.where != undefined) {
-            $scope.path = x.where;
-        }
-        else {
-            $scope.path += x.name + "\\\\";
-        }
+        $scope.path = x.path + "\\\\";
         $scope.backwardStore.push($scope.path);
         $scope.forwardStore = [];
         readFolder();

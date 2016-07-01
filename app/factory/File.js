@@ -253,6 +253,7 @@ routeApp.factory('File', $q => {
                     }
                     stat.type = FileTypeIcon[type].type;
                     stat.src = FileTypeIcon[type].src;
+                    stat.path = src;
                     stat.rename = false;
                     stat.hover = false;
                     resolve(stat);
@@ -361,15 +362,14 @@ routeApp.factory('File', $q => {
      * @returns {*}
      */
     function search(src, wanted, result=[]) {
-        return $q(function(resolve, reject){
+        return $q((resolve, reject) => {
             let path = src;
-            readFolder(src).then(function(files){
-                files.forEach(function(file){
-                    fs.stat(path + file, function(err, stat){
+            readFolder(src).then(files => {
+                files.forEach(file => {
+                    fs.stat(path + file, (err, stat) => {
                         if(stat && stat.isDirectory()){
                             if(file.toLowerCase().includes(wanted.toLowerCase())) {
-                                getFileInfo(path + file).then(function(stat){
-                                    stat.where = path + file + "\\\\";
+                                getFileInfo(path + file).then(stat => {
                                     result.push(stat);
                                 });
                             }
@@ -377,8 +377,7 @@ routeApp.factory('File', $q => {
                         }
                         else if(stat && stat.isFile()){
                             if(file.toLowerCase().includes(wanted.toLowerCase())) {
-                                getFileInfo(path + file).then(function(stat){
-                                    stat.where = path + file;
+                                getFileInfo(path + file).then(stat => {
                                     result.push(stat);
                                 });
                             }
