@@ -162,6 +162,13 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System) {
         menu.popup(remote.getCurrentWindow());
     }, false);
 
+
+    $scope.search = wanted => {
+        File.search($scope.path, wanted).then(function(result){
+            $scope.result = result;
+        });
+    };
+
     /** enter键确认重命名 */
     $scope.listenEnter = (e, index) => {
         if(e.which === 13) {

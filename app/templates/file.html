@@ -71,3 +71,16 @@
         </table>
     </section>
 </article>
+<form>
+    <div>
+        <label>搜索</label><input type="text" ng-model="wanted">
+        <input type="button" ng-click="search(wanted)">
+    </div>
+    <table>
+        <tbody>
+            <tr ng-repeat="x in result">
+                <td>{{x}}</td>
+            </tr>
+        </tbody>
+    </table>
+</form>

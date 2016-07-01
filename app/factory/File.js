@@ -350,6 +350,41 @@ routeApp.factory('File', $q => {
             });
     }
 
+    /**
+     * 搜索文件
+     * todo [ ] 多种搜索模式
+     * todo [ ] 貌似感觉哪里不太对...
+     * todo [ ] 提前结束全部异步
+     * @param src
+     * @param wanted
+     * @param result
+     * @returns {*}
+     */
+    function search(src, wanted, result=[]) {
+        return $q(function(resolve, reject){
+            let path = src;
+            readFolder(src).then(function(files){
+                files.forEach(function(file){
+                    fs.stat(path + file, function(err, stat){
+                        if(stat && stat.isDirectory()){
+                            if(file.toLowerCase().includes(wanted.toLowerCase())) {
+                                result.push(path + file + "\\\\");
+                            }
+                            search(path + file + "\\\\", wanted, result).then();
+                        }
+                        else if(stat && stat.isFile()){
+                            if(file.toLowerCase().includes(wanted.toLowerCase())) {
+                                result.push(path + file);
+                            }
+                        }
+                    })
+                });
+            });
+            resolve(result);
+        })
+    }
+
+
     return {
         copyFile: copyFile,
         copyFolder: copyFolder,
@@ -359,7 +394,8 @@ routeApp.factory('File', $q => {
         getFileInfo: getFileInfo,
         rename: rename,
         createNewFolder: createNewFolder,
-        createNewTxt: createNewTxt
+        createNewTxt: createNewTxt,
+        search: search
     };
 
 });
