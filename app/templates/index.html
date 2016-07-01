@@ -1,6 +1,9 @@
 <div class="status">
-    <button class="btn btn-danger arrow-left" ng-init="remove = true" ng-click="remove=!remove">
+    <button class="btn btn-danger arrow-left" ng-init="remove = true" ng-click="remove=!remove" ng-show="remove">
         <i class="material-icons">keyboard_arrow_left</i>
+    </button>
+    <button class="btn btn-danger arrow-right" ng-init="remove = true" ng-click="remove=!remove" ng-hide="remove">
+        <i class="material-icons">keyboard_arrow_right</i>
     </button>
 </div>
 <div ng-if="remove" class="animate-if">

@@ -93,7 +93,8 @@ $hover: #e8e8e8;
 .system {
   max-width: 300px;
   float: left;
-  .arrow-left {
+  .arrow-left,
+  .arrow-right {
     float: right;
     margin: 0;
     padding: 8px 5px;
@@ -130,6 +131,7 @@ $hover: #e8e8e8;
     table,
     thead,
     tbody {
+      table-layout: auto;
       overflow: hidden;
       display: block;
       width: 100%;
@@ -148,7 +150,7 @@ $hover: #e8e8e8;
     tr {
       min-width: 400px;
       overflow: hidden;
-      display: flex;
+      display: block;
       input {
         border: 0;
         box-shadow: none;
@@ -176,19 +178,20 @@ $hover: #e8e8e8;
           }
         }
         &:nth-child(2) {
-          width: 40%;
           padding-left: 0;
           text-align: left;
         }
         &:nth-child(3) {
-          width: 20%;
+          width: 120px;
+          float: right;
         }
         &:nth-child(4) {
-          width: 25%;
+          width: 150px;
+          float: right;
         }
         &:nth-child(5) {
-          min-width: 80px;
-          width: 15%;
+          width: 180px;
+          float: right;
         }
       }
     }
