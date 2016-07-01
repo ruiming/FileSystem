@@ -78,9 +78,18 @@ a:active {
     line-height: 1.8;
     overflow: hidden; }
 
+.status {
+  width: 40px;
+  overflow: hidden;
+  float: right; }
+
 .system {
-  width: 300px;
+  max-width: 300px;
   float: left; }
+  .system .arrow-left {
+    float: right;
+    margin: 0;
+    padding: 8px 5px; }
   .system p {
     margin: 0 0 5px; }
   .system .cpu {

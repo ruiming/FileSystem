@@ -13,7 +13,7 @@ routeApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider
                     controller: 'indexCtrl',
                     controllerUrl: 'app/controllers/indexCtrl.js'
                 },
-                "files": {
+                'files': {
                     templateUrl: 'app/templates/file.html',
                     controller: 'fileCtrl',
                     controllerUrl: 'app/controllers/fileCtrl.js'
