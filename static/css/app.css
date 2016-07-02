@@ -119,7 +119,7 @@ a:active {
   .files .disks-files thead,
   .files .disks-files tbody {
     min-width: 470px;
-    overflow: hidden;
+    overflow: auto;
     display: block;
     width: 100%; }
   .files .disks-files .tr-active {
