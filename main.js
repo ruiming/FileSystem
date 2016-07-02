@@ -18,7 +18,6 @@ app.on('ready', () => {
         title: "资源管理器",
         center: true
     });
-    
     // 加载应用的index.html
     mainWindow.loadURL('file://' + __dirname + '/index.html');
     

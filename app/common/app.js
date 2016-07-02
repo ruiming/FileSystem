@@ -1,4 +1,4 @@
-var routeApp = angular.module('asd',['ui.router','ui.bootstrap', 'angularBootstrapMaterial']);
+var routeApp = angular.module('asd',['ui.router','ui.bootstrap', 'angularBootstrapMaterial', 'ngAnimate']);
 
 routeApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider){
 

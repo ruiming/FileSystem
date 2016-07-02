@@ -71,7 +71,8 @@
         </table>
     </section>
 </article>
-<ul class="breadcrumb">
+<ul class="breadcrumb" ng-init="checked = false">
+    <p class="message message-show-hide" ng-show="checked">{{message}}</p>
     <li><a href="javascript:void(0)" ng-click="turnto('Computer')">Computer</a></li>
     <li ng-repeat="bread in breadcrumbs track by $index" ng-if="bread != 'Computer'"><a href="javascript:void(0)" ng-click="turnto(bread)">{{bread}}</a></li>
     <li class="number" ng-show="path != 'Computer'">共{{files.length}}个项目</li>

@@ -12,6 +12,7 @@
     <script src="app/common/help.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/angular-bootstrap-material/dist/angular-bootstrap-material.js"></script>
     <script src="bower_components/angular-messages/angular-messages.js"></script>
@@ -25,7 +26,7 @@
 <body>
 <div class="container-fluid">
 <div class="row">
-    <div ui-view="system" class="system hidden-xs"></div>
+    <div ui-view="system" id="system" class="system hidden-xs"></div>
     <div ui-view="files" class="files"></div>
 </div>
 </div>

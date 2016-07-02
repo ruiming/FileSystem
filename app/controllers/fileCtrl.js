@@ -4,7 +4,8 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
             path = require('path'),
             remote = require('electron').remote,
             Menu = remote.Menu,
-            MenuItem = remote.MenuItem;
+            MenuItem = remote.MenuItem,
+            watch = require('watch');
     
     $scope.path = "Computer";
     $scope.files = [];
@@ -163,7 +164,6 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
         menu.popup(remote.getCurrentWindow());
     }, false);
 
-    
     $scope.search = wanted => {
         $scope.backwardStore.push($scope.path);
         $scope.forwardStore = [];
@@ -305,11 +305,28 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
             filenames.map(filename => {
                 File.getFileInfo($scope.path + filename).then(stat => {
                     $scope.files.push(stat);
-                })
+                });
             });
-        })
-    }
+        });
 
+        fs.watch($scope.path, (event, filename) => {
+            console.log(`event is: ${event}`);
+            if (filename) {
+                $scope.checked = true;
+                $scope.message = `filename provided: ${filename}`;
+                $timeout(()=>{
+                    $scope.checked = false;
+                }, 3000)
+            } else {
+                $scope.checked = true;
+                $scope.message = 'filename not provided';
+                $timeout(()=>{
+                    $scope.checked = false;
+                }, 3000)
+            }
+        });
+    }
+    
     /** 获取固定磁盘分区信息 */
     function getDisk() {
         $scope.breadcrumb();

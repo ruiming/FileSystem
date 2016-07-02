@@ -388,8 +388,7 @@ routeApp.factory('File', $q => {
             resolve(result);
         })
     }
-
-
+    
     return {
         copyFile: copyFile,
         copyFolder: copyFolder,

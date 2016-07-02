@@ -199,12 +199,26 @@ a:active {
     width: 100%;
     z-index: 1500;
     position: fixed;
+    right: 0;
     bottom: 0;
     background-color: #FFF;
     margin-bottom: 0;
     float: left;
-    line-height: 3.5;
     padding: 0 0 0 25px; }
+    .files .breadcrumb li {
+      line-height: 3.5; }
+    .files .breadcrumb .message-show-hide {
+      text-align: center;
+      padding: 0;
+      background-color: transparent;
+      opacity: 1;
+      position: relative; }
+    .files .breadcrumb .message-show-hide {
+      bottom: -5px;
+      transition: all linear 0.5s; }
+    .files .breadcrumb .message-show-hide.ng-hide {
+      bottom: -25px;
+      opacity: 0; }
   .files .number {
     float: right;
     z-index: 1500;

@@ -69,7 +69,6 @@ $hover: #e8e8e8;
   /* Support for Safari and Chrome. */
   text-rendering: optimizeLegibility;
 }
-
 .system,
 .files {
   padding: 20px;
@@ -229,12 +228,30 @@ $hover: #e8e8e8;
     width: 100%;
     z-index: 1500;
     position: fixed;
+    right: 0;
     bottom: 0;
     background-color: #FFF;
     margin-bottom: 0;
     float: left;
-    line-height: 3.5;
     padding: 0 0 0 25px;
+    li {
+      line-height: 3.5;
+    }
+    .message-show-hide {
+      text-align: center;
+      padding: 0;
+      background-color: transparent;
+      opacity: 1;
+      position: relative;
+    }
+    .message-show-hide {
+      bottom: -5px;
+      transition: all linear 0.5s;
+    }
+    .message-show-hide.ng-hide {
+      bottom: -25px;
+      opacity: 0;
+    }
   }
   .number {
     float: right;
