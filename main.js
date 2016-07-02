@@ -14,6 +14,7 @@ app.on('ready', () => {
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 768,
+        minWidth: 510,
         title: "资源管理器",
         center: true
     });
