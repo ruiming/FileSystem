@@ -4,7 +4,7 @@ body{
   -webkit-app-region: drag;
   cursor: default;
   min-width: 450px;
-  background-color: #FFF;
+  background-color: #fdfdfd;
 }
 p,
 span,
@@ -78,6 +78,13 @@ $hover: #e8e8e8;
     font-size: 22px;
     padding: 5px 0;
     font-weight: 800;
+    i {
+      font-size: 25px;
+      padding-right: 30px;
+      position: relative;
+      color: #4caf50;
+      bottom: -4px;
+    }
   }
   section {
     font-size: 14px;
@@ -203,24 +210,24 @@ $hover: #e8e8e8;
   .action {
     overflow: hidden;
     display: block;
-    float: left;
     button {
       border-radius: 0;
       padding: 6px 15px;
       float: left;
     }
-  }
-  form {
-    float: right;
-    display: flex;
-    .form-group,
-    #search {
-      margin: 0;
-      padding: 0 0 0 5px;
-    }
-    button {
-      padding: 0 10px;
-      margin: 0;
+    form {
+      padding: 6px 15px;
+      float: right;
+      display: flex;
+      .form-group,
+      #search {
+        margin: 0;
+        padding: 0 0 0 5px;
+      }
+      button {
+        padding: 0 10px;
+        margin: 0;
+      }
     }
   }
   .breadcrumb {

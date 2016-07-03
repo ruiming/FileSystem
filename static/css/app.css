@@ -4,7 +4,7 @@ body {
   -webkit-app-region: drag;
   cursor: default;
   min-width: 450px;
-  background-color: #FFF; }
+  background-color: #fdfdfd; }
 
 p,
 span,
@@ -73,6 +73,13 @@ a:active {
     font-size: 22px;
     padding: 5px 0;
     font-weight: 800; }
+    .system header i,
+    .files header i {
+      font-size: 25px;
+      padding-right: 30px;
+      position: relative;
+      color: #4caf50;
+      bottom: -4px; }
   .system section,
   .files section {
     font-size: 14px;
@@ -178,22 +185,22 @@ a:active {
         width: 180px; }
   .files .action {
     overflow: hidden;
-    display: block;
-    float: left; }
+    display: block; }
     .files .action button {
       border-radius: 0;
       padding: 6px 15px;
       float: left; }
-  .files form {
-    float: right;
-    display: flex; }
-    .files form .form-group,
-    .files form #search {
-      margin: 0;
-      padding: 0 0 0 5px; }
-    .files form button {
-      padding: 0 10px;
-      margin: 0; }
+    .files .action form {
+      padding: 6px 15px;
+      float: right;
+      display: flex; }
+      .files .action form .form-group,
+      .files .action form #search {
+        margin: 0;
+        padding: 0 0 0 5px; }
+      .files .action form button {
+        padding: 0 10px;
+        margin: 0; }
   .files .breadcrumb {
     display: block;
     width: 100%;

@@ -1,14 +1,12 @@
 <div class="status">
-    <button class="btn btn-danger arrow-left" ng-init="remove = true" ng-click="remove=!remove" ng-show="remove">
-        <i class="material-icons">keyboard_arrow_left</i>
-    </button>
-    <button class="btn btn-danger arrow-right" ng-init="remove = true" ng-click="remove=!remove" ng-hide="remove">
-        <i class="material-icons">keyboard_arrow_right</i>
+    <button class="btn btn-danger arrow-left" ng-init="remove = true" ng-click="remove=!remove">
+        <i class="material-icons" ng-show="remove">keyboard_arrow_left</i>
+        <i class="material-icons" ng-show="!remove">keyboard_arrow_right</i>
     </button>
 </div>
 <div ng-if="remove" class="animate-if">
     <article class="basic">
-        <header>· 操作系统信息</header>
+        <header><i class="material-icons">computer</i>操作系统信息</header>
         <section>
             <p class="type">操作系统名称: {{system.type}}</p>
             <p class="hostname">操作系统主机名: {{system.hostname}}</p>
@@ -22,7 +20,7 @@
         </section>
     </article>
     <article class="cpus">
-        <header>· CPU信息</header>
+        <header><i class="material-icons">free_breakfast</i>CPU信息</header>
         <section>
             <p>型号: {{system.cpus[0].model}}</p>
             <p>架构: {{system.arch}}</p>
@@ -34,7 +32,7 @@
         </section>
     </article>
     <article class="memory">
-        <header>· 内存信息</header>
+        <header><i class="material-icons">memory</i>内存信息</header>
         <section>
             <p>已使用内存: {{(system.totalmem - system.freemen) / 1024 | number: 0}} KB</p>
             <p>空闲内存字节: {{system.freemen / 1024 | number: 0}} KB</p>
@@ -42,7 +40,7 @@
         </section>
     </article>
     <article class="usedbar">
-        <header>· 使用情况</header>
+        <header><i class="material-icons">data_usage</i>使用情况</header>
         <section>
             <div class="bar menbar">
                 <span class="col-xs-4">内存使用: </span>

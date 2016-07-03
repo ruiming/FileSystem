@@ -1,5 +1,5 @@
 <article class="disks-files">
-    <header>文件管理器</header>
+    <header><i class="material-icons">toys</i>文件管理器</header>
     <section class="file-center">
         <div class="action">
             <button class="btn btn-info" ng-click="home()" ng-disabled="path == 'Computer'">
@@ -11,16 +11,16 @@
             <button class="btn btn-info" ng-click="Hforward()" ng-disabled="forwardStore.length==0">
                 <i class="material-icons">keyboard_arrow_right</i>
             </button>
+            <form>
+                <div class="form-group">
+                    <label for="search" hidden>搜索</label>
+                    <input type="text" ng-model="wanted" class="form-control" id="search" placeholder="请输入您要搜索的内容">
+                </div>
+                <button class="btn btn-info" ng-click="search(wanted)">
+                    <i class="material-icons">search</i>
+                </button>
+            </form>
         </div>
-        <form>
-            <div class="form-group">
-                <label for="search" hidden>搜索</label>
-                <input type="text" ng-model="wanted" class="form-control" id="search" placeholder="请输入您要搜索的内容">
-            </div>
-            <button class="btn btn-info" ng-click="search(wanted)">
-                <i class="material-icons">search</i>
-            </button>
-        </form>
         <table ng-show="path == 'Computer'">
             <tbody>
                 <tr class="menu">
