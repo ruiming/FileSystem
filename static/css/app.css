@@ -135,7 +135,7 @@ a:active {
   .files .disks-files .tr-active {
     background-color: #b3e4ff !important; }
   .files .disks-files .tr-inactive {
-    background-color: #ffffff; }
+    background-color: #fdfdfd; }
   .files .disks-files .list:hover,
   .files .disks-files .menu th:hover {
     background-color: #d7f1ff; }

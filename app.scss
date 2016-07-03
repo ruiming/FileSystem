@@ -4,7 +4,7 @@ body{
   -webkit-app-region: drag;
   cursor: default;
   min-width: 450px;
-  background-color: #fdfdfd;
+  background-color: $bgColor;
 }
 p,
 span,
@@ -27,6 +27,7 @@ a:active {
 }
 
 $hover: #e8e8e8;
+$bgColor: #fdfdfd;
 
 ::-webkit-scrollbar {
   height: 12px;
@@ -150,7 +151,7 @@ $hover: #e8e8e8;
       background-color: #b3e4ff !important;
     }
     .tr-inactive {
-      background-color: #ffffff;
+      background-color: $bgColor;
     }
     .list,
     .menu th {
