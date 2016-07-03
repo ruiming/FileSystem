@@ -151,7 +151,9 @@ routeApp.factory('File', $q => {
                         }
                     })
                 }
-                resolve();
+                else {
+                    reject('cancel');
+                }
             });
         });
     }

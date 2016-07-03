@@ -308,19 +308,19 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
                 });
             });
         });
-
         fs.watch($scope.path, (event, filename) => {
-            console.log(`event is: ${event}`);
+            filename = filename.replace(/(\\)/, '');
+            $timeout.cancel($scope.alert);
             if (filename) {
                 $scope.checked = true;
-                $scope.message = `filename provided: ${filename}`;
-                $timeout(()=>{
+                $scope.message = `${event}: ${filename}`;
+                $scope.alert = $timeout(()=>{
                     $scope.checked = false;
                 }, 3000)
             } else {
                 $scope.checked = true;
-                $scope.message = 'filename not provided';
-                $timeout(()=>{
+                $scope.message = '${event}: ${filename}';
+                $scope.alert = $timeout(()=>{
                     $scope.checked = false;
                 }, 3000)
             }
