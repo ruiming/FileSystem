@@ -1,3 +1,5 @@
+$hover: #e8e8e8;
+$bgColor: #fdfdfd;
 body{
   font-family: "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   -webkit-user-select: none;
@@ -25,9 +27,6 @@ a:active {
   outline: 0;
   text-decoration: none;
 }
-
-$hover: #e8e8e8;
-$bgColor: #fdfdfd;
 
 ::-webkit-scrollbar {
   height: 12px;
@@ -147,6 +146,10 @@ $bgColor: #fdfdfd;
       display: block;
       width: 100%;
     }
+    tbody {
+      max-height: 830px;
+      padding-right: 15px;
+    }
     .tr-active {
       background-color: #b3e4ff !important;
     }
@@ -243,7 +246,7 @@ $bgColor: #fdfdfd;
     float: left;
     padding: 0 0 0 25px;
     li {
-      line-height: 3.5;
+      margin: 10px 0;
     }
     .message-show-hide {
       text-align: center;

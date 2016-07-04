@@ -132,6 +132,9 @@ a:active {
     overflow: auto;
     display: block;
     width: 100%; }
+  .files .disks-files tbody {
+    max-height: 830px;
+    padding-right: 15px; }
   .files .disks-files .tr-active {
     background-color: #b3e4ff !important; }
   .files .disks-files .tr-inactive {
@@ -213,7 +216,7 @@ a:active {
     float: left;
     padding: 0 0 0 25px; }
     .files .breadcrumb li {
-      line-height: 3.5; }
+      margin: 10px 0; }
     .files .breadcrumb .message-show-hide {
       text-align: center;
       padding: 0;
