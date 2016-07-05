@@ -11,6 +11,7 @@
   "author": "Ruiming Zhuang",
   "license": "ISC",
   "devDependencies": {
+    "base64-img": "^1.0.3",
     "bower": "^1.7.9",
     "chokidar": "^1.6.0",
     "electron": "^0.4.1",

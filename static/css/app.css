@@ -241,7 +241,11 @@ a:active {
   padding: 0 0 0 10px; }
   .preview label {
     padding: 5px 0;
-    font-size: 14px; }
+    font-size: 14px;
+    display: block; }
+  .preview img {
+    overflow: hidden;
+    max-width: 100%; }
   .preview .preview-content {
     overflow: hidden;
     color: #b1b1b1;

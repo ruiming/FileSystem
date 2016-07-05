@@ -7,6 +7,7 @@ routeApp.factory('File', $q => {
             path = require('path'),
             exec = require('child_process').exec,
             dialog = require('electron').remote.dialog,
+            base64Img = require('base64-img'),
             iconv = require('iconv-lite');
     const   buttons = ['OK', 'Cancel'];
 
@@ -395,16 +396,33 @@ routeApp.factory('File', $q => {
     }
 
     function readFile(src) {
-        return $q((resolve, reject) => {
-            fs.readFile(src, 'utf-8', (err, data) => {
-                if(err) {
-                    reject(err);
-                }
-                else {
-                    resolve(data);
-                }
-            });
-        })
+        let temp = src.split('.');
+        if( temp[temp.length - 1].toLowerCase() == 'jpg'  ||
+            temp[temp.length - 1].toLowerCase() == 'jpeg' ||
+            temp[temp.length - 1].toLowerCase() == 'png'  ||
+            temp[temp.length - 1].toLowerCase() == 'bmg'  ||
+            temp[temp.length - 1].toLowerCase() == 'gif'  ||
+            temp[temp.length - 1].toLowerCase() == 'svg'  ||
+            temp[temp.length - 1].toLowerCase() == 'psd') {
+            return $q((resolve, reject) => {
+                base64Img.base64(src, (err, data) => {
+                    if(err) reject(err);
+                    else resolve(data);
+                })
+            })
+        }
+        else {
+            return $q((resolve, reject) => {
+                fs.readFile(src, 'utf-8', (err, data) => {
+                    if(err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve(data);
+                    }
+                });
+            })
+        }
     }
 
     return {

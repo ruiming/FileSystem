@@ -81,7 +81,8 @@
             <label>Ctime:</label><p>{{last.ctime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
         </div>
         <label ng-if="content && content!=''">内容预览</label>
-        <p class="preview-content">{{content}}</p>
+        <p class="preview-content" ng-if="content.substring(0, 10)!='data:image'">{{content}}</p>
+        <img ng-src="{{content}}"  ng-if="content.substring(0, 10)=='data:image'">
     </section>
 </article>
 <ul class="breadcrumb" ng-init="checked = false">
