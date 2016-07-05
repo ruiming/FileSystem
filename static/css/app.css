@@ -239,6 +239,9 @@ a:active {
 .preview {
   border-left: 1px solid #eee;
   padding: 0 0 0 10px; }
+  .preview label {
+    padding: 5px 0;
+    font-size: 14px; }
   .preview .preview-content {
     overflow: hidden;
     color: #b1b1b1;
@@ -257,6 +260,3 @@ a:active {
       width: 80px; }
   .preview .preview-info {
     font-size: 12px; }
-    .preview .preview-info label {
-      padding: 5px 0;
-      font-size: 14px; }

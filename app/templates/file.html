@@ -70,7 +70,7 @@
             </tbody>
         </table>
     </section>
-    <section class="preview col-md-2 hidden-xs hidden-sm">
+    <section class="preview col-md-2 hidden-xs hidden-sm" ng-show="path != 'Computer'">
         <div class="preview-text">
             <img ng-src="{{last.src}}">
             <p>{{last.name}}</p>
@@ -80,6 +80,7 @@
             <label>Birthtime:</label><p>{{last.birthtime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
             <label>Ctime:</label><p>{{last.ctime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
         </div>
+        <label ng-if="content && content!=''">内容预览</label>
         <p class="preview-content">{{content}}</p>
     </section>
 </article>
