@@ -143,19 +143,25 @@ routeApp.factory('System', ($q) => {
             if(err || iconv.decode(stderr, 'GB2312')){
                 throw new Error(err);
             }
-            let reg = /=([^\r]+)\r/g;
-            log(iconv.decode(stdout, 'GB2312'));
-            let result = iconv.decode(stdout, 'GB2312').match(reg);
-            let disks = [];
-            for(let i=0; i<result.length; i+=7) {
-                for(let j=i; j<=i+6; j++){
-                    result[j]=result[j].replace(/=/g,'')
-                }
-                disks.push(result.slice(i, i+6));
-            }
-            console.log(disks);
+            wmicFormat(iconv.decode(stdout, 'GB2312'), 7);
         })
     }
+
+    function wmicFormat(stdout, size) {
+        let reg = /([^\r]+)=([^\r]+)\r/g;
+        let result = [];
+        let one = {};
+        let length = stdout.match(/=/g).length;
+        for(let i=0; i<length/size; i++){
+            for(let j=0; j<size; j++){
+                let mat = reg.exec(stdout);
+                one[mat[1].slice(1)] = mat[2];
+            }
+            result.push(one);
+        }
+        console.log(result);
+    }
+
     getDiskDriver();
 
     return {
