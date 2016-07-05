@@ -186,6 +186,9 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
             file.hover = false;
         });
         $scope.files[index].hover = !status;
+        if($scope.files[index].hover){
+            getSideBar($scope.path + $scope.files[index].name);
+        }
     };
 
     /** 重命名 */
@@ -325,13 +328,20 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
                 }, 3000)
             }
         });
-        File.getFileInfo($scope.path.slice(0, $scope.path.length-2)).then(stat => {
-            $scope.last = stat;
-            log(stat);
-        });
+        getSideBar($scope.path.slice(0, $scope.path.length-2));
     }
 
-    
+    function getSideBar(src) {
+        File.getFileInfo(src).then(stat => {
+            $scope.last = stat;
+        });
+        File.readFile(src).then(content => {
+            $scope.content = content;
+        }, err => {
+            $scope.content = '';
+        })
+    }
+
     /** 获取固定磁盘分区信息 */
     function getDisk() {
         $scope.breadcrumb();

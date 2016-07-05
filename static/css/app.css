@@ -237,7 +237,15 @@ a:active {
     right: 20px; }
 
 .preview {
-  border-left: 1px solid #eee; }
+  border-left: 1px solid #eee;
+  padding: 0 0 0 10px; }
+  .preview .preview-content {
+    overflow: hidden;
+    color: #b1b1b1;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+    word-break: break-word; }
   .preview .preview-text {
     float: left;
     overflow: hidden;

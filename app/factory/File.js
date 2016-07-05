@@ -393,7 +393,20 @@ routeApp.factory('File', $q => {
             resolve(result);
         })
     }
-    
+
+    function readFile(src) {
+        return $q((resolve, reject) => {
+            fs.readFile(src, 'utf-8', (err, data) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(data);
+                }
+            });
+        })
+    }
+
     return {
         copyFile: copyFile,
         copyFolder: copyFolder,
@@ -404,7 +417,8 @@ routeApp.factory('File', $q => {
         rename: rename,
         createNewFolder: createNewFolder,
         createNewTxt: createNewTxt,
-        search: search
+        search: search,
+        readFile: readFile
     };
 
 });
