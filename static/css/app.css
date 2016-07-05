@@ -235,3 +235,20 @@ a:active {
     position: fixed;
     bottom: 0;
     right: 20px; }
+
+.preview {
+  border-left: 1px solid #eee; }
+  .preview .preview-text {
+    float: left;
+    overflow: hidden;
+    width: 100%;
+    text-align: center; }
+    .preview .preview-text img {
+      text-align: center;
+      margin: 20px;
+      width: 80px; }
+  .preview .preview-info {
+    font-size: 12px; }
+    .preview .preview-info label {
+      padding: 5px 0;
+      font-size: 14px; }

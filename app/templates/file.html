@@ -1,6 +1,6 @@
-<article class="disks-files">
+<article class="disks-files row">
     <header><i class="material-icons">toys</i>文件管理器</header>
-    <section class="file-center">
+    <section class="file-center col-md-10 col-sm-12 col-xs-12">
         <div class="action">
             <button class="btn btn-info" ng-click="home()" ng-disabled="path == 'Computer'">
                 <i class="material-icons">home</i>
@@ -69,6 +69,17 @@
                 </tr>
             </tbody>
         </table>
+    </section>
+    <section class="preview col-md-2 hidden-xs hidden-sm">
+        <div class="preview-text">
+            <img ng-src="{{last.src}}">
+            <p>{{last.name}}</p>
+        </div>
+        <div class="preview-info">
+            <label>Atime:</label><p>{{last.atime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+            <label>Birthtime:</label><p>{{last.birthtime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+            <label>Ctime:</label><p>{{last.ctime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+        </div>
     </section>
 </article>
 <ul class="breadcrumb" ng-init="checked = false">

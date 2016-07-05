@@ -253,6 +253,9 @@ routeApp.factory('File', $q => {
                     else if(FileTypeIcon.hasOwnProperty(mime)) {
                         type = mime;
                     }
+                    if(src.length <= 4){
+                        type = 'disk'
+                    }
                     stat.type = FileTypeIcon[type].type;
                     stat.src = FileTypeIcon[type].src;
                     stat.path = src;

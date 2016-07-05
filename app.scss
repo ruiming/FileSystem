@@ -272,3 +272,24 @@ a:active {
     right: 20px;
   }
 }
+.preview {
+  border-left: 1px solid #eee;
+  .preview-text {
+    float: left;
+    overflow: hidden;
+    width: 100%;
+    text-align: center;
+    img {
+      text-align: center;
+      margin: 20px;
+      width: 80px;
+    }
+  }
+  .preview-info {
+    font-size: 12px;
+    label {
+      padding: 5px 0;
+      font-size: 14px;
+    }
+  }
+}

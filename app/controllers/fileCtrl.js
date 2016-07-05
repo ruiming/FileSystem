@@ -325,7 +325,12 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
                 }, 3000)
             }
         });
+        File.getFileInfo($scope.path.slice(0, $scope.path.length-2)).then(stat => {
+            $scope.last = stat;
+            log(stat);
+        });
     }
+
     
     /** 获取固定磁盘分区信息 */
     function getDisk() {
