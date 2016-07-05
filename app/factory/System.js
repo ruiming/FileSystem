@@ -3,7 +3,8 @@
  * 提供Windows下获取系统信息如固定磁盘分区，CPU负载等功能
  */
 routeApp.factory('System', ($q) => {
-    const exec = require('child_process').exec;
+    const exec = require('child_process').exec,
+         iconv = require('iconv-lite');
 
     /**
      * 获取系统固定磁盘信息
@@ -137,6 +138,26 @@ routeApp.factory('System', ($q) => {
         })
     }
 
+    function getDiskDriver() {
+        exec('wmic DISKDRIVE get caption,description,interfacetype,model,partitions,size,totalsectors /VALUE', {encoding: 'GB2312'}, (err, stdout, stderr) => {
+            if(err || iconv.decode(stderr, 'GB2312')){
+                throw new Error(err);
+            }
+            let reg = /=([^\r]+)\r/g;
+            log(iconv.decode(stdout, 'GB2312'));
+            let result = iconv.decode(stdout, 'GB2312').match(reg);
+            let disks = [];
+            for(let i=0; i<result.length; i+=7) {
+                for(let j=i; j<=i+6; j++){
+                    result[j]=result[j].replace(/=/g,'')
+                }
+                disks.push(result.slice(i, i+6));
+            }
+            console.log(disks);
+        })
+    }
+    getDiskDriver();
+
     return {
         getDisk: getDisk,
         getCpuLoadPercentage: getCpuLoadPercentage,
@@ -144,6 +165,7 @@ routeApp.factory('System', ($q) => {
         getBiosManufacturer: getBiosManufacturer,
         getBiosName: getBiosName,
         getCpuNumber: getCpuNumber,
-        getProduct: getProduct
+        getProduct: getProduct,
+        getDiskDriver: getDiskDriver
     }
 });
