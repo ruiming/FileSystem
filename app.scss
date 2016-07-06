@@ -138,6 +138,7 @@ a:active {
 .files {
   min-width: 510px;
   .disks-files{
+    margin-bottom: 20px;
     table,
     thead,
     tbody {
@@ -278,7 +279,6 @@ a:active {
   label {
     padding: 5px 0;
     font-size: 14px;
-    display: block;
   }
   img {
     overflow: hidden;

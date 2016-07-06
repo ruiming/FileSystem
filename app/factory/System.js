@@ -78,7 +78,20 @@ routeApp.factory('System', ($q) => {
         })
     }
 
-
+    function getDiskDrive() {
+        return $q((resolve, reject) => {
+            exec('wmic diskdrive get /VALUE', {encoding: 'GB2312'}, (err, stdout, stderr) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    wmicFormat(iconv.decode(stdout, 'GB2312'), 51).then(result => {
+                        resolve(result);
+                    })
+                }
+            })
+        })
+    }
 
     /**
      * 格式化wmic输出
@@ -114,6 +127,7 @@ routeApp.factory('System', ($q) => {
         getCpu: getCpu,
         getCpuTemperature: getCpuTemperature,
         getBios: getBios,
-        getBaseboard: getBaseboard
+        getBaseboard: getBaseboard,
+        getDiskDrive: getDiskDrive
     }
 });

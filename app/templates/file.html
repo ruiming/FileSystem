@@ -89,7 +89,7 @@
         <p class="preview-content" ng-if="content.substring(0, 10)!='data:image'">{{content}}</p>
         <img ng-src="{{content}}"  ng-if="content.substring(0, 10)=='data:image'">
     </section>
-    <section class="preview col-md-2 hidden-xs hidden-sm" ng-show="path == 'Computer'||!last">
+    <section class="preview col-md-2 hidden-xs hidden-sm" ng-show="diskDetail && (path == 'Computer'||!last)">
         <div class="preview-text">
             <img ng-src='{{FileTypeIcon[diskDetail.Description].src}}'>
             <p>{{diskDetail.VolumeName}}</p>
@@ -106,6 +106,27 @@
             <label ng-if="diskDetail.Description">Description:</label><p>{{diskDetail.Description}}</p>
             <label ng-if="diskDetail.VolumeSerialNumber">VolumeSerialNumber:</label><p>{{diskDetail.VolumeSerialNumber}}</p>
             <label></label>
+        </div>
+    </section>
+    <section class="preview col-md-2 hidden-xs hidden-sm"
+             ng-show="!diskDetail && (path == 'Computer'||!last)">
+        <div ng-repeat="x in diskdrive">
+            <div class="preview-text">
+                <img ng-src='{{FileTypeIcon[x.Description].src}}'>
+                <p>{{x.Caption}}</p>
+                <p>{{x.Manufacturer}}</p>
+            </div>
+            <div class="preview-info">
+                <label>DeviceID:</label><p>{{x.DeviceID}}</p>
+                <label>InterfaceType</label><p>{{x.InterfaceType}}</p>
+                <label>Partitions:</label><p>{{x.Partitions}}</p>
+                <label>SerialNumber</label><p>{{x.SerialNumber}}</p>
+                <label>TotalCylinders</label><p>{{x.TotalCylinders}}</p>
+                <label>TotalHeads</label><p>{{x.TotalHeads}}</p>
+                <label>TotalSectors</label><p>{{x.TotalSectors}}</p>
+                <label>TotalTracks</label><p>{{x.TotalTracks}}</p>
+                <label>TracksPerCylinder</label><p>{{x.TracksPerCylinder}}</p>
+            </div>
         </div>
     </section>
 </article>

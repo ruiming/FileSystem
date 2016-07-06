@@ -125,67 +125,69 @@ a:active {
 
 .files {
   min-width: 510px; }
-  .files .disks-files table,
-  .files .disks-files thead,
-  .files .disks-files tbody {
-    min-width: 470px;
-    overflow: auto;
-    display: block;
-    width: 100%; }
-  .files .disks-files tbody {
-    max-height: 830px;
-    padding-right: 15px; }
-  .files .disks-files .tr-active {
-    background-color: #b3e4ff !important; }
-  .files .disks-files .tr-inactive {
-    background-color: #fdfdfd; }
-  .files .disks-files .list:hover,
-  .files .disks-files .menu th:hover {
-    background-color: #d7f1ff; }
-  .files .disks-files tr {
-    min-width: 470px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap; }
-    .files .disks-files tr input {
-      border: 0;
-      box-shadow: none;
-      outline: 0;
-      text-align: left;
-      white-space: nowrap;
+  .files .disks-files {
+    margin-bottom: 20px; }
+    .files .disks-files table,
+    .files .disks-files thead,
+    .files .disks-files tbody {
+      min-width: 470px;
+      overflow: auto;
+      display: block;
+      width: 100%; }
+    .files .disks-files tbody {
+      max-height: 830px;
+      padding-right: 15px; }
+    .files .disks-files .tr-active {
+      background-color: #b3e4ff !important; }
+    .files .disks-files .tr-inactive {
+      background-color: #fdfdfd; }
+    .files .disks-files .list:hover,
+    .files .disks-files .menu th:hover {
+      background-color: #d7f1ff; }
+    .files .disks-files tr {
+      min-width: 470px;
       overflow: hidden;
-      float: left;
-      width: 100%;
-      padding: 0; }
-    .files .disks-files tr td,
-    .files .disks-files tr th {
-      overflow: hidden;
-      padding-left: 10px;
-      text-align: right; }
-      .files .disks-files tr td:nth-child(1),
-      .files .disks-files tr th:nth-child(1) {
-        padding: 0 5px;
-        width: 26px; }
-        .files .disks-files tr td:nth-child(1) img,
-        .files .disks-files tr th:nth-child(1) img {
-          width: 16px; }
-      .files .disks-files tr td:nth-child(2),
-      .files .disks-files tr th:nth-child(2) {
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+      .files .disks-files tr input {
+        border: 0;
+        box-shadow: none;
+        outline: 0;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        float: left;
         width: 100%;
-        max-width: 130px;
-        text-overflow: ellipsis;
-        padding-right: 15px;
-        padding-left: 0;
-        text-align: left; }
-      .files .disks-files tr td:nth-child(3),
-      .files .disks-files tr th:nth-child(3) {
-        width: 120px; }
-      .files .disks-files tr td:nth-child(4),
-      .files .disks-files tr th:nth-child(4) {
-        width: 150px; }
-      .files .disks-files tr td:nth-child(5),
-      .files .disks-files tr th:nth-child(5) {
-        width: 180px; }
+        padding: 0; }
+      .files .disks-files tr td,
+      .files .disks-files tr th {
+        overflow: hidden;
+        padding-left: 10px;
+        text-align: right; }
+        .files .disks-files tr td:nth-child(1),
+        .files .disks-files tr th:nth-child(1) {
+          padding: 0 5px;
+          width: 26px; }
+          .files .disks-files tr td:nth-child(1) img,
+          .files .disks-files tr th:nth-child(1) img {
+            width: 16px; }
+        .files .disks-files tr td:nth-child(2),
+        .files .disks-files tr th:nth-child(2) {
+          width: 100%;
+          max-width: 130px;
+          text-overflow: ellipsis;
+          padding-right: 15px;
+          padding-left: 0;
+          text-align: left; }
+        .files .disks-files tr td:nth-child(3),
+        .files .disks-files tr th:nth-child(3) {
+          width: 120px; }
+        .files .disks-files tr td:nth-child(4),
+        .files .disks-files tr th:nth-child(4) {
+          width: 150px; }
+        .files .disks-files tr td:nth-child(5),
+        .files .disks-files tr th:nth-child(5) {
+          width: 180px; }
   .files .action {
     overflow: hidden;
     display: block; }
@@ -241,8 +243,7 @@ a:active {
   padding: 0 0 0 10px; }
   .preview label {
     padding: 5px 0;
-    font-size: 14px;
-    display: block; }
+    font-size: 14px; }
   .preview img {
     overflow: hidden;
     max-width: 100%; }

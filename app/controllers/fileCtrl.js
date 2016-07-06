@@ -363,6 +363,10 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
             log(err);
         })
     }
+    /** 获取硬盘信息 */
+    System.getDiskDrive().then(result => {
+        $scope.diskdrive = result;
+    });
 
     getDisk();
 
