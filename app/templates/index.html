@@ -9,21 +9,19 @@
         <header><i class="material-icons">computer</i>SYSTEM</header>
         <section>
             <p class="type">Type: {{system.type}}</p>
-            <p class="hostname">Hostname: {{system.hostname}}</p>
+            <p class="caption">Caption: {{os.Caption}}</p>
+            <p class="hostname">RegisteredUser: {{os.RegisteredUser}}</p>
             <p class="release">Release: {{system.release}}</p>
-            <p class="platform">Platform: {{system.platform}}</p>
-            <p class="endianness">Endianness: {{system.endianness}}</p>
             <p class="uptime">Uptime: {{system.uptime | number: 0}} S</p>
             <p class="bios-manufacturer">BiosManufacturer: {{bios.Manufacturer}}</p>
             <p class="Product">Product: {{baseboard.Product}}</p>
+            <p>OSArchitecture: {{os.OSArchitecture}}</p>
         </section>
     </article>
     <article class="cpus">
         <header><i class="material-icons">free_breakfast</i>CPU</header>
         <section>
             <p>Name: {{cpu.Name}}</p>
-            <p>AddressWidth: {{cpu.AddressWidth}}</p>
-            <p>DataWidth: {{cpu.DataWidth}}</p>
             <p>NumberOfCores: {{cpu.NumberOfCores}}</p>
             <p>NumberOfLogicalProcessors: {{cpu.NumberOfLogicalProcessors}}</p>
             <p>CurrentClockSpeed: {{cpu.CurrentClockSpeed}} MHZ</p>

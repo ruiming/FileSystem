@@ -6,9 +6,19 @@ routeApp.factory('System', ($q) => {
     const exec = require('child_process').exec,
          iconv = require('iconv-lite');
 
+    const cmd = {
+        'disk': 'wmic logicaldisk get /VALUE',
+        'cpu': 'wmic cpu get /VALUE',
+        'baseboard': 'wmic baseboard get /VALUE',
+        'bios': 'wmic bios get /VALUE',
+        'diskdrive': 'wmic diskdrive get /VALUE',
+        'os': 'wmic os get /VALUE',
+        'memorychip': 'wmic memorychip get /VALUE'
+    };
+
     function getDisk(){
         return $q(function(resolve, reject){
-            exec('wmic logicaldisk get /VALUE', {encoding: 'GB2312'}, (err, stdout, stderr) => {
+            exec(cmd.disk, {encoding: 'GB2312'}, (err, stdout, stderr) => {
                 if(err){
                     reject(stderr);
                 }
@@ -23,9 +33,9 @@ routeApp.factory('System', ($q) => {
 
     function getCpu(){
             return $q((resolve, reject) => {
-                exec('wmic cpu get /VALUE', (err, stdout, stderr) => {
-                    if(err || stderr){
-                        throw new Error(err);
+                exec(cmd.cpu, (err, stdout, stderr) => {
+                    if(err){
+                        reject(err);
                     }
                     else {
                         wmicFormat(stdout,57).then(result => {
@@ -38,8 +48,8 @@ routeApp.factory('System', ($q) => {
     
     function getBaseboard() {
         return $q((resolve, reject) => {
-            exec('wmic baseboard get /VALUE', (err, stdout, stderr) => {
-                if(err || stderr){
+            exec(cmd.baseboard, (err, stdout, stderr) => {
+                if(err){
                     reject(err);
                 }
                 else {
@@ -53,12 +63,12 @@ routeApp.factory('System', ($q) => {
 
     function getBios(){
         return $q((resolve, reject) => {
-            exec('wmic bios get /VALUE', (err, stdout, stderr) => {
+            exec(cmd.bios, {encoding: 'GB2312'}, (err, stdout, stderr) => {
                 if (err) {
                     reject(err);
                 }
                 else {
-                    wmicFormat(stdout, 31).then(result => {
+                    wmicFormat(iconv.decode(stdout, 'GB2312'), 31).then(result => {
                         resolve(result);
                     })
                 }
@@ -66,9 +76,39 @@ routeApp.factory('System', ($q) => {
         })
     }
 
+    function getOs(){
+        return $q((resolve, reject) => {
+            exec(cmd.os, {encoding: 'GB2312'}, (err, stdout, stderr) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    wmicFormat(iconv.decode(stdout, 'GB2312'), 64).then(result => {
+                        resolve(result);
+                    })
+                }
+            })
+        })
+    }
+
+    function getMemorychip(){
+        return $q((resolve, reject) => {
+            exec(cmd.memorychip, {encoding: 'GB2312'}, (err, stdout, stderr) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    wmicFormat(iconv.decode(stdout, 'GB2312'), 36).then(result => {
+                        resolve(result);
+                    })
+                }
+            })
+        })
+    }
+    
     function getDiskDrive() {
         return $q((resolve, reject) => {
-            exec('wmic diskdrive get /VALUE', {encoding: 'GB2312'}, (err, stdout, stderr) => {
+            exec(cmd.diskdrive, {encoding: 'GB2312'}, (err, stdout, stderr) => {
                 if(err) {
                     reject(err);
                 }
@@ -80,13 +120,7 @@ routeApp.factory('System', ($q) => {
             })
         })
     }
-
-    /**
-     * 格式化wmic输出
-     * @param stdout
-     * @param size
-     * @returns {*}
-     */
+    
     function wmicFormat(stdout, size) {
         return $q((resolve, reject) => {
             let reg = /([^\r]+)=(.*)\r/g;
@@ -115,6 +149,8 @@ routeApp.factory('System', ($q) => {
         getCpu: getCpu,
         getBios: getBios,
         getBaseboard: getBaseboard,
-        getDiskDrive: getDiskDrive
+        getDiskDrive: getDiskDrive,
+        getOs: getOs,
+        getMemorychip: getMemorychip
     }
 });

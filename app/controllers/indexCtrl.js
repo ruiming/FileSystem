@@ -34,5 +34,10 @@ routeApp.controller('indexCtrl', function($http, $scope, $interval, System){
     System.getBaseboard().then(result => {
         $scope.baseboard = result;
     });
-
+    System.getOs().then(result => {
+        $scope.os = result;
+    });
+    System.getMemorychip().then(result => {
+        $scope.memorychip = result;
+    })
 });

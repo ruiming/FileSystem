@@ -31,7 +31,7 @@
                     <th>Size</th>
                 </tr>
                 <tr ng-repeat="x in disks | index track by $index"
-                    ng-dblclick="forward(x.Name)"
+                    ng-dblclick="forward(x)"
                     ng-init="x.hover = false"
                     ng-click="selectDisk(x.index)"
                     ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"

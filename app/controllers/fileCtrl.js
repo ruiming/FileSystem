@@ -212,8 +212,9 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
     };
 
     /** 跳转至相应磁盘 */
-    $scope.forward = disk => {
-        $scope.path = disk + "\\\\";
+    $scope.forward = x => {
+        if(x.Description == '光盘')   return;
+        $scope.path = x.Name + "\\\\";
         $scope.backwardStore.push($scope.path);
         readFolder();
     };
