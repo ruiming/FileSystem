@@ -20,6 +20,9 @@ routeApp.controller('indexCtrl', function($http, $scope, $interval, System){
     getOS();
     $interval(function(){
         getOS();
+        System.getCpu().then(result => {
+            $scope.cpu = result;
+        });
     }, 1000);
 
     System.getCpu().then(result => {

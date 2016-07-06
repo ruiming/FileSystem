@@ -1,7 +1,10 @@
 # 资源管理器
   使用Angular, Node.js, Electron编写的Windows下的资源管理器
 
-###主要功能：
+### 截图预览
+    ![image](https://github.com/ruiming/FileSystem/raw/master/static/windows.png)
+
+### 主要功能：
 
   - 文件和文件夹的增删查改
   - 搜索功能
@@ -9,7 +12,7 @@
   - 监控文件和文件夹的操作
   - 文件分类，用户和权限管理
 
-###已完成功能：
+### 已完成功能：
 
   - 通过WMIC和Node.js的OS模块来显示基本系统信息(2016.6.12)
   - 通过WMIC来得到系统固定磁盘分区和磁盘信息(2016.6.13)

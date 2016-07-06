@@ -35,19 +35,7 @@ routeApp.factory('System', ($q) => {
             });
         });
     }
-
-    function getCpuTemperature(callback){
-        exec('wmic /namespace:\\\\root\\WMI path MSAcpi_ThermalZoneTemperature GET CriticalTripPoint,CurrentTemperature', (err, stdout, stderr) => {
-            if(err || stderr){
-                throw new Error(err);
-            }
-            let out = stdout.replace(/(CriticalTripPoint)|(CurrentTemperature)/g, '').replace(/(\s+)/g, '#').trim().split('#');
-            out.pop();
-            out.shift();
-            callback(out);
-        })
-    }
-
+    
     function getBaseboard() {
         return $q((resolve, reject) => {
             exec('wmic baseboard get /VALUE', (err, stdout, stderr) => {
@@ -125,7 +113,6 @@ routeApp.factory('System', ($q) => {
     return {
         getDisk: getDisk,
         getCpu: getCpu,
-        getCpuTemperature: getCpuTemperature,
         getBios: getBios,
         getBaseboard: getBaseboard,
         getDiskDrive: getDiskDrive
