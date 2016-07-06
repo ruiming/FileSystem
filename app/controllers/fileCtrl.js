@@ -15,6 +15,8 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
     $scope.desc = 0;
     $scope.disks = [];
     $scope.disk = {};
+    $scope.FileTypeIcon = FileTypeIcon;
+    console.log($scope.FileTypeIcon);
     
     let rightClickPosition = null;
     var selectedIndex = 0;

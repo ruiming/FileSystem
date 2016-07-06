@@ -10,7 +10,6 @@ routeApp.factory('File', $q => {
             base64Img = require('base64-img'),
             iconv = require('iconv-lite');
     const   buttons = ['OK', 'Cancel'];
-
     /**
      * 生成一个文件副本路径
      * @param to 目的路径

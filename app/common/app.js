@@ -3,7 +3,6 @@ var routeApp = angular.module('asd',['ui.router','ui.bootstrap', 'angularBootstr
 routeApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider){
 
     $urlRouterProvider.otherwise("/");
-
     $stateProvider
         .state('index', {
             url: '/',

@@ -8,27 +8,27 @@
     <article class="basic">
         <header><i class="material-icons">computer</i>操作系统信息</header>
         <section>
-            <p class="type">操作系统名称: {{system.type}}</p>
-            <p class="hostname">操作系统主机名: {{system.hostname}}</p>
-            <p class="release">操作系统版本: {{system.release}}</p>
-            <p class="platform">操作系统类型: {{system.platform}}</p>
-            <p class="endianness">字节序: {{system.endianness}}</p>
-            <p class="uptime">计算机运行时间: {{system.uptime | number: 0}} 秒</p>
-            <p class="bios-manufacturer">BIOS制造商: {{bios.manufacturer}}</p>
-            <p class="bios-name">BIOS版本: {{bios.name}}</p>
-            <p class="pc-product">计算机型号: {{name}}</p>
+            <p class="type">Type: {{system.type}}</p>
+            <p class="hostname">Hostname: {{system.hostname}}</p>
+            <p class="release">Release: {{system.release}}</p>
+            <p class="platform">Platform: {{system.platform}}</p>
+            <p class="endianness">Endianness: {{system.endianness}}</p>
+            <p class="uptime">Uptime: {{system.uptime | number: 0}} S</p>
+            <p class="bios-manufacturer">BiosManufacturer: {{bios.Manufacturer}}</p>
+            <p class="Product">Product: {{baseboard.Product}}</p>
         </section>
     </article>
     <article class="cpus">
         <header><i class="material-icons">free_breakfast</i>CPU信息</header>
         <section>
-            <p>型号: {{system.cpus[0].model}}</p>
-            <p>架构: {{system.arch}}</p>
-            <p>CPU核心数: {{cpuCore[1]}}</p>
-            <p>CPU逻辑核心数: {{cpuCore[2]}}</p>
-            <p>CPU频率: {{system.cpus[0].speed}} MHZ</p>
-            <p>CPU温度: {{(cpuTemperature[1] - 2732) / 10}} ℃</p>
-            <p>CPU警戒温度: {{(cpuTemperature[0] - 2732) / 10}} ℃</p>
+            <p>Name: {{cpu.Name}}</p>
+            <p>AddressWidth: {{cpu.AddressWidth}}</p>
+            <p>DataWidth: {{cpu.DataWidth}}</p>
+            <p>NumberOfCores: {{cpu.NumberOfCores}}</p>
+            <p>NumberOfLogicalProcessors: {{cpu.NumberOfLogicalProcessors}}</p>
+            <p>CurrentClockSpeed: {{cpu.CurrentClockSpeed}} MHZ</p>
+            <p>L2CacheSize: {{cpu.L2CacheSize}} KB</p>
+            <p>L3CacheSize: {{cpu.L3CacheSize}} KB</p>
         </section>
     </article>
     <article class="memory">
@@ -51,7 +51,7 @@
             <div class="bar cpubar">
                 <span class="col-xs-4">CPU使用: </span>
                 <uib-progressbar class="progress-striped active" max="100" value="cpuload" type="success">
-                    <i>{{cpuload}}</i>
+                    <i>{{cpu.LoadPercentage}}</i>
                 </uib-progressbar>
             </div>
         </section>
