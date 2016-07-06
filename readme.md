@@ -2,7 +2,7 @@
   使用Angular, Node.js, Electron编写的Windows下的资源管理器
 
 ### 截图预览
-    ![image](https://github.com/ruiming/FileSystem/raw/master/static/windows.png)
+![image](https://raw.githubusercontent.com/Ruiming/FileSystem/master/static/windows.png)
 
 ### 主要功能：
 
