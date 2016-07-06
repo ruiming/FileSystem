@@ -30,7 +30,12 @@
                     <th>FreeSpace</th>
                     <th>Size</th>
                 </tr>
-                <tr ng-repeat="x in disks"  ng-dblclick="forward(x.Name)" class="list">
+                <tr ng-repeat="x in disks | index track by $index"
+                    ng-dblclick="forward(x.Name)"
+                    ng-init="x.hover = false"
+                    ng-click="selectDisk(x.index)"
+                    ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"
+                    class="list">
                     <td><img ng-src='{{FileTypeIcon[x.Description].src}}'></td>
                     <td>{{x.Name}}</td>
                     <td>{{x.FileSystem}}</td>
@@ -70,7 +75,7 @@
             </tbody>
         </table>
     </section>
-    <section class="preview col-md-2 hidden-xs hidden-sm" ng-show="path != 'Computer'">
+    <section class="preview col-md-2 hidden-xs hidden-sm" ng-show="path != 'Computer' && last">
         <div class="preview-text">
             <img ng-src="{{last.src}}">
             <p>{{last.name}}</p>
@@ -83,6 +88,25 @@
         <label ng-if="content && content!=''">内容预览</label>
         <p class="preview-content" ng-if="content.substring(0, 10)!='data:image'">{{content}}</p>
         <img ng-src="{{content}}"  ng-if="content.substring(0, 10)=='data:image'">
+    </section>
+    <section class="preview col-md-2 hidden-xs hidden-sm" ng-show="path == 'Computer'||!last">
+        <div class="preview-text">
+            <img ng-src='{{FileTypeIcon[diskDetail.Description].src}}'>
+            <p>{{diskDetail.VolumeName}}</p>
+            <p>{{diskDetail.Caption}}</p>
+        </div>
+        <div class="preview-info">
+            <label>FreeSpace:</label><p>{{diskDetail.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</p>
+            <label>Size:</label><p>{{diskDetail.Size / 1024 / 1024 / 1024 | number: 0}} GB</p>
+            <label>Usage:</label>
+            <uib-progressbar class="progress-striped active" max="diskDetail.Size" value="diskDetail.Size - diskDetail.FreeSpace" type="danger">
+                <i>{{diskDetail.Size - diskDetail.FreeSpace}}</i>
+            </uib-progressbar>
+            <label ng-if="diskDetail.FileSystem">FileSystem:</label><p>{{diskDetail.FileSystem}}</p>
+            <label ng-if="diskDetail.Description">Description:</label><p>{{diskDetail.Description}}</p>
+            <label ng-if="diskDetail.VolumeSerialNumber">VolumeSerialNumber:</label><p>{{diskDetail.VolumeSerialNumber}}</p>
+            <label></label>
+        </div>
     </section>
 </article>
 <ul class="breadcrumb" ng-init="checked = false">

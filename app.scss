@@ -305,5 +305,8 @@ a:active {
   }
   .preview-info {
     font-size: 12px;
+    .progress-striped {
+      margin-bottom: 0;
+    }
   }
 }

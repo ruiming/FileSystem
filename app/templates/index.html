@@ -6,7 +6,7 @@
 </div>
 <div ng-if="remove" class="animate-if">
     <article class="basic">
-        <header><i class="material-icons">computer</i>操作系统信息</header>
+        <header><i class="material-icons">computer</i>SYSTEM</header>
         <section>
             <p class="type">Type: {{system.type}}</p>
             <p class="hostname">Hostname: {{system.hostname}}</p>
@@ -19,7 +19,7 @@
         </section>
     </article>
     <article class="cpus">
-        <header><i class="material-icons">free_breakfast</i>CPU信息</header>
+        <header><i class="material-icons">free_breakfast</i>CPU</header>
         <section>
             <p>Name: {{cpu.Name}}</p>
             <p>AddressWidth: {{cpu.AddressWidth}}</p>
@@ -32,11 +32,11 @@
         </section>
     </article>
     <article class="memory">
-        <header><i class="material-icons">memory</i>内存信息</header>
+        <header><i class="material-icons">memory</i>MEMORY</header>
         <section>
-            <p>已使用内存: {{(system.totalmem - system.freemen) / 1024 | number: 0}} KB</p>
-            <p>空闲内存字节: {{system.freemen / 1024 | number: 0}} KB</p>
-            <p>系统总内存: {{system.totalmem / 1024 | number: 0}} KB</p>
+            <p>UsedMemory: {{(system.totalmem - system.freemen) / 1024 | number: 0}} KB</p>
+            <p>FreeMemory: {{system.freemen / 1024 | number: 0}} KB</p>
+            <p>TotalMemory: {{system.totalmem / 1024 | number: 0}} KB</p>
         </section>
     </article>
     <article class="usedbar">

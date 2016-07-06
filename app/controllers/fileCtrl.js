@@ -16,7 +16,6 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
     $scope.disks = [];
     $scope.disk = {};
     $scope.FileTypeIcon = FileTypeIcon;
-    console.log($scope.FileTypeIcon);
     
     let rightClickPosition = null;
     var selectedIndex = 0;
@@ -50,7 +49,6 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
         label: '粘贴到此处',
         click() {
             if(!$scope.srcType) {
-                log($scope.src, $scope.path + $scope.srcName);
                 File.copyFolder($scope.src, $scope.path + $scope.srcName).then((result) => {
                     for(let i in $scope.files) {
                         if($scope.files.hasOwnProperty(i)) {
@@ -181,7 +179,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
         }
     };
 
-    /** 点击高亮 */
+    /** 点击文件或文件夹高亮 */
     $scope.select = index => {
         let status = $scope.files[index].hover;
         $scope.files.forEach(function(file) {
@@ -190,6 +188,17 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
         $scope.files[index].hover = !status;
         if($scope.files[index].hover){
             getSideBar($scope.path + $scope.files[index].name);
+        }
+    };
+    /** 点击磁盘高亮 */
+    $scope.selectDisk = index => {
+        let status = $scope.disks[index].hover;
+        $scope.disks.forEach(disk => {
+            disk.hover = false;
+        });
+        $scope.disks[index].hover = !status;
+        if($scope.disks[index].hover){
+            $scope.diskDetail = $scope.disks[index];
         }
     };
 
