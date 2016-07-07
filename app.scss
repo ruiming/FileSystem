@@ -285,12 +285,15 @@ a:active {
     max-width: 100%;
   }
   .preview-content {
-    overflow: hidden;
-    color: #b1b1b1;
+    overflow: auto;
+    color: #000000;
+    white-space: pre;
     max-height: 500px;
     overflow-y: auto;
     padding-right: 10px;
+    font-size: 12px;
     word-break: break-word;
+    -webkit-user-select: text;
   }
   .preview-text {
     float: left;

@@ -409,12 +409,13 @@ routeApp.factory('File', $q => {
         }
         else {
             return $q((resolve, reject) => {
-                fs.readFile(src, (err, data) => {
+                // 只支持UTF-8编码格式
+                fs.readFile(src, 'utf-8', (err, data) => {
                     if(err) {
                         reject(err);
                     }
                     else {
-                        resolve(iconv.decode(data, 'GB2312'));
+                        resolve(data);
                     }
                 });
             })

@@ -248,12 +248,15 @@ a:active {
     overflow: hidden;
     max-width: 100%; }
   .preview .preview-content {
-    overflow: hidden;
-    color: #b1b1b1;
+    overflow: auto;
+    color: #000000;
+    white-space: pre;
     max-height: 500px;
     overflow-y: auto;
     padding-right: 10px;
-    word-break: break-word; }
+    font-size: 12px;
+    word-break: break-word;
+    -webkit-user-select: text; }
   .preview .preview-text {
     float: left;
     overflow: hidden;
