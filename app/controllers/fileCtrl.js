@@ -18,7 +18,6 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
     $scope.FileTypeIcon = FileTypeIcon;
     
     let rightClickPosition = null;
-    var selectedIndex = 0;
     const menu = new Menu();
 
     menu.append(new MenuItem({
@@ -190,6 +189,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
             getSideBar($scope.path + $scope.files[index].name);
         }
     };
+    
     /** 点击磁盘高亮 */
     $scope.selectDisk = index => {
         let status = $scope.disks[index].hover;
@@ -312,7 +312,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
         }
     };
 
-    /** 获取目录里面的文件列表 */
+    /** 获取目录里面的文件列表并监控 */
     function readFolder() {
         File.readFolder($scope.path).then(filenames => {
             $scope.files = [];
@@ -343,27 +343,35 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
         getSideBar($scope.path.slice(0, $scope.path.length-2));
     }
 
+    /** 获取侧边栏信息 */
     function getSideBar(src) {
         File.getFileInfo(src).then(stat => {
             $scope.last = stat;
+            // 1MB以内文件可以预览
+            if(stat.isFile() && stat.size <= 1024*1024) {
+                File.readFile(src).then(content => {
+                    $scope.content = content;
+                }, err => {
+                    $scope.content = '';
+                })
+            }
+            else {
+                $scope.content = '';
+            }
         });
-        File.readFile(src).then(content => {
-            $scope.content = content;
-        }, err => {
-            $scope.content = '';
-        })
     }
 
     /** 获取固定磁盘分区信息 */
     function getDisk() {
         $scope.breadcrumb();
-        let promise = System.getDisk();
-        promise.then(disks => {
+        $scope.last = false;
+        System.getDisk().then(disks => {
             $scope.disks = disks;
         }, err => {
             log(err);
         })
     }
+
     /** 获取硬盘信息 */
     System.getDiskDrive().then(result => {
         $scope.diskdrive = result;

@@ -409,12 +409,12 @@ routeApp.factory('File', $q => {
         }
         else {
             return $q((resolve, reject) => {
-                fs.readFile(src, 'utf-8', (err, data) => {
+                fs.readFile(src, (err, data) => {
                     if(err) {
                         reject(err);
                     }
                     else {
-                        resolve(data);
+                        resolve(iconv.decode(data, 'GB2312'));
                     }
                 });
             })
