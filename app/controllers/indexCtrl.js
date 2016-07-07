@@ -1,6 +1,7 @@
-routeApp.controller('indexCtrl', function($http, $scope, $interval, System){
+routeApp.controller('indexCtrl', function($http, $scope, $interval){
     
     const os = require('os');
+    const wmic = require('node-wmic');
     $scope.bios = [];
 
     function getOS(){
@@ -9,8 +10,6 @@ routeApp.controller('indexCtrl', function($http, $scope, $interval, System){
             endianness: os.endianness(),                        // 字节顺序 高位优先返回BE,低位优先的返回LE
             freemen: os.freemem(),                              // 空闲内存字节
             totalmem: os.totalmem(),                            // 系统总内存
-            homedir: os.homedir(),                              // 当前登录用户的根目录
-            hostname: os.hostname(),                            // 操作系统主机名
             platform: os.platform(),                            // 操作系统类型
             release: os.release(),                              // 操作系统版本
             type: os.type(),                                    // 操作系统名称
@@ -20,24 +19,24 @@ routeApp.controller('indexCtrl', function($http, $scope, $interval, System){
     getOS();
     $interval(function(){
         getOS();
-        System.getCpu().then(result => {
+        wmic.cpu().then(result => {
             $scope.cpu = result;
         });
     }, 1000);
 
-    System.getCpu().then(result => {
+    wmic.cpu().then(result => {
         $scope.cpu = result;
     });
-    System.getBios().then(result => {
+    wmic.bios().then(result => {
         $scope.bios = result;
     });
-    System.getBaseboard().then(result => {
+    wmic.baseboard().then(result => {
         $scope.baseboard = result;
     });
-    System.getOs().then(result => {
+    wmic.os().then(result => {
         $scope.os = result;
     });
-    System.getMemorychip().then(result => {
+    wmic.memorychip().then(result => {
         $scope.memorychip = result;
     })
 });
