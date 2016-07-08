@@ -180,6 +180,7 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
 
     /** 点击文件或文件夹高亮 */
     $scope.select = index => {
+        console.log($scope.files[index]);
         let status = $scope.files[index].hover;
         $scope.files.forEach(function(file) {
             file.hover = false;
@@ -221,11 +222,15 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
 
     /** 跳转至相应文件夹 */
     $scope.forward_folder = x => {
-        if(x.isFile())  return;
-        $scope.path = x.path + "\\\\";
-        $scope.backwardStore.push($scope.path);
-        $scope.forwardStore = [];
-        readFolder();
+        if(x.isDirectory()) {
+            $scope.path = x.path + "\\\\";
+            $scope.backwardStore.push($scope.path);
+            $scope.forwardStore = [];
+            readFolder();
+        }
+        else {
+            File.open(x.path);
+        }
     };
 
     /** 导航栏跳转 */

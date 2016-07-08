@@ -5,6 +5,7 @@
 routeApp.factory('File', $q => {
     const   fs = require("fs"),
             path = require('path'),
+            child_process = require('child_process'),
             exec = require('child_process').exec,
             dialog = require('electron').remote.dialog,
             base64Img = require('base64-img'),
@@ -250,8 +251,8 @@ routeApp.factory('File', $q => {
                     if(stat.isDirectory()) {
                         type = 'folder'
                     }
-                    else if(FileTypeIcon.hasOwnProperty(mime)) {
-                        type = mime;
+                    else if(FileTypeIcon.hasOwnProperty(mime.toLowerCase())) {
+                        type = mime.toLowerCase();
                     }
                     stat.type = FileTypeIcon[type].type;
                     stat.src = FileTypeIcon[type].src;
@@ -391,6 +392,11 @@ routeApp.factory('File', $q => {
         })
     }
 
+    function open(src) {
+        console.log(src[0] + ': && "' + src.slice(4) + '"');
+        exec(src[0] + ': && "' + src.slice(4) + '"');
+    }
+    
     function readFile(stat) {
         let src = stat.path;
         let temp = src.split('.');
@@ -436,7 +442,8 @@ routeApp.factory('File', $q => {
         createNewFolder: createNewFolder,
         createNewTxt: createNewTxt,
         search: search,
-        readFile: readFile
+        readFile: readFile,
+        open: open
     };
 
 });
