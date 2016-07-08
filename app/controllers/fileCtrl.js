@@ -347,17 +347,11 @@ routeApp.controller('fileCtrl', function($scope, $interval, $q, File, System, $t
     function getSideBar(src) {
         File.getFileInfo(src).then(stat => {
             $scope.last = stat;
-            // 1MB以内文件可以预览
-            if(stat.isFile() && stat.size <= 1024*1024) {
-                File.readFile(src).then(content => {
-                    $scope.content = content;
-                }, err => {
-                    $scope.content = '';
-                })
-            }
-            else {
+            File.readFile(stat).then(content => {
+                $scope.content = content;
+            }, err => {
                 $scope.content = '';
-            }
+            })
         });
     }
 

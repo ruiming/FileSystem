@@ -391,7 +391,8 @@ routeApp.factory('File', $q => {
         })
     }
 
-    function readFile(src) {
+    function readFile(stat) {
+        let src = stat.path;
         let temp = src.split('.');
         if( temp[temp.length - 1].toLowerCase() == 'jpg'  ||
             temp[temp.length - 1].toLowerCase() == 'jpeg' ||
@@ -399,7 +400,8 @@ routeApp.factory('File', $q => {
             temp[temp.length - 1].toLowerCase() == 'bmg'  ||
             temp[temp.length - 1].toLowerCase() == 'gif'  ||
             temp[temp.length - 1].toLowerCase() == 'svg'  ||
-            temp[temp.length - 1].toLowerCase() == 'psd') {
+            temp[temp.length - 1].toLowerCase() == 'psd'  ||
+            temp[temp.length - 1].toLowerCase() == 'ico' ) {
             return $q((resolve, reject) => {
                 base64Img.base64(src, (err, data) => {
                     if(err) reject(err);
@@ -409,7 +411,8 @@ routeApp.factory('File', $q => {
         }
         else {
             return $q((resolve, reject) => {
-                // 只支持UTF-8编码格式
+                // 只256KB以下文件的显示
+                if(stat.size > 256*1024)    reject();
                 fs.readFile(src, 'utf-8', (err, data) => {
                     if(err) {
                         reject(err);
