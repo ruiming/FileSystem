@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-packager . FileSystem --platform=win32 --arch=ia32"
+    "build": "electron-packager . FileSystem --platform=win32 --asar --arch=ia32"
   },
   "repository": {
     "type": "git",
