@@ -12,8 +12,8 @@ import wmic from 'node-wmic'
 
     FileCtrl.$inject = ['$scope', 'FileService', '$timeout'];
 
-    function FileCtrl($scope, $timeout, FileService) {
-        let Menu = remote.Menu,
+    function FileCtrl($scope, FileService, $timeout) {
+        var Menu = remote.Menu,
             MenuItem = remote.MenuItem;
 
         $scope.path = "Computer";

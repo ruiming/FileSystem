@@ -1,6 +1,6 @@
 import fs from 'fs'
 import {exec} from 'child_process'
-import dialog from 'electron'
+import {dialog} from 'electron'
 import base64Img from 'base64-img'
 import iconv from 'iconv-lite'
 (function() {

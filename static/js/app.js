@@ -93,7 +93,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     FileCtrl.$inject = ['$scope', 'FileService', '$timeout'];
 
-    function FileCtrl($scope, $timeout, FileService) {
+    function FileCtrl($scope, FileService, $timeout) {
         var Menu = _electron.remote.Menu,
             MenuItem = _electron.remote.MenuItem;
 
@@ -577,8 +577,6 @@ var _child_process = require('child_process');
 
 var _electron = require('electron');
 
-var _electron2 = _interopRequireDefault(_electron);
-
 var _base64Img = require('base64-img');
 
 var _base64Img2 = _interopRequireDefault(_base64Img);
@@ -711,7 +709,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     if (_fs2.default.existsSync(dist)) {
                         var title = '重名文件存在';
                         var message = '重名文件存在，继续粘贴将覆盖，是否继续?';
-                        _electron2.default.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
+                        _electron.dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
                             if (index == 0) {
                                 copy(src, dist).then(function (result) {
                                     resolve(result);
@@ -749,7 +747,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     if (_fs2.default.existsSync(dist)) {
                         var title = '重名文件夹存在';
                         var message = '重名文件夹存在，继续粘贴将覆盖，是否继续?';
-                        _electron2.default.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
+                        _electron.dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
                             if (index == 0) {
                                 xcopy(src, dist).then(function (result) {
                                     resolve(result);
@@ -781,7 +779,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             var title = '删除文件';
             var message = '确认要删除吗? 此操作不可逆!';
             return $q(function (resolve, reject) {
-                _electron2.default.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
+                _electron.dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
                     if (index == 0) {
                         _fs2.default.unlink(src, function (err) {
                             if (err) {
@@ -807,11 +805,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             var title = '删除文件夹';
             var message = '确认要删除吗? 此操作不可逆!';
             return $q(function (resolve, reject) {
-                _electron2.default.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
+                _electron.dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
                     if (index == 0) {
                         (0, _child_process.exec)('rmdir "' + src + '" /S /Q', { encoding: 'GB2312' }, function (err, stdout, stderr) {
                             if (err || _iconvLite2.default.decode(stderr, 'GB2312')) {
-                                _electron2.default.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
+                                _electron.dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
                                 reject(_iconvLite2.default.decode(stderr, 'GB2312'));
                             } else {
                                 resolve();
@@ -832,10 +830,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             return $q(function (resolve, reject) {
                 (0, _child_process.exec)('xcopy "' + src + '" "' + dist + '" /E /C /Y /H /I', { encoding: 'GB2312' }, function (err, stdout, stderr) {
                     if (err || _iconvLite2.default.decode(stderr, 'GB2312')) {
-                        _electron2.default.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
+                        _electron.dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
                         reject(_iconvLite2.default.decode(stderr, 'GB2312'));
                     } else {
-                        _electron2.default.showMessageBox({ type: 'info', title: 'Success', message: _iconvLite2.default.decode(stdout, 'GB2312'), buttons: ['OK'] });
+                        _electron.dialog.showMessageBox({ type: 'info', title: 'Success', message: _iconvLite2.default.decode(stdout, 'GB2312'), buttons: ['OK'] });
                         getFileInfo(dist).then(function (stat) {
                             resolve(stat);
                         });
@@ -854,10 +852,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             return $q(function (resolve, reject) {
                 (0, _child_process.exec)('copy "' + src + '" "' + dist + '" /Y', { encoding: 'GB2312' }, function (err, stdout, stderr) {
                     if (err || _iconvLite2.default.decode(stderr, 'GB2312')) {
-                        _electron2.default.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
+                        _electron.dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
                         reject(_iconvLite2.default.decode(stderr, 'GB2312'));
                     } else {
-                        _electron2.default.showMessageBox({ type: 'info', title: 'Success', message: _iconvLite2.default.decode(stdout, 'GB2312'), buttons: ['OK'] });
+                        _electron.dialog.showMessageBox({ type: 'info', title: 'Success', message: _iconvLite2.default.decode(stdout, 'GB2312'), buttons: ['OK'] });
                         getFileInfo(dist).then(function (stat) {
                             resolve(stat);
                         });

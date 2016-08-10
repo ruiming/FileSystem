@@ -1,5 +1,7 @@
-const {app, BrowserWindow} = require('electron');
-var mainWindow = null;
+const electron = require('electron');
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+let mainWindow = null;
 
 
 // 若所有窗口关闭，则退出
