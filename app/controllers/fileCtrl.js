@@ -84,8 +84,7 @@ import wmic from 'node-wmic'
                             $scope.files.push(result);
                         }
                     })
-                }
-                else {
+                } else {
                     FileService.copyFile($scope.src, $scope.path + $scope.srcName).then(result => {
                         for(let file of $scope.files) {
                             if(file.name === result.name) {
@@ -145,8 +144,7 @@ import wmic from 'node-wmic'
                     }, err => {
                         console.log(err);
                     })
-                }
-                else {
+                } else {
                     FileService.deleteFolder(src).then(() => {
                         $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
                     }, err => {
@@ -306,8 +304,7 @@ import wmic from 'node-wmic'
             if($scope.path == "Computer") {
                 $scope.filename = null;
                 getDisk();
-            }
-            else {
+            } else {
                 readFolder();
             }
         }

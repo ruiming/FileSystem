@@ -1020,14 +1020,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }
 
         function open(src) {
-            console.log(src[0] + ': && "' + src.slice(4) + '"');
             (0, _child_process.exec)(src[0] + ': && "' + src.slice(4) + '"');
         }
 
         function readFile(stat) {
+            var img = ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'svg', 'psd', 'ico'];
             var src = stat.path;
             var temp = src.split('.');
-            if (temp[temp.length - 1].toLowerCase() == 'jpg' || temp[temp.length - 1].toLowerCase() == 'jpeg' || temp[temp.length - 1].toLowerCase() == 'png' || temp[temp.length - 1].toLowerCase() == 'bmg' || temp[temp.length - 1].toLowerCase() == 'gif' || temp[temp.length - 1].toLowerCase() == 'svg' || temp[temp.length - 1].toLowerCase() == 'psd' || temp[temp.length - 1].toLowerCase() == 'ico') {
+            if (img.indexOf(temp[temp.length - 1].toLowerCase()) !== -1) {
                 return $q(function (resolve, reject) {
                     _base64Img2.default.base64(src, function (err, data) {
                         if (err) reject(err);else resolve(data);

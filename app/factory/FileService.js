@@ -81,8 +81,7 @@ import iconv from 'iconv-lite'
                     }, err => {
                         reject(err);
                     });
-                }
-                else {
+                } else {
                     if(fs.existsSync(dist)) {
                         let title = '重名文件存在';
                         let message = '重名文件存在，继续粘贴将覆盖，是否继续?';
@@ -95,8 +94,7 @@ import iconv from 'iconv-lite'
                                 });
                             }
                         })
-                    }
-                    else {
+                    } else {
                         copy(src, dist).then(result => {
                             resolve(result);
                         }, err => {
@@ -121,8 +119,7 @@ import iconv from 'iconv-lite'
                     }, err => {
                         reject(err);
                     });
-                }
-                else {
+                } else {
                     if(fs.existsSync(dist)) {
                         let title = '重名文件夹存在';
                         let message = '重名文件夹存在，继续粘贴将覆盖，是否继续?';
@@ -133,13 +130,11 @@ import iconv from 'iconv-lite'
                                 }, err => {
                                     reject(err);
                                 });
-                            }
-                            else {
+                            } else {
                                 resolve();
                             }
                         })
-                    }
-                    else {
+                    } else {
                         xcopy(src, dist).then(result => {
                             resolve(result);
                         }, err => {
@@ -165,13 +160,11 @@ import iconv from 'iconv-lite'
                         fs.unlink(src, err => {
                             if (err) {
                                 reject(err);
-                            }
-                            else {
+                            } else {
                                 resolve();
                             }
                         })
-                    }
-                    else {
+                    } else {
                         reject('cancel');
                     }
                 });
@@ -194,8 +187,7 @@ import iconv from 'iconv-lite'
                             if(err || iconv.decode(stderr, 'GB2312')) {
                                 dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
                                 reject(iconv.decode(stderr, 'GB2312'));
-                            }
-                            else {
+                            } else {
                                 resolve();
                             }
                         });
@@ -216,8 +208,7 @@ import iconv from 'iconv-lite'
                     if(err || iconv.decode(stderr, 'GB2312')) {
                         dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                         reject(iconv.decode(stderr, 'GB2312'));
-                    }
-                    else {
+                    } else {
                         dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
                         getFileInfo(dist).then(stat => {
                             resolve(stat);
@@ -239,8 +230,7 @@ import iconv from 'iconv-lite'
                     if(err || iconv.decode(stderr, 'GB2312')) {
                         dialog.showErrorBox(iconv.decode(stderr, 'GB2312'), iconv.decode(stdout, 'GB2312'));
                         reject(iconv.decode(stderr, 'GB2312'));
-                    }
-                    else {
+                    } else {
                         dialog.showMessageBox({type: 'info', title: 'Success', message: iconv.decode(stdout, 'GB2312'), buttons: ['OK']});
                         getFileInfo(dist).then(stat => {
                             resolve(stat);
@@ -260,8 +250,7 @@ import iconv from 'iconv-lite'
                 fs.stat(src, (err, stat) => {
                     if(err || src.length <= 4) {
                         reject(err);
-                    }
-                    else {
+                    } else {
                         let temp = src.split('\\\\');
                         let type = 'unknown';
                         let seq = temp[temp.length-1].split('.');
@@ -269,8 +258,7 @@ import iconv from 'iconv-lite'
                         stat.name = temp[temp.length-1];
                         if(stat.isDirectory()) {
                             type = 'folder'
-                        }
-                        else if(FileTypeIcon.hasOwnProperty(mime.toLowerCase())) {
+                        } else if(FileTypeIcon.hasOwnProperty(mime.toLowerCase())) {
                             type = mime.toLowerCase();
                         }
                         stat.type = FileTypeIcon[type].type;
@@ -294,8 +282,7 @@ import iconv from 'iconv-lite'
                 fs.readdir(src, (err, files) => {
                     if(err) {
                         reject(err);
-                    }
-                    else {
+                    } else {
                         resolve(files);
                     }
                 })
@@ -313,8 +300,7 @@ import iconv from 'iconv-lite'
                 fs.mkdir(dist, 777, err => {
                     if(err) {
                         reject(err);
-                    }
-                    else {
+                    } else {
                         resolve(getFileInfo(dist));
                     }
                 })
@@ -332,8 +318,7 @@ import iconv from 'iconv-lite'
                 fs.appendFile(dist, '', err => {
                     if(err) {
                         reject(err);
-                    }
-                    else {
+                    } else {
                         resolve(getFileInfo(dist));
                     }
                 })
@@ -352,8 +337,7 @@ import iconv from 'iconv-lite'
                     if(err) {
                         alert(err);
                         reject(err);
-                    }
-                    else {
+                    } else {
                         resolve();
                     }
                 });
@@ -396,8 +380,7 @@ import iconv from 'iconv-lite'
                                     });
                                 }
                                 search(path + file + "\\\\", wanted, result).then();
-                            }
-                            else if(stat && stat.isFile()){
+                            } else if (stat && stat.isFile()){
                                 if(file.toLowerCase().includes(wanted.toLowerCase())) {
                                     getFileInfo(path + file).then(stat => {
                                         result.push(stat);
@@ -412,37 +395,28 @@ import iconv from 'iconv-lite'
         }
 
         function open(src) {
-            console.log(src[0] + ': && "' + src.slice(4) + '"');
             exec(src[0] + ': && "' + src.slice(4) + '"');
         }
 
         function readFile(stat) {
+            let img = ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'svg', 'psd', 'ico'];
             let src = stat.path;
             let temp = src.split('.');
-            if( temp[temp.length - 1].toLowerCase() == 'jpg'  ||
-                temp[temp.length - 1].toLowerCase() == 'jpeg' ||
-                temp[temp.length - 1].toLowerCase() == 'png'  ||
-                temp[temp.length - 1].toLowerCase() == 'bmg'  ||
-                temp[temp.length - 1].toLowerCase() == 'gif'  ||
-                temp[temp.length - 1].toLowerCase() == 'svg'  ||
-                temp[temp.length - 1].toLowerCase() == 'psd'  ||
-                temp[temp.length - 1].toLowerCase() == 'ico' ) {
+            if(img.indexOf(temp[temp.length - 1].toLowerCase()) !== -1) {
                 return $q((resolve, reject) => {
                     base64Img.base64(src, (err, data) => {
                         if(err) reject(err);
                         else resolve(data);
                     })
                 })
-            }
-            else {
+            } else {
                 return $q((resolve, reject) => {
                     // 只256KB以下文件的显示
                     if(stat.size > 256*1024)    reject();
                     fs.readFile(src, 'utf-8', (err, data) => {
                         if(err) {
                             reject(err);
-                        }
-                        else {
+                        } else {
                             resolve(data);
                         }
                     });
