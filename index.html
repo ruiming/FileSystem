@@ -21,6 +21,21 @@
 <div class="row">
     <div ui-view="system" id="system" class="system hidden-xs"></div>
     <div ui-view="files" class="files"></div>
+    <div class="cssload-wrap" ng-show="$root.loading">
+        <div class="cssload-container">
+        <span class="cssload-dots"></span>
+        <span class="cssload-dots"></span>
+        <span class="cssload-dots"></span>
+        <span class="cssload-dots"></span>
+        <span class="cssload-dots"></span>
+        <span class="cssload-dots"></span>
+        <span class="cssload-dots"></span>
+        <span class="cssload-dots"></span>
+        <span class="cssload-dots"></span>
+        <span class="cssload-dots"></span>
+        <p> Loading... </p>
+    </div>
+</div>
 </div>
 </div>
 </body>

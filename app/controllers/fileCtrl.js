@@ -10,9 +10,9 @@ import wmic from 'node-wmic'
         .module('app')
         .controller('FileCtrl', FileCtrl);
 
-    FileCtrl.$inject = ['$scope', 'FileService', '$timeout'];
+    FileCtrl.$inject = ['$scope', 'FileService', '$timeout', 'diskdrive', 'disks'];
 
-    function FileCtrl($scope, FileService, $timeout) {
+    function FileCtrl($scope, FileService, $timeout, diskdrive, disks) {
         var Menu = remote.Menu,
             MenuItem = remote.MenuItem;
 
@@ -24,6 +24,9 @@ import wmic from 'node-wmic'
         $scope.desc = 0;
         $scope.disks = [];
         $scope.disk = {};
+        $scope.diskdrive = diskdrive;
+        $scope.last = false;
+        $scope.disks = disks;
         $scope.FileTypeIcon = FileTypeIcon;
 
         $scope.search = search;
@@ -39,9 +42,7 @@ import wmic from 'node-wmic'
         $scope.Hbackward = Hbackward;
         $scope.Hforward = Hforward;
 
-
-        getDiskdrive();
-        getDisk();
+        breadcrumb();
 
         let rightClickPosition = null;
         const menu = new Menu();
@@ -77,7 +78,7 @@ import wmic from 'node-wmic'
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);
                 $scope.dist = $scope.path + $scope.files[id].name;
                 $scope.srcType ? FileService.copyFile($scope.src, $scope.dist + "\\\\" + $scope.srcName).then(() => {cut()})
-                    : FileService.copyFolder($scope.src, $scope.dist + "\\\\" + $scope.srcName).then(() => {cut()});  
+                    : FileService.copyFolder($scope.src, $scope.dist + "\\\\" + $scope.srcName).then(() => {cut()});
             }
         }));
         menu.append(new MenuItem({
@@ -388,13 +389,6 @@ import wmic from 'node-wmic'
             wmic.disk().then(disks => {
                 $scope.disks = disks;
             }, err => { })
-        }
-
-        /** 获取硬盘信息 */
-        function getDiskdrive() {
-            wmic.diskdrive().then(result => {
-                $scope.diskdrive = result;
-            });
         }
 
         function cut() {

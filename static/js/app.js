@@ -1,9 +1,38 @@
 'use strict';
 
+var _nodeWmic = require('node-wmic');
+
+var _nodeWmic2 = _interopRequireDefault(_nodeWmic);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 (function () {
     'use strict';
 
-    angular.module('app', ['ui.router', 'ui.bootstrap', 'angularBootstrapMaterial', 'ngAnimate']).config(config);
+    angular.module('app', ['ui.router', 'ui.bootstrap', 'angularBootstrapMaterial', 'ngAnimate']).config(config).run(function ($rootScope) {
+        $rootScope.$on("$stateChangeStart", function (event, toState, toStateParams, fromState, fromStateParams) {
+            var isLoading = toState.resolve;
+            if (!isLoading) {
+                for (var prop in toState.views) {
+                    if (toState.views.hasOwnProperty(prop)) {
+                        if (toState.views[prop].resolve) {
+                            isLoading = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (isLoading) {
+                $rootScope.loading = true;
+            }
+        });
+        $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
+            $rootScope.loading = false;
+        });
+        $rootScope.$on("$stateChangeError", function (event, toState, toParams, fromState, fromParams, error) {
+            $rootScope.loading = false;
+        });
+    });
 
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
 
@@ -15,12 +44,51 @@
                 'system': {
                     templateUrl: 'app/templates/index.html',
                     controller: 'IndexCtrl',
-                    controllerUrl: 'app/controllers/IndexCtrl.js'
+                    controllerUrl: 'app/controllers/IndexCtrl.js',
+                    resolve: {
+                        cpu: function cpu() {
+                            return _nodeWmic2.default.cpu().then(function (r) {
+                                return r;
+                            });
+                        },
+                        bios: function bios() {
+                            return _nodeWmic2.default.bios().then(function (r) {
+                                return r;
+                            });
+                        },
+                        baseboard: function baseboard() {
+                            return _nodeWmic2.default.baseboard().then(function (r) {
+                                return r;
+                            });
+                        },
+                        os: function os() {
+                            return _nodeWmic2.default.os().then(function (r) {
+                                return r;
+                            });
+                        },
+                        memorychip: function memorychip() {
+                            return _nodeWmic2.default.memorychip().then(function (r) {
+                                return r;
+                            });
+                        }
+                    }
                 },
                 'files': {
                     templateUrl: 'app/templates/file.html',
                     controller: 'FileCtrl',
-                    controllerUrl: 'app/controllers/fileCtrl.js'
+                    controllerUrl: 'app/controllers/fileCtrl.js',
+                    resolve: {
+                        diskdrive: function diskdrive() {
+                            return _nodeWmic2.default.diskdrive().then(function (diskdrive) {
+                                return diskdrive;
+                            });
+                        },
+                        disks: function disks() {
+                            return _nodeWmic2.default.disk().then(function (disks) {
+                                return disks;
+                            });
+                        }
+                    }
                 }
             }
         });
@@ -91,9 +159,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     angular.module('app').controller('FileCtrl', FileCtrl);
 
-    FileCtrl.$inject = ['$scope', 'FileService', '$timeout'];
+    FileCtrl.$inject = ['$scope', 'FileService', '$timeout', 'diskdrive', 'disks'];
 
-    function FileCtrl($scope, FileService, $timeout) {
+    function FileCtrl($scope, FileService, $timeout, diskdrive, disks) {
         var Menu = _electron.remote.Menu,
             MenuItem = _electron.remote.MenuItem;
 
@@ -105,6 +173,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         $scope.desc = 0;
         $scope.disks = [];
         $scope.disk = {};
+        $scope.diskdrive = diskdrive;
+        $scope.last = false;
+        $scope.disks = disks;
         $scope.FileTypeIcon = FileTypeIcon;
 
         $scope.search = search;
@@ -120,8 +191,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         $scope.Hbackward = Hbackward;
         $scope.Hforward = Hforward;
 
-        getDiskdrive();
-        getDisk();
+        breadcrumb();
 
         var rightClickPosition = null;
         var menu = new Menu();
@@ -520,13 +590,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             }, function (err) {});
         }
 
-        /** 获取硬盘信息 */
-        function getDiskdrive() {
-            _nodeWmic2.default.diskdrive().then(function (result) {
-                $scope.diskdrive = result;
-            });
-        }
-
         function cut() {
             if ($scope.deletePath && $scope.srcType) {
                 FileService.deleteFile($scope.deletePath, false).then(function () {
@@ -561,27 +624,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     angular.module('app').controller('IndexCtrl', IndexCtrl);
 
-    IndexCtrl.$inject = ['$scope', '$interval'];
+    IndexCtrl.$inject = ['$scope', '$interval', 'cpu', 'bios', 'baseboard', 'os', 'memorychip'];
 
-    function IndexCtrl($scope, $interval) {
-        $scope.bios = [];
+    function IndexCtrl($scope, $interval, cpu, bios, baseboard, os, memorychip) {
+        $scope.bios = bios;
+        $scope.cpu = cpu;
+        $scope.baseboard = baseboard;
+        $scope.os = os;
+        $scope.memorychip = memorychip;
 
         getOS();
-        _nodeWmic2.default.cpu().then(function (result) {
-            $scope.cpu = result;
-        });
-        _nodeWmic2.default.bios().then(function (result) {
-            $scope.bios = result;
-        });
-        _nodeWmic2.default.baseboard().then(function (result) {
-            $scope.baseboard = result;
-        });
-        _nodeWmic2.default.os().then(function (result) {
-            $scope.os = result;
-        });
-        _nodeWmic2.default.memorychip().then(function (result) {
-            $scope.memorychip = result;
-        });
 
         $interval(function () {
             getOS();
