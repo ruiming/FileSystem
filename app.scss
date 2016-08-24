@@ -151,6 +151,15 @@ a:active {
       max-height: 720px;
       padding-right: 15px;
     }
+    tr {
+      &.ng-enter {
+        transition:0.3s linear all;
+        opacity:0;
+      }
+      &.ng-enter.ng-enter-active {
+       opacity:1;
+      }
+    }
     .tr-active {
       background-color: #b3e4ff !important;
     }
