@@ -137,17 +137,24 @@ a:active {
       overflow: auto;
       display: block;
       width: 100%; }
+    .files .disks-files thead {
+      position: absolute;
+      background-color: white;
+      left: 0;
+      right: 0;
+      padding: 0 30px 0 15px; }
     .files .disks-files tbody {
+      margin-top: 24px;
       padding-right: 15px; }
-    .files .disks-files tr.ng-enter {
-      transition: 0.3s linear all;
-      opacity: 0; }
-    .files .disks-files tr.ng-enter.ng-enter-active {
-      opacity: 1; }
-    .files .disks-files .tr-active {
-      background-color: #b3e4ff !important; }
-    .files .disks-files .tr-inactive {
-      background-color: #fdfdfd; }
+      .files .disks-files tbody tr.ng-enter {
+        transition: 0.3s linear all;
+        opacity: 0; }
+      .files .disks-files tbody tr.ng-enter.ng-enter-active {
+        opacity: 1; }
+      .files .disks-files tbody .tr-active {
+        background-color: #b3e4ff !important; }
+      .files .disks-files tbody .tr-inactive {
+        background-color: #fdfdfd; }
     .files .disks-files .list:hover,
     .files .disks-files .menu th:hover {
       background-color: #d7f1ff; }

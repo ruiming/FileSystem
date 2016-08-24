@@ -22,7 +22,7 @@
             </form>
         </div>
         <table ng-show="path == 'Computer'">
-            <tbody>
+            <thead>
                 <tr class="menu">
                     <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     <th>Name</th>
@@ -30,6 +30,8 @@
                     <th>FreeSpace</th>
                     <th>Size</th>
                 </tr>
+            </thead>
+            <tbody>
                 <tr ng-repeat="x in disks | index track by $index"
                     ng-dblclick="forward(x)"
                     ng-init="x.hover = false"
@@ -45,8 +47,7 @@
             </tbody>
         </table>
         <table ng-show="path != 'Computer'" class="fileboard">
-            <tbody id="file" infinite-scroll="lazyload(files.length)" infinite-scroll-distance='2'
-                infinite-scroll-immediate-check='false' infinite-scroll-parent="true" >
+            <thead>
                 <tr class="menu">
                     <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     <th ng-click="col='name';desc=!desc">Name</th>
@@ -54,6 +55,9 @@
                     <th ng-click="col='type';desc=!desc">Type</th>
                     <th ng-click="col='size';desc=!desc">Size</th>
                 </tr>
+            </thead>
+            <tbody id="file" infinite-scroll="lazyload(files.length)" infinite-scroll-distance='2'
+                infinite-scroll-immediate-check='false' infinite-scroll-parent="true" >
                 <tr class="list"
                     ng-repeat="x in files | index | orderBy:col:desc track by $index"
                     ng-dblclick="forward_folder(x)"

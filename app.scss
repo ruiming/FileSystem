@@ -150,23 +150,31 @@ a:active {
       display: block;
       width: 100%;
     }
+    thead {
+      position: absolute;
+      background-color: white;
+      left: 0;
+      right: 0;
+      padding: 0 30px 0 15px;
+    }
     tbody {
+      margin-top: 24px;
       padding-right: 15px;
-    }
-    tr {
-      &.ng-enter {
-        transition:0.3s linear all;
-        opacity:0;
+      tr {
+        &.ng-enter {
+          transition: 0.3s linear all;
+          opacity: 0;
+        }
+        &.ng-enter.ng-enter-active {
+         opacity: 1;
+        }
       }
-      &.ng-enter.ng-enter-active {
-       opacity:1;
+      .tr-active {
+        background-color: #b3e4ff !important;
       }
-    }
-    .tr-active {
-      background-color: #b3e4ff !important;
-    }
-    .tr-inactive {
-      background-color: $bgColor;
+      .tr-inactive {
+        background-color: $bgColor;
+      }
     }
     .list,
     .menu th {
