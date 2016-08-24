@@ -142,7 +142,7 @@ a:active {
       background-color: white;
       left: 0;
       right: 0;
-      padding: 0 30px 0 15px; }
+      padding: 0 45px 0 15px; }
     .files .disks-files tbody {
       margin-top: 24px;
       padding-right: 15px; }
@@ -162,13 +162,13 @@ a:active {
       min-width: 470px;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: flex;
       white-space: nowrap; }
       .files .disks-files tr input {
         border: 0;
         box-shadow: none;
         outline: 0;
         text-align: left;
-        white-space: nowrap;
         overflow: hidden;
         float: left;
         width: 100%;
@@ -176,11 +176,11 @@ a:active {
       .files .disks-files tr td,
       .files .disks-files tr th {
         overflow: hidden;
-        padding-left: 10px;
-        text-align: right; }
+        text-align: right;
+        float: left;
+        padding-right: 15px; }
         .files .disks-files tr td:nth-child(1),
         .files .disks-files tr th:nth-child(1) {
-          padding: 0 5px;
           width: 26px; }
           .files .disks-files tr td:nth-child(1) img,
           .files .disks-files tr th:nth-child(1) img {
@@ -188,20 +188,21 @@ a:active {
         .files .disks-files tr td:nth-child(2),
         .files .disks-files tr th:nth-child(2) {
           width: 100%;
-          max-width: 130px;
           text-overflow: ellipsis;
-          padding-right: 15px;
-          padding-left: 0;
           text-align: left; }
         .files .disks-files tr td:nth-child(3),
         .files .disks-files tr th:nth-child(3) {
-          width: 120px; }
+          width: 230px;
+          overflow: hidden; }
         .files .disks-files tr td:nth-child(4),
         .files .disks-files tr th:nth-child(4) {
-          width: 150px; }
+          width: 200px;
+          overflow: hidden; }
         .files .disks-files tr td:nth-child(5),
         .files .disks-files tr th:nth-child(5) {
-          width: 180px; }
+          padding-right: 0;
+          width: 120px;
+          overflow: hidden; }
   .files .action {
     overflow: hidden;
     display: block; }
