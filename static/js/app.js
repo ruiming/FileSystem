@@ -9,7 +9,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 (function () {
     'use strict';
 
-    angular.module('app', ['ui.router', 'ui.bootstrap', 'angularBootstrapMaterial', 'ngAnimate']).config(config).run(function ($rootScope) {
+    angular.module('app', ['ui.router', 'ui.bootstrap', 'angularBootstrapMaterial', 'ngAnimate', 'infinite-scroll']).config(config).run(function ($rootScope) {
         $rootScope.$on("$stateChangeStart", function (event, toState, toStateParams, fromState, fromStateParams) {
             var isLoading = toState.resolve;
             if (!isLoading) {
@@ -159,11 +159,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     angular.module('app').controller('FileCtrl', FileCtrl);
 
-    FileCtrl.$inject = ['$scope', 'FileService', '$timeout', 'diskdrive', 'disks'];
+    FileCtrl.$inject = ['$scope', 'FileService', '$timeout', 'diskdrive', 'disks', '$q', '$interval'];
 
-    function FileCtrl($scope, FileService, $timeout, diskdrive, disks) {
+    function FileCtrl($scope, FileService, $timeout, diskdrive, disks, $q, $interval) {
         var Menu = _electron.remote.Menu,
-            MenuItem = _electron.remote.MenuItem;
+            MenuItem = _electron.remote.MenuItem,
+            result = [],
+            length = 0;
 
         $scope.path = "Computer";
         $scope.files = [];
@@ -190,6 +192,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         $scope.breadcrumb = breadcrumb;
         $scope.Hbackward = Hbackward;
         $scope.Hforward = Hforward;
+        $scope.lazyload = lazyload;
 
         breadcrumb();
 
@@ -538,15 +541,36 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             }
         }
 
+        function lazyload(start) {
+            console.log($scope.files.length, start, result.length);
+            if ($scope.files.length < result.length) {
+                var end = result.length - start > 30 ? start + 30 : result.length;
+                for (var i = start; i < end; i++) {
+                    $scope.files.push(result[i]);
+                }
+            }
+        }
+
         /** 获取目录里面的文件列表并监控 */
         function readFolder() {
             FileService.readFolder($scope.path).then(function (filenames) {
                 $scope.files = [];
+                result = [];
                 $scope.breadcrumb();
-                filenames.map(function (filename) {
-                    FileService.getFileInfo($scope.path + filename).then(function (stat) {
-                        $scope.files.push(stat);
+                var promises = filenames.map(function (filename) {
+                    return FileService.getFileInfo($scope.path + filename).then(function (stat) {
+                        result.push(stat);
+                    }).catch(function (err) {
+                        console.log(err);
                     });
+                });
+                $q.all(promises).then(function () {
+                    if (result.length > 30) {
+                        $scope.files = result.slice(0, 30);
+                    } else {
+                        $scope.files = result;
+                    }
+                    $scope.length = result.length;
                 });
             });
             _fs2.default.watch($scope.path, function (event, filename) {

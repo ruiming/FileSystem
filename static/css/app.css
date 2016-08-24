@@ -123,6 +123,9 @@ a:active {
       padding: 0;
       width: 70px; }
 
+.fileboard {
+  max-height: 730px; }
+
 .files {
   min-width: 510px; }
   .files .disks-files {
@@ -135,7 +138,6 @@ a:active {
       display: block;
       width: 100%; }
     .files .disks-files tbody {
-      max-height: 720px;
       padding-right: 15px; }
     .files .disks-files tr.ng-enter {
       transition: 0.3s linear all;

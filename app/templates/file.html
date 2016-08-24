@@ -44,8 +44,9 @@
                 </tr>
             </tbody>
         </table>
-        <table ng-show="path != 'Computer'">
-            <tbody id="file">
+        <table ng-show="path != 'Computer'" class="fileboard">
+            <tbody id="file" infinite-scroll="lazyload(files.length)" infinite-scroll-distance='2'
+                infinite-scroll-immediate-check='false' infinite-scroll-parent="true" >
                 <tr class="menu">
                     <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     <th ng-click="col='name';desc=!desc">Name</th>
@@ -133,5 +134,5 @@
     <p class="message message-show-hide" ng-show="checked">{{message}}</p>
     <li><a href="javascript:void(0)" ng-click="turnto('Computer')">Computer</a></li>
     <li ng-repeat="bread in breadcrumbs track by $index" ng-if="bread != 'Computer'"><a href="javascript:void(0)" ng-click="turnto(bread)">{{bread}}</a></li>
-    <li class="number" ng-show="path != 'Computer'">共{{files.length}}个项目</li>
+    <li class="number" ng-show="path != 'Computer'">共{{length}}个项目</li>
 </ul>

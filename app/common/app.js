@@ -8,7 +8,8 @@ import wmic from 'node-wmic'
             'ui.router',
             'ui.bootstrap',
             'angularBootstrapMaterial',
-            'ngAnimate'
+            'ngAnimate',
+            'infinite-scroll'
         ])
         .config(config)
         .run(function ($rootScope) {

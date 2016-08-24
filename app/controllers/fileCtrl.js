@@ -10,11 +10,13 @@ import wmic from 'node-wmic'
         .module('app')
         .controller('FileCtrl', FileCtrl);
 
-    FileCtrl.$inject = ['$scope', 'FileService', '$timeout', 'diskdrive', 'disks'];
+    FileCtrl.$inject = ['$scope', 'FileService', '$timeout', 'diskdrive', 'disks', '$q', '$interval'];
 
-    function FileCtrl($scope, FileService, $timeout, diskdrive, disks) {
+    function FileCtrl($scope, FileService, $timeout, diskdrive, disks, $q, $interval) {
         var Menu = remote.Menu,
-            MenuItem = remote.MenuItem;
+            MenuItem = remote.MenuItem,
+            result = [],
+            length = 0;
 
         $scope.path = "Computer";
         $scope.files = [];
@@ -41,6 +43,7 @@ import wmic from 'node-wmic'
         $scope.breadcrumb = breadcrumb;
         $scope.Hbackward = Hbackward;
         $scope.Hforward = Hforward;
+        $scope.lazyload = lazyload;
 
         breadcrumb();
 
@@ -339,16 +342,37 @@ import wmic from 'node-wmic'
             }
         }
 
+        function lazyload(start) {
+            console.log($scope.files.length, start, result.length);
+            if($scope.files.length < result.length) {
+                let end = result.length - start > 30 ? start + 30 : result.length;
+                for(let i=start; i<end; i++) {
+                    $scope.files.push(result[i]);
+                }
+            }
+        }
+
         /** 获取目录里面的文件列表并监控 */
         function readFolder() {
             FileService.readFolder($scope.path).then(filenames => {
                 $scope.files = [];
+                result = [];
                 $scope.breadcrumb();
-                filenames.map(filename => {
-                    FileService.getFileInfo($scope.path + filename).then(stat => {
-                        $scope.files.push(stat);
-                    });
+                let promises = filenames.map(filename => {
+                    return FileService.getFileInfo($scope.path + filename).then(stat => {
+                        result.push(stat);
+                    }).catch(err => {
+                        console.log(err);
+                    })
                 });
+                $q.all(promises).then(() => {
+                    if(result.length > 30) {
+                        $scope.files = result.slice(0, 30);
+                    } else {
+                        $scope.files = result;
+                    }
+                    $scope.length = result.length;
+                })
             });
             fs.watch($scope.path, (event, filename) => {
                 filename = filename.replace(/(\\)/, '');
