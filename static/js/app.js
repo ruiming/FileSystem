@@ -128,6 +128,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         /** 右键菜单 */
         menu.append(new MenuItem({
+            label: '剪切',
+            click: function click() {
+                var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+                var id = JSON.parse(selectedElement.attributes.id.nodeValue);
+                $scope.src = $scope.files[id].path; // 路径
+                $scope.srcType = $scope.files[id].isFile(); // 文件类别
+                $scope.srcName = $scope.files[id].name; // 文件名称
+                $scope.deletePath = $scope.files[id].path; // 剪切标志
+                $scope.prePath = $scope.path;
+                $scope.preId = id;
+            }
+        }));
+        menu.append(new MenuItem({
             label: '复制',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
@@ -143,7 +156,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 var id = JSON.parse(selectedElement.attributes.id.nodeValue);
                 $scope.dist = $scope.path + $scope.files[id].name;
-                $scope.srcType ? FileService.copyFile($scope.src, $scope.dist + "\\\\" + $scope.srcName).then() : FileService.copyFolder($scope.src, $scope.dist + "\\\\" + $scope.srcName).then();
+                $scope.srcType ? FileService.copyFile($scope.src, $scope.dist + "\\\\" + $scope.srcName).then(function () {
+                    cut();
+                }) : FileService.copyFolder($scope.src, $scope.dist + "\\\\" + $scope.srcName).then(function () {
+                    cut();
+                });
             }
         }));
         menu.append(new MenuItem({
@@ -184,6 +201,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                         if (result !== 1) {
                             $scope.files.push(result);
                         }
+                    }).then(function () {
+                        cut();
                     });
                 } else {
                     FileService.copyFile($scope.src, $scope.path + $scope.srcName).then(function (result) {
@@ -220,6 +239,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                         if (result !== 1) {
                             $scope.files.push(result);
                         }
+                    }).then(function () {
+                        cut();
                     });
                 }
             }
@@ -505,6 +526,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 $scope.diskdrive = result;
             });
         }
+
+        function cut() {
+            if ($scope.deletePath && $scope.srcType) {
+                FileService.deleteFile($scope.deletePath, false).then(function () {
+                    if ($scope.path === $scope.prePath) $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1);
+                }, function (err) {
+                    console.log(err);
+                });
+            } else if ($scope.deletePath && !$scope.srcTyp) {
+                FileService.deleteFolder($scope.deletePath, false).then(function () {
+                    if ($scope.path === $scope.prePath) $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1);
+                }, function (err) {
+                    console.log(err);
+                });
+            }
+        }
     }
 })();
 'use strict';
@@ -596,6 +633,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     function FileService($q) {
         var buttons = ['OK', 'Cancel'];
+        var dialog = _electron.remote.dialog;
 
         return {
             copyFile: copyFile,
@@ -709,7 +747,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     if (_fs2.default.existsSync(dist)) {
                         var title = '重名文件存在';
                         var message = '重名文件存在，继续粘贴将覆盖，是否继续?';
-                        _electron.dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
+                        dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
                             if (index == 0) {
                                 copy(src, dist).then(function (result) {
                                     resolve(result);
@@ -747,7 +785,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     if (_fs2.default.existsSync(dist)) {
                         var title = '重名文件夹存在';
                         var message = '重名文件夹存在，继续粘贴将覆盖，是否继续?';
-                        _electron.dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
+                        dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
                             if (index == 0) {
                                 xcopy(src, dist).then(function (result) {
                                     resolve(result);
@@ -775,23 +813,35 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
          * @returns {*}
          */
         function deleteFile(src) {
+            var alert = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
             var buttons = ['OK', 'Cancel'];
             var title = '删除文件';
             var message = '确认要删除吗? 此操作不可逆!';
             return $q(function (resolve, reject) {
-                _electron.dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
-                    if (index == 0) {
-                        _fs2.default.unlink(src, function (err) {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                resolve();
-                            }
-                        });
-                    } else {
-                        reject('cancel');
-                    }
-                });
+                if (alert) {
+                    dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
+                        if (index == 0) {
+                            _fs2.default.unlink(src, function (err) {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    resolve();
+                                }
+                            });
+                        } else {
+                            reject('cancel');
+                        }
+                    });
+                } else {
+                    _fs2.default.unlink(src, function (err) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
+                }
             });
         }
 
@@ -801,22 +851,35 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
          * @returns {*}
          */
         function deleteFolder(src) {
+            var alert = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
             var buttons = ['OK', 'Cancel'];
             var title = '删除文件夹';
             var message = '确认要删除吗? 此操作不可逆!';
             return $q(function (resolve, reject) {
-                _electron.dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
-                    if (index == 0) {
-                        (0, _child_process.exec)('rmdir "' + src + '" /S /Q', { encoding: 'GB2312' }, function (err, stdout, stderr) {
-                            if (err || _iconvLite2.default.decode(stderr, 'GB2312')) {
-                                _electron.dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
-                                reject(_iconvLite2.default.decode(stderr, 'GB2312'));
-                            } else {
-                                resolve();
-                            }
-                        });
-                    }
-                });
+                if (alert) {
+                    dialog.showMessageBox({ type: 'question', title: title, buttons: buttons, message: message }, function (index) {
+                        if (index == 0) {
+                            (0, _child_process.exec)('rmdir "' + src + '" /S /Q', { encoding: 'GB2312' }, function (err, stdout, stderr) {
+                                if (err || _iconvLite2.default.decode(stderr, 'GB2312')) {
+                                    dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
+                                    reject(_iconvLite2.default.decode(stderr, 'GB2312'));
+                                } else {
+                                    resolve();
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    (0, _child_process.exec)('rmdir "' + src + '" /S /Q', { encoding: 'GB2312' }, function (err, stdout, stderr) {
+                        if (err || _iconvLite2.default.decode(stderr, 'GB2312')) {
+                            dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
+                            reject(_iconvLite2.default.decode(stderr, 'GB2312'));
+                        } else {
+                            resolve();
+                        }
+                    });
+                }
             });
         }
 
@@ -830,10 +893,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             return $q(function (resolve, reject) {
                 (0, _child_process.exec)('xcopy "' + src + '" "' + dist + '" /E /C /Y /H /I', { encoding: 'GB2312' }, function (err, stdout, stderr) {
                     if (err || _iconvLite2.default.decode(stderr, 'GB2312')) {
-                        _electron.dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
+                        dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
                         reject(_iconvLite2.default.decode(stderr, 'GB2312'));
                     } else {
-                        _electron.dialog.showMessageBox({ type: 'info', title: 'Success', message: _iconvLite2.default.decode(stdout, 'GB2312'), buttons: ['OK'] });
+                        dialog.showMessageBox({ type: 'info', title: 'Success', message: _iconvLite2.default.decode(stdout, 'GB2312'), buttons: ['OK'] });
                         getFileInfo(dist).then(function (stat) {
                             resolve(stat);
                         });
@@ -852,10 +915,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             return $q(function (resolve, reject) {
                 (0, _child_process.exec)('copy "' + src + '" "' + dist + '" /Y', { encoding: 'GB2312' }, function (err, stdout, stderr) {
                     if (err || _iconvLite2.default.decode(stderr, 'GB2312')) {
-                        _electron.dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
+                        dialog.showErrorBox(_iconvLite2.default.decode(stderr, 'GB2312'), _iconvLite2.default.decode(stdout, 'GB2312'));
                         reject(_iconvLite2.default.decode(stderr, 'GB2312'));
                     } else {
-                        _electron.dialog.showMessageBox({ type: 'info', title: 'Success', message: _iconvLite2.default.decode(stdout, 'GB2312'), buttons: ['OK'] });
+                        dialog.showMessageBox({ type: 'info', title: 'Success', message: _iconvLite2.default.decode(stdout, 'GB2312'), buttons: ['OK'] });
                         getFileInfo(dist).then(function (stat) {
                             resolve(stat);
                         });

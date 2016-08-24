@@ -48,6 +48,19 @@ import wmic from 'node-wmic'
 
         /** 右键菜单 */
         menu.append(new MenuItem({
+            label: '剪切',
+            click() {
+                let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+                let id = JSON.parse(selectedElement.attributes.id.nodeValue);
+                $scope.src = $scope.files[id].path;                                 // 路径
+                $scope.srcType = $scope.files[id].isFile();                         // 文件类别
+                $scope.srcName = $scope.files[id].name;                             // 文件名称
+                $scope.deletePath = $scope.files[id].path;                          // 剪切标志
+                $scope.prePath = $scope.path;
+                $scope.preId = id;
+            }
+        }))
+        menu.append(new MenuItem({
             label: '复制',
             click() {
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
@@ -63,8 +76,8 @@ import wmic from 'node-wmic'
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);
                 $scope.dist = $scope.path + $scope.files[id].name;
-                $scope.srcType ? FileService.copyFile($scope.src, $scope.dist + "\\\\" + $scope.srcName).then()
-                    : FileService.copyFolder($scope.src, $scope.dist + "\\\\" + $scope.srcName).then();
+                $scope.srcType ? FileService.copyFile($scope.src, $scope.dist + "\\\\" + $scope.srcName).then(() => {cut()})
+                    : FileService.copyFolder($scope.src, $scope.dist + "\\\\" + $scope.srcName).then(() => {cut()});  
             }
         }));
         menu.append(new MenuItem({
@@ -83,7 +96,7 @@ import wmic from 'node-wmic'
                         if(result !== 1) {
                             $scope.files.push(result);
                         }
-                    })
+                    }).then(() => {cut()});
                 } else {
                     FileService.copyFile($scope.src, $scope.path + $scope.srcName).then(result => {
                         for(let file of $scope.files) {
@@ -97,7 +110,7 @@ import wmic from 'node-wmic'
                         if(result !== 1) {
                             $scope.files.push(result);
                         }
-                    })
+                    }).then(() => {cut()});
                 }
             }
         }));
@@ -382,6 +395,22 @@ import wmic from 'node-wmic'
             wmic.diskdrive().then(result => {
                 $scope.diskdrive = result;
             });
+        }
+
+        function cut() {
+            if($scope.deletePath && $scope.srcType) {
+                    FileService.deleteFile($scope.deletePath, false).then(() => {
+                        if($scope.path === $scope.prePath)  $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1)
+                    }, err => {
+                        console.log(err);
+                    })
+            } else if($scope.deletePath && !$scope.srcTyp) {
+                FileService.deleteFolder($scope.deletePath, false).then(() => {
+                    if($scope.path === $scope.prePath)  $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1)
+                }, err => {
+                    console.log(err);
+                })
+            }
         }
     }
 }());

@@ -1,8 +1,9 @@
 import fs from 'fs'
 import {exec} from 'child_process'
-import {dialog} from 'electron'
+import {remote} from 'electron'
 import base64Img from 'base64-img'
 import iconv from 'iconv-lite'
+
 (function() {
     'use strict';
 
@@ -13,7 +14,8 @@ import iconv from 'iconv-lite'
     FileService.$inject = ['$q'];
 
     function FileService($q) {
-        const   buttons = ['OK', 'Cancel'];
+        const buttons = ['OK', 'Cancel'];
+        const dialog = remote.dialog;
 
         return {
             copyFile: copyFile,
@@ -150,24 +152,35 @@ import iconv from 'iconv-lite'
          * @param src
          * @returns {*}
          */
-        function deleteFile(src) {
+        function deleteFile(src, alert=true) {
             let buttons = ['OK', 'Cancel'];
             let title = '删除文件';
             let message = '确认要删除吗? 此操作不可逆!';
             return $q((resolve, reject) => {
-                dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
-                    if(index == 0) {
-                        fs.unlink(src, err => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                resolve();
-                            }
-                        })
-                    } else {
-                        reject('cancel');
-                    }
-                });
+                if(alert) {
+                    dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
+                        if(index == 0) {
+                            fs.unlink(src, err => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    resolve();
+                                }
+                            })
+                        } else {
+                            reject('cancel');
+                        }
+                    });
+                } else {
+                    fs.unlink(src, err => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    })    
+                }
+                
             });
         }
 
@@ -176,23 +189,34 @@ import iconv from 'iconv-lite'
          * @param src   路径
          * @returns {*}
          */
-        function deleteFolder(src) {
+        function deleteFolder(src, alert=true) {
             let buttons = ['OK', 'Cancel'];
             let title = '删除文件夹';
             let message = '确认要删除吗? 此操作不可逆!';
             return $q((resolve, reject) => {
-                dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
-                    if(index == 0) {
-                        exec(`rmdir "${src}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
-                            if(err || iconv.decode(stderr, 'GB2312')) {
-                                dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
-                                reject(iconv.decode(stderr, 'GB2312'));
-                            } else {
-                                resolve();
-                            }
-                        });
-                    }
-                });
+                if(alert) {
+                   dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
+                        if(index == 0) {
+                            exec(`rmdir "${src}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
+                                if(err || iconv.decode(stderr, 'GB2312')) {
+                                    dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
+                                    reject(iconv.decode(stderr, 'GB2312'));
+                                } else {
+                                    resolve();
+                                }
+                            });
+                        }
+                    }); 
+                } else {
+                    exec(`rmdir "${src}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
+                        if(err || iconv.decode(stderr, 'GB2312')) {
+                            dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
+                            reject(iconv.decode(stderr, 'GB2312'));
+                        } else {
+                            resolve();
+                        }
+                    });
+                }
             });
         }
 
