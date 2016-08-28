@@ -25,10 +25,10 @@
             <thead>
                 <tr class="menu">
                     <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                    <th>Name</th>
-                    <th>FileSystem</th>
-                    <th>FreeSpace</th>
-                    <th>Size</th>
+                    <th>盘符名</th>
+                    <th>文件系统</th>
+                    <th>剩余总量</th>
+                    <th>总容量</th>
                 </tr>
             </thead>
             <tbody>
@@ -86,9 +86,8 @@
             <p>{{last.name}}</p>
         </div>
         <div class="preview-info">
-            <label>Atime:</label><p>{{last.atime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
-            <label>Birthtime:</label><p>{{last.birthtime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
-            <label>Ctime:</label><p>{{last.ctime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+            <label>创建时间:</label><p>{{last.birthtime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+            <label>修改时间:</label><p>{{last.mtime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
         </div>
         <label ng-if="content && content!=''">内容预览</label>
         <p class="preview-content" ng-if="content.substring(0, 10)!='data:image'">{{content}}</p>
@@ -101,15 +100,15 @@
             <p>{{diskDetail.Caption}}</p>
         </div>
         <div class="preview-info">
-            <label>FreeSpace:</label><p>{{diskDetail.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</p>
-            <label>Size:</label><p>{{diskDetail.Size / 1024 / 1024 / 1024 | number: 0}} GB</p>
-            <label>Usage:</label>
+            <label>剩余容量:</label><p>{{diskDetail.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</p>
+            <label>总容量:</label><p>{{diskDetail.Size / 1024 / 1024 / 1024 | number: 0}} GB</p>
+            <label>使用率:</label>
             <uib-progressbar class="progress-striped active" max="diskDetail.Size" value="diskDetail.Size - diskDetail.FreeSpace" type="danger">
                 <i>{{diskDetail.Size - diskDetail.FreeSpace}}</i>
             </uib-progressbar>
-            <label ng-if="diskDetail.FileSystem">FileSystem:</label><p>{{diskDetail.FileSystem}}</p>
-            <label ng-if="diskDetail.Description">Description:</label><p>{{diskDetail.Description}}</p>
-            <label ng-if="diskDetail.VolumeSerialNumber">VolumeSerialNumber:</label><p>{{diskDetail.VolumeSerialNumber}}</p>
+            <label ng-if="diskDetail.FileSystem">文件系统:</label><p>{{diskDetail.FileSystem}}</p>
+            <label ng-if="diskDetail.Description">描述:</label><p>{{diskDetail.Description}}</p>
+            <label ng-if="diskDetail.VolumeSerialNumber">序列号:</label><p>{{diskDetail.VolumeSerialNumber}}</p>
             <label></label>
         </div>
     </section>
@@ -122,14 +121,14 @@
                 <p>{{x.Manufacturer}}</p>
             </div>
             <div class="preview-info">
-                <label>InterfaceType</label><p>{{x.InterfaceType}}</p>
-                <label>Partitions:</label><p>{{x.Partitions}}</p>
-                <label>SerialNumber</label><p>{{x.SerialNumber}}</p>
-                <label>TotalCylinders</label><p>{{x.TotalCylinders}}</p>
-                <label>TotalHeads</label><p>{{x.TotalHeads}}</p>
-                <label>TotalSectors</label><p>{{x.TotalSectors}}</p>
-                <label>TotalTracks</label><p>{{x.TotalTracks}}</p>
-                <label>TracksPerCylinder</label><p>{{x.TracksPerCylinder}}</p>
+                <label>接口类型</label><p>{{x.InterfaceType}}</p>
+                <label>分区数:</label><p>{{x.Partitions}}</p>
+                <label>序列号</label><p>{{x.SerialNumber}}</p>
+                <label>总柱面数</label><p>{{x.TotalCylinders}}</p>
+                <label>总磁头数</label><p>{{x.TotalHeads}}</p>
+                <label>总扇区数</label><p>{{x.TotalSectors}}</p>
+                <label>总磁道数</label><p>{{x.TotalTracks}}</p>
+                <label>每柱面的磁道数</label><p>{{x.TracksPerCylinder}}</p>
             </div>
         </div>
     </section>

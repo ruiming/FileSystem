@@ -155,6 +155,7 @@ import iconv from 'iconv-lite'
         function deleteFile(src, alert=true) {
             let buttons = ['OK', 'Cancel'];
             let title = '删除文件';
+            let infoSuccess = '删除 ' + src + ' 成功!';
             let message = '确认要删除吗? 此操作不可逆!';
             return $q((resolve, reject) => {
                 if(alert) {
@@ -164,6 +165,7 @@ import iconv from 'iconv-lite'
                                 if (err) {
                                     reject(err);
                                 } else {
+                                    dialog.showMessageBox({title: infoSuccess, detail: infoSuccess, type: 'info', buttons: ['OK']});
                                     resolve();
                                 }
                             })
@@ -176,6 +178,7 @@ import iconv from 'iconv-lite'
                         if (err) {
                             reject(err);
                         } else {
+                            dialog.showMessageBox({title: infoSuccess, detail: infoSuccess, type: 'info', buttons: ['OK']});
                             resolve();
                         }
                     })    

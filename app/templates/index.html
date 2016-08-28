@@ -8,33 +8,32 @@
     <article class="basic">
         <header><i class="material-icons">computer</i>SYSTEM</header>
         <section>
-            <p class="type">Type: {{system.type}}</p>
-            <p class="caption">Caption: {{os.Caption}}</p>
-            <p class="hostname">RegisteredUser: {{os.RegisteredUser}}</p>
-            <p class="release">Release: {{system.release}}</p>
-            <p class="uptime">Uptime: {{system.uptime | number: 0}} S</p>
-            <p class="bios-manufacturer">BiosManufacturer: {{bios.Manufacturer}}</p>
-            <p class="Product">Product: {{baseboard.Product}}</p>
-            <p>OSArchitecture: {{os.OSArchitecture}}</p>
+            <p class="caption">操作系统: {{os.Caption}}</p>
+            <p class="release">版本号: {{system.release}}</p>            
+            <p class="hostname">用户名: {{os.RegisteredUser}}</p>
+            <p class="uptime">开机时间: {{system.uptime | number: 0}} S</p>
+            <p class="bios-manufacturer">BIOS 厂商: {{bios.Manufacturer}}</p>
+            <p class="Product">制造商: {{baseboard.Product}}</p>
+            <p>系统架构: {{os.OSArchitecture}}</p>
         </section>
     </article>
     <article class="cpus">
         <header><i class="material-icons">free_breakfast</i>CPU</header>
         <section>
-            <p>Name: {{cpu.Name}}</p>
-            <p>NumberOfCores: {{cpu.NumberOfCores}}</p>
-            <p>NumberOfLogicalProcessors: {{cpu.NumberOfLogicalProcessors}}</p>
-            <p>CurrentClockSpeed: {{cpu.CurrentClockSpeed}} MHZ</p>
-            <p>L2CacheSize: {{cpu.L2CacheSize}} KB</p>
-            <p>L3CacheSize: {{cpu.L3CacheSize}} KB</p>
+            <p>CPU: {{cpu.Name}}</p>
+            <p>核心数: {{cpu.NumberOfCores}}</p>
+            <p>逻辑核心数: {{cpu.NumberOfLogicalProcessors}}</p>
+            <p>频率: {{cpu.CurrentClockSpeed}} MHZ</p>
+            <p>L2 缓存: {{cpu.L2CacheSize || 0}} KB</p>
+            <p>L3 缓存: {{cpu.L3CacheSize || 0}} KB</p>
         </section>
     </article>
     <article class="memory">
         <header><i class="material-icons">memory</i>MEMORY</header>
         <section>
-            <p>UsedMemory: {{(system.totalmem - system.freemen) / 1024 | number: 0}} KB</p>
-            <p>FreeMemory: {{system.freemen / 1024 | number: 0}} KB</p>
-            <p>TotalMemory: {{system.totalmem / 1024 | number: 0}} KB</p>
+            <p>已用内存: {{(system.totalmem - system.freemen) / 1024 | number: 0}} KB</p>
+            <p>空闲内存: {{system.freemen / 1024 | number: 0}} KB</p>
+            <p>总内存: {{system.totalmem / 1024 | number: 0}} KB</p>
         </section>
     </article>
     <article class="usedbar">

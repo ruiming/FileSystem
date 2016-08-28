@@ -52,19 +52,6 @@ import wmic from 'node-wmic'
 
         /** 右键菜单 */
         menu.append(new MenuItem({
-            label: '剪切',
-            click() {
-                let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
-                let id = JSON.parse(selectedElement.attributes.id.nodeValue);
-                $scope.src = $scope.files[id].path;                                 // 路径
-                $scope.srcType = $scope.files[id].isFile();                         // 文件类别
-                $scope.srcName = $scope.files[id].name;                             // 文件名称
-                $scope.deletePath = $scope.files[id].path;                          // 剪切标志
-                $scope.prePath = $scope.path;
-                $scope.preId = id;
-            }
-        }))
-        menu.append(new MenuItem({
             label: '复制',
             click() {
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
@@ -171,6 +158,19 @@ import wmic from 'node-wmic'
                 if(path === $scope.forwardStore[$scope.forwardStore.length-1] || path + "\\\\" === $scope.forwardStore[$scope.forwardStore.length-1]) {
                     $scope.forwardStore = [];
                 }
+            }
+        }));
+        menu.append(new MenuItem({
+            label: '剪切',
+            click() {
+                let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+                let id = JSON.parse(selectedElement.attributes.id.nodeValue);
+                $scope.src = $scope.files[id].path;                                 // 路径
+                $scope.srcType = $scope.files[id].isFile();                         // 文件类别
+                $scope.srcName = $scope.files[id].name;                             // 文件名称
+                $scope.deletePath = $scope.files[id].path;                          // 剪切标志
+                $scope.prePath = $scope.path;
+                $scope.preId = id;
             }
         }));
 
@@ -343,7 +343,6 @@ import wmic from 'node-wmic'
         }
 
         function lazyload(start) {
-            console.log($scope.files.length, start, result.length);
             if($scope.files.length < result.length) {
                 let end = result.length - start > 30 ? start + 30 : result.length;
                 for(let i=start; i<end; i++) {

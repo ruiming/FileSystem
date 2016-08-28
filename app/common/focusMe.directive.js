@@ -1,7 +1,13 @@
 (function() {
     'use strict';
 
-    let focusMe = () => {
+    angular
+        .module('app')
+        .directive('focusMe', focusMe);
+
+    focusMe.$inject = ['$timeout'];
+
+    function focusMe($timeout) {
         return {
             scope: { trigger: '@focusMe' },
             link(scope, element) {
@@ -16,7 +22,4 @@
         };
     };
 
-    angular
-        .module('app')
-        .directive('focusMe', focusMe);
 }());
