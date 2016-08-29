@@ -175,8 +175,7 @@ a:active {
     .files .disks-files tr th {
       overflow: hidden;
       text-align: right;
-      float: left;
-      padding-right: 15px; }
+      float: left; }
       .files .disks-files tr td:nth-child(1),
       .files .disks-files tr th:nth-child(1) {
         width: 26px; }
@@ -191,16 +190,19 @@ a:active {
       .files .disks-files tr td:nth-child(3),
       .files .disks-files tr th:nth-child(3) {
         width: 300px;
+        padding-right: 15px;
         overflow: hidden; }
       .files .disks-files tr td:nth-child(4),
       .files .disks-files tr th:nth-child(4) {
         width: 200px;
+        padding-right: 15px;
         overflow: hidden; }
       .files .disks-files tr td:nth-child(5),
       .files .disks-files tr th:nth-child(5) {
-        padding-right: 15px;
         width: 120px;
         overflow: hidden; }
+    .files .disks-files tr td {
+      padding-right: 15px; }
   .files .action {
     overflow: hidden;
     display: block; }
@@ -229,7 +231,8 @@ a:active {
     background-color: transparent;
     margin-bottom: 0;
     float: left;
-    padding: 0 0 0 25px; }
+    padding: 0 0 0 25px;
+    line-height: 1; }
     .files .breadcrumb li {
       margin: 10px 0; }
     .files .breadcrumb .message-show-hide {

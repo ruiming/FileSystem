@@ -79,7 +79,6 @@
                     <td ng-if="x.isDirectory()">&nbsp;</td>
                 </tr>
             </tbody>
-            <tbody class="blank" id="blank" style="height: 100%"></tbody>
         </table>
     </section>
     <section class="preview col-md-2 hidden-xs hidden-sm" ng-show="path != 'Computer' && last">
@@ -90,6 +89,7 @@
         <div class="preview-info">
             <label>创建时间:</label><p>{{last.birthtime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
             <label>修改时间:</label><p>{{last.mtime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+            <label ng-if="last.isFile()">文件大小:</label><p ng-if="last.isFile()">{{last.size}} B</p>
         </div>
         <label ng-if="content && content!=''">内容预览</label>
         <p class="preview-content" ng-if="content.substring(0, 10)!='data:image'">{{content}}</p>
@@ -139,5 +139,5 @@
     <p class="message message-show-hide" ng-show="checked">{{message}}</p>
     <li><a href="javascript:void(0)" ng-click="turnto('Computer')">Computer</a></li>
     <li ng-repeat="bread in breadcrumbs track by $index" ng-if="bread != 'Computer'"><a href="javascript:void(0)" ng-click="turnto(bread)">{{bread}}</a></li>
-    <li class="number" ng-show="path != 'Computer'">共{{length}}个项目</li>
+    <li class="number" ng-show="path != 'Computer'">共{{files.length ? files.length : length}}个项目</li>
 </ul>

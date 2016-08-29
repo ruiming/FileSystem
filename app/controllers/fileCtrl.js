@@ -167,20 +167,19 @@ import wmic from 'node-wmic'
         menu1.append(copy);menu1.append(pasteIn);menu1.append(renameFile);menu1.append(deleteFile);menu1.append(cutFile);
         menu2.append(pasteHere);menu2.append(newFile);
 
-        let FILE = document.getElementById('file');
+        let FILE = document.getElementById('center');
         FILE.addEventListener('contextmenu', e => {
             e.preventDefault();
             rightClickPosition = {x: e.x, y: e.y};
-            menu1.items[1].enabled = $scope.src ? true : false;
-            menu1.popup(remote.getCurrentWindow());
-        }, false);
-
-        let BLANK = document.getElementById("blank");
-        BLANK.addEventListener('contextmenu', e => {
-            e.preventDefault();
-            rightClickPosition = {x: e.x, y: e.y};
-            menu2.items[0].enabled = $scope.src ? true : false;
-            menu2.popup(remote.getCurrentWindow());
+            let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+            let id = (selectedElement.attributes.id && JSON.parse(selectedElement.attributes.id.nodeValue)) || null;
+            if(id && $scope.files[id].hover) {
+                menu1.items[1].enabled = $scope.src ? true : false;
+                menu1.popup(remote.getCurrentWindow());
+            } else {
+                menu2.items[0].enabled = $scope.src ? true : false;
+                menu2.popup(remote.getCurrentWindow());
+            }
         }, false);
 
         /** 搜索 */

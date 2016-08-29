@@ -374,20 +374,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         menu1.append(copy);menu1.append(pasteIn);menu1.append(renameFile);menu1.append(deleteFile);menu1.append(cutFile);
         menu2.append(pasteHere);menu2.append(newFile);
 
-        var FILE = document.getElementById('file');
+        var FILE = document.getElementById('center');
         FILE.addEventListener('contextmenu', function (e) {
             e.preventDefault();
             rightClickPosition = { x: e.x, y: e.y };
-            menu1.items[1].enabled = $scope.src ? true : false;
-            menu1.popup(_electron.remote.getCurrentWindow());
-        }, false);
-
-        var BLANK = document.getElementById("blank");
-        BLANK.addEventListener('contextmenu', function (e) {
-            e.preventDefault();
-            rightClickPosition = { x: e.x, y: e.y };
-            menu2.items[0].enabled = $scope.src ? true : false;
-            menu2.popup(_electron.remote.getCurrentWindow());
+            var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
+            var id = selectedElement.attributes.id && JSON.parse(selectedElement.attributes.id.nodeValue) || null;
+            if (id && $scope.files[id].hover) {
+                menu1.items[1].enabled = $scope.src ? true : false;
+                menu1.popup(_electron.remote.getCurrentWindow());
+            } else {
+                menu2.items[0].enabled = $scope.src ? true : false;
+                menu2.popup(_electron.remote.getCurrentWindow());
+            }
         }, false);
 
         /** 搜索 */
