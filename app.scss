@@ -109,7 +109,8 @@ a:active {
     padding: 8px 5px;
   }
   p {
-    margin: 0 0 4px;
+    margin: 0 0 2px;
+    font-size: 13px;
   }
   .cpu {
     text-align: center;
@@ -136,12 +137,11 @@ a:active {
   }
 }
 .fileboard {
-  max-height: 730px;
+  height: 520px;
 }
 .files {
   min-width: 510px;
   .disks-files{
-    margin-bottom: 20px;
     table,
     thead,
     tbody {
@@ -155,11 +155,10 @@ a:active {
       background-color: white;
       left: 0;
       right: 0;
-      padding: 0 45px 0 15px;
+      padding: 0 25px 0 15px;
     }
     tbody {
       margin-top: 24px;
-      padding-right: 15px;
       tr {
         &.ng-enter {
           transition: 0.3s linear all;
@@ -217,7 +216,7 @@ a:active {
           text-align: left;
         }
         &:nth-child(3) {
-          width: 230px;
+          width: 300px;
           overflow: hidden;
         }
         &:nth-child(4) {
@@ -225,7 +224,7 @@ a:active {
           overflow: hidden;
         }
         &:nth-child(5) {
-          padding-right: 0;
+          padding-right: 15px;
           width: 120px;
           overflow: hidden;
         }
@@ -262,7 +261,7 @@ a:active {
     position: fixed;
     right: 0;
     bottom: 0;
-    background-color: #FFF;
+    background-color: transparent;
     margin-bottom: 0;
     float: left;
     padding: 0 0 0 25px;
@@ -297,7 +296,7 @@ a:active {
   border-left: 1px solid #eee;
   padding: 0 0 0 10px;
   label {
-    padding: 5px 0;
+    padding: 3px 0;
     font-size: 14px;
   }
   img {

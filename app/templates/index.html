@@ -6,15 +6,12 @@
 </div>
 <div ng-if="remove" class="animate-if">
     <article class="basic">
-        <header><i class="material-icons">computer</i>SYSTEM</header>
+        <header><i class="material-icons">computer</i>系统</header>
         <section>
             <p class="caption">操作系统: {{os.Caption}}</p>
-            <p class="release">版本号: {{system.release}}</p>            
-            <p class="hostname">用户名: {{os.RegisteredUser}}</p>
-            <p class="uptime">开机时间: {{system.uptime | number: 0}} S</p>
-            <p class="bios-manufacturer">BIOS 厂商: {{bios.Manufacturer}}</p>
-            <p class="Product">制造商: {{baseboard.Product}}</p>
+            <p class="release">版本号: {{system.release}}</p>
             <p>系统架构: {{os.OSArchitecture}}</p>
+            <p class="hostname">用户名: {{os.RegisteredUser}}</p>
         </section>
     </article>
     <article class="cpus">
@@ -29,7 +26,7 @@
         </section>
     </article>
     <article class="memory">
-        <header><i class="material-icons">memory</i>MEMORY</header>
+        <header><i class="material-icons">memory</i>内存</header>
         <section>
             <p>已用内存: {{(system.totalmem - system.freemen) / 1024 | number: 0}} KB</p>
             <p>空闲内存: {{system.freemen / 1024 | number: 0}} KB</p>

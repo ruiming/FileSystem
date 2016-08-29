@@ -181,9 +181,9 @@ import iconv from 'iconv-lite'
                             dialog.showMessageBox({title: infoSuccess, detail: infoSuccess, type: 'info', buttons: ['OK']});
                             resolve();
                         }
-                    })    
+                    })
                 }
-                
+
             });
         }
 
@@ -209,7 +209,7 @@ import iconv from 'iconv-lite'
                                 }
                             });
                         }
-                    }); 
+                    });
                 } else {
                     exec(`rmdir "${src}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
                         if(err || iconv.decode(stderr, 'GB2312')) {
@@ -326,6 +326,7 @@ import iconv from 'iconv-lite'
                 let dist = duplicateFolder(src + '新建文件夹');
                 fs.mkdir(dist, 777, err => {
                     if(err) {
+                        alert(err);
                         reject(err);
                     } else {
                         resolve(getFileInfo(dist));
@@ -344,6 +345,7 @@ import iconv from 'iconv-lite'
                 let dist = duplicate(src + '新文档.txt');
                 fs.appendFile(dist, '', err => {
                     if(err) {
+                        alert(err);
                         reject(err);
                     } else {
                         resolve(getFileInfo(dist));

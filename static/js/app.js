@@ -199,10 +199,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         breadcrumb();
 
         var rightClickPosition = null;
-        var menu = new Menu();
+        var menu1 = new Menu();
+        var menu2 = new Menu();
 
         /** 右键菜单 */
-        menu.append(new MenuItem({
+        var copy = new MenuItem({
             label: '复制',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
@@ -211,8 +212,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 $scope.srcType = $scope.files[id].isFile(); // 文件类别
                 $scope.srcName = $scope.files[id].name; // 文件名称
             }
-        }));
-        menu.append(new MenuItem({
+        }),
+            pasteIn = new MenuItem({
             label: '粘贴到里面',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
@@ -224,8 +225,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     cut();
                 });
             }
-        }));
-        menu.append(new MenuItem({
+        }),
+            pasteHere = new MenuItem({
             label: '粘贴到此处',
             click: function click() {
                 if (!$scope.srcType) {
@@ -306,8 +307,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     });
                 }
             }
-        }));
-        menu.append(new MenuItem({
+        }),
+            newFile = new MenuItem({
             label: '新建',
             submenu: [{
                 label: '文件夹',
@@ -324,8 +325,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     });
                 }
             }]
-        }));
-        menu.append(new MenuItem({
+        }),
+            renameFile = new MenuItem({
             'label': '重命名',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
@@ -336,8 +337,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 $scope.src = $scope.path + $scope.files[id].name; // 路径
                 $scope.name = $scope.files[id].name;
             }
-        }));
-        menu.append(new MenuItem({
+        }),
+            deleteFile = new MenuItem({
             label: '删除',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
@@ -346,22 +347,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 if ($scope.files[id].isFile()) {
                     FileService.deleteFile(src).then(function () {
                         $scope.files.splice($scope.files.indexOf($scope.files[id]), 1);
-                    }, function (err) {
-                        console.log(err);
                     });
                 } else {
                     FileService.deleteFolder(src).then(function () {
                         $scope.files.splice($scope.files.indexOf($scope.files[id]), 1);
-                    }, function (err) {
-                        console.log(err);
                     });
                 }
                 if (_path2.default === $scope.forwardStore[$scope.forwardStore.length - 1] || _path2.default + "\\\\" === $scope.forwardStore[$scope.forwardStore.length - 1]) {
                     $scope.forwardStore = [];
                 }
             }
-        }));
-        menu.append(new MenuItem({
+        }),
+            cutFile = new MenuItem({
             label: '剪切',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
@@ -373,26 +370,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 $scope.prePath = $scope.path;
                 $scope.preId = id;
             }
-        }));
+        });
+        menu1.append(copy);menu1.append(pasteIn);menu1.append(renameFile);menu1.append(deleteFile);menu1.append(cutFile);
+        menu2.append(pasteHere);menu2.append(newFile);
 
-        var FILE = document.getElementById("file");
+        var FILE = document.getElementById('file');
         FILE.addEventListener('contextmenu', function (e) {
             e.preventDefault();
             rightClickPosition = { x: e.x, y: e.y };
-            var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
-            var id = JSON.parse(selectedElement.attributes.id.nodeValue);
-            if ($scope.files[id].isFile()) {
-                menu.items[1].enabled = false;
-                menu.items[2].enabled = true;
-            } else {
-                menu.items[1].enabled = true;
-                menu.items[2].enabled = true;
-            }
-            if ($scope.src == undefined) {
-                menu.items[1].enabled = false;
-                menu.items[2].enabled = false;
-            }
-            menu.popup(_electron.remote.getCurrentWindow());
+            menu1.items[1].enabled = $scope.src ? true : false;
+            menu1.popup(_electron.remote.getCurrentWindow());
+        }, false);
+
+        var BLANK = document.getElementById("blank");
+        BLANK.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            rightClickPosition = { x: e.x, y: e.y };
+            menu2.items[0].enabled = $scope.src ? true : false;
+            menu2.popup(_electron.remote.getCurrentWindow());
         }, false);
 
         /** 搜索 */
@@ -573,6 +568,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     }
                     $scope.length = result.length;
                 });
+            }, function (err) {
+                // TODO: has not been test...
+                alert(err);
             });
             _fs2.default.watch($scope.path, function (event, filename) {
                 filename = filename.replace(/(\\)/, '');
@@ -1066,6 +1064,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 var dist = duplicateFolder(src + '新建文件夹');
                 _fs2.default.mkdir(dist, 777, function (err) {
                     if (err) {
+                        alert(err);
                         reject(err);
                     } else {
                         resolve(getFileInfo(dist));
@@ -1084,6 +1083,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 var dist = duplicate(src + '新文档.txt');
                 _fs2.default.appendFile(dist, '', function (err) {
                     if (err) {
+                        alert(err);
                         reject(err);
                     } else {
                         resolve(getFileInfo(dist));

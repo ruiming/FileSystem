@@ -102,7 +102,8 @@ a:active {
     margin: 0;
     padding: 8px 5px; }
   .system p {
-    margin: 0 0 4px; }
+    margin: 0 0 2px;
+    font-size: 13px; }
   .system .cpu {
     text-align: center;
     display: block;
@@ -124,85 +125,82 @@ a:active {
       width: 70px; }
 
 .fileboard {
-  max-height: 730px; }
+  height: 520px; }
 
 .files {
   min-width: 510px; }
-  .files .disks-files {
-    margin-bottom: 20px; }
-    .files .disks-files table,
-    .files .disks-files thead,
-    .files .disks-files tbody {
-      min-width: 470px;
-      overflow: auto;
-      display: block;
-      width: 100%; }
-    .files .disks-files thead {
-      position: absolute;
-      background-color: white;
-      left: 0;
-      right: 0;
-      padding: 0 45px 0 15px; }
-    .files .disks-files tbody {
-      margin-top: 24px;
-      padding-right: 15px; }
-      .files .disks-files tbody tr.ng-enter {
-        transition: 0.3s linear all;
-        opacity: 0; }
-      .files .disks-files tbody tr.ng-enter.ng-enter-active {
-        opacity: 1; }
-      .files .disks-files tbody .tr-active {
-        background-color: #b3e4ff !important; }
-      .files .disks-files tbody .tr-inactive {
-        background-color: #fdfdfd; }
-    .files .disks-files .list:hover,
-    .files .disks-files .menu th:hover {
-      background-color: #d7f1ff; }
-    .files .disks-files tr {
-      min-width: 470px;
+  .files .disks-files table,
+  .files .disks-files thead,
+  .files .disks-files tbody {
+    min-width: 470px;
+    overflow: auto;
+    display: block;
+    width: 100%; }
+  .files .disks-files thead {
+    position: absolute;
+    background-color: white;
+    left: 0;
+    right: 0;
+    padding: 0 25px 0 15px; }
+  .files .disks-files tbody {
+    margin-top: 24px; }
+    .files .disks-files tbody tr.ng-enter {
+      transition: 0.3s linear all;
+      opacity: 0; }
+    .files .disks-files tbody tr.ng-enter.ng-enter-active {
+      opacity: 1; }
+    .files .disks-files tbody .tr-active {
+      background-color: #b3e4ff !important; }
+    .files .disks-files tbody .tr-inactive {
+      background-color: #fdfdfd; }
+  .files .disks-files .list:hover,
+  .files .disks-files .menu th:hover {
+    background-color: #d7f1ff; }
+  .files .disks-files tr {
+    min-width: 470px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    white-space: nowrap; }
+    .files .disks-files tr input {
+      border: 0;
+      box-shadow: none;
+      outline: 0;
+      text-align: left;
       overflow: hidden;
-      text-overflow: ellipsis;
-      display: flex;
-      white-space: nowrap; }
-      .files .disks-files tr input {
-        border: 0;
-        box-shadow: none;
-        outline: 0;
-        text-align: left;
-        overflow: hidden;
-        float: left;
+      float: left;
+      width: 100%;
+      padding: 0; }
+    .files .disks-files tr td,
+    .files .disks-files tr th {
+      overflow: hidden;
+      text-align: right;
+      float: left;
+      padding-right: 15px; }
+      .files .disks-files tr td:nth-child(1),
+      .files .disks-files tr th:nth-child(1) {
+        width: 26px; }
+        .files .disks-files tr td:nth-child(1) img,
+        .files .disks-files tr th:nth-child(1) img {
+          width: 16px; }
+      .files .disks-files tr td:nth-child(2),
+      .files .disks-files tr th:nth-child(2) {
         width: 100%;
-        padding: 0; }
-      .files .disks-files tr td,
-      .files .disks-files tr th {
-        overflow: hidden;
-        text-align: right;
-        float: left;
-        padding-right: 15px; }
-        .files .disks-files tr td:nth-child(1),
-        .files .disks-files tr th:nth-child(1) {
-          width: 26px; }
-          .files .disks-files tr td:nth-child(1) img,
-          .files .disks-files tr th:nth-child(1) img {
-            width: 16px; }
-        .files .disks-files tr td:nth-child(2),
-        .files .disks-files tr th:nth-child(2) {
-          width: 100%;
-          text-overflow: ellipsis;
-          text-align: left; }
-        .files .disks-files tr td:nth-child(3),
-        .files .disks-files tr th:nth-child(3) {
-          width: 230px;
-          overflow: hidden; }
-        .files .disks-files tr td:nth-child(4),
-        .files .disks-files tr th:nth-child(4) {
-          width: 200px;
-          overflow: hidden; }
-        .files .disks-files tr td:nth-child(5),
-        .files .disks-files tr th:nth-child(5) {
-          padding-right: 0;
-          width: 120px;
-          overflow: hidden; }
+        text-overflow: ellipsis;
+        text-align: left; }
+      .files .disks-files tr td:nth-child(3),
+      .files .disks-files tr th:nth-child(3) {
+        width: 300px;
+        overflow: hidden; }
+      .files .disks-files tr td:nth-child(4),
+      .files .disks-files tr th:nth-child(4) {
+        width: 200px;
+        overflow: hidden; }
+      .files .disks-files tr td:nth-child(5),
+      .files .disks-files tr th:nth-child(5) {
+        padding-right: 15px;
+        width: 120px;
+        overflow: hidden; }
   .files .action {
     overflow: hidden;
     display: block; }
@@ -228,7 +226,7 @@ a:active {
     position: fixed;
     right: 0;
     bottom: 0;
-    background-color: #FFF;
+    background-color: transparent;
     margin-bottom: 0;
     float: left;
     padding: 0 0 0 25px; }
@@ -257,7 +255,7 @@ a:active {
   border-left: 1px solid #eee;
   padding: 0 0 0 10px; }
   .preview label {
-    padding: 5px 0;
+    padding: 3px 0;
     font-size: 14px; }
   .preview img {
     overflow: hidden;

@@ -33,6 +33,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="x in disks | index track by $index"
+                    ng-if="x.FileSystem"
                     ng-dblclick="forward(x)"
                     ng-init="x.hover = false"
                     ng-click="selectDisk(x.index)"
@@ -46,7 +47,7 @@
                 </tr>
             </tbody>
         </table>
-        <table ng-show="path != 'Computer'" class="fileboard">
+        <table ng-show="path != 'Computer'" class="fileboard" id="center">
             <thead>
                 <tr class="menu">
                     <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -78,6 +79,7 @@
                     <td ng-if="x.isDirectory()">&nbsp;</td>
                 </tr>
             </tbody>
+            <tbody class="blank" id="blank" style="height: 100%"></tbody>
         </table>
     </section>
     <section class="preview col-md-2 hidden-xs hidden-sm" ng-show="path != 'Computer' && last">
