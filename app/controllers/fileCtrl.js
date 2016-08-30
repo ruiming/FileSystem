@@ -54,6 +54,7 @@ import wmic from 'node-wmic'
         /** 右键菜单 */
         let copy = new MenuItem({
             label: '复制',
+            accelerator: 'CmdOrCtrl+C',
             click() {
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -63,6 +64,7 @@ import wmic from 'node-wmic'
             }
         }), pasteIn = new MenuItem({
             label: '粘贴到里面',
+            accelerator: 'CmdOrCtrl+V',
             click() {
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -72,6 +74,7 @@ import wmic from 'node-wmic'
             }
         }), pasteHere = new MenuItem({
             label: '粘贴到此处',
+            accelerator: 'CmdOrCtrl+V',
             click() {
                 if(!$scope.srcType) {
                     FileService.copyFolder($scope.src, $scope.path + $scope.srcName).then(result => {
@@ -105,6 +108,7 @@ import wmic from 'node-wmic'
             }
         }), newFile = new MenuItem({
             label: '新建',
+            accelerator: 'CmdOrCtrl+N',
             submenu: [{
                     label: '文件夹',
                     click() {
@@ -123,6 +127,7 @@ import wmic from 'node-wmic'
             ]
         }), renameFile = new MenuItem({
             'label': '重命名',
+            accelerator: 'CmdOrCtrl+R',
             click() {
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -134,6 +139,7 @@ import wmic from 'node-wmic'
             }
         }), deleteFile = new MenuItem({
             label: '删除',
+            accelerator: 'CmdOrCtrl+D',
             click() {
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -153,6 +159,7 @@ import wmic from 'node-wmic'
             }
         }), cutFile = new MenuItem({
             label: '剪切',
+            accelerator: 'CmdOrCtrl+X',
             click() {
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);

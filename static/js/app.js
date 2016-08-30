@@ -205,6 +205,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         /** 右键菜单 */
         var copy = new MenuItem({
             label: '复制',
+            accelerator: 'CmdOrCtrl+C',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 var id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -215,6 +216,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }),
             pasteIn = new MenuItem({
             label: '粘贴到里面',
+            accelerator: 'CmdOrCtrl+V',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 var id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -228,6 +230,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }),
             pasteHere = new MenuItem({
             label: '粘贴到此处',
+            accelerator: 'CmdOrCtrl+V',
             click: function click() {
                 if (!$scope.srcType) {
                     FileService.copyFolder($scope.src, $scope.path + $scope.srcName).then(function (result) {
@@ -310,6 +313,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }),
             newFile = new MenuItem({
             label: '新建',
+            accelerator: 'CmdOrCtrl+N',
             submenu: [{
                 label: '文件夹',
                 click: function click() {
@@ -328,6 +332,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }),
             renameFile = new MenuItem({
             'label': '重命名',
+            accelerator: 'CmdOrCtrl+R',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 var id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -340,6 +345,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }),
             deleteFile = new MenuItem({
             label: '删除',
+            accelerator: 'CmdOrCtrl+D',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 var id = JSON.parse(selectedElement.attributes.id.nodeValue);
@@ -360,6 +366,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }),
             cutFile = new MenuItem({
             label: '剪切',
+            accelerator: 'CmdOrCtrl+X',
             click: function click() {
                 var selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 var id = JSON.parse(selectedElement.attributes.id.nodeValue);
