@@ -3,7 +3,6 @@ import babel from 'gulp-babel'
 import plumber from 'gulp-plumber'
 import sass from 'gulp-sass'
 import concat from 'gulp-concat'
-import winInstaller from 'electron-windows-installer'
 
 gulp.task('sass', () => {
     gulp.src('*.scss')
@@ -18,15 +17,6 @@ gulp.task('js', () => {
         .pipe(babel())
         .pipe(concat('app.js'))
         .pipe(gulp.dest('static/js/'))
-});
-
-gulp.task('create-windows-installer', function(done) {
-    winInstaller({
-        appDirectory: './build-win32-ia32',
-        outputDirectory: './release',
-        arch: 'ia32',
-        iconUrl: './static/pikachu.png'
-    }).then(done).catch(done);
 });
 
 gulp.watch('app.scss', ['sass']);

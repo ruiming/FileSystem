@@ -16,7 +16,7 @@ app.on('window-all-closed', () => {
 var appIcon = null;
 
 app.on('ready', () => {
-    appIcon = new Tray('./static/pikachu.png');
+    appIcon = new Tray(__dirname + '/static/pikachu.png');
     var contextMenu = Menu.buildFromTemplate([
         { label: '打开', click() {
             mainWindow.show();
@@ -41,13 +41,13 @@ app.on('ready', () => {
         title: "资源管理器",
         center: true,
         skipTaskbar: true,
-        icon: nativeImage.createFromPath('./static/pikachu.png')
+        icon: nativeImage.createFromPath(__dirname + '/static/pikachu.png')
     });
     // 加载应用的index.html
     mainWindow.loadURL('file://' + __dirname + '/index.html');
     
     // 打开开发工具
-    // mainWindow.openDevTools();
+     mainWindow.openDevTools();
     
     // 当window被关闭，触发下面事件
     mainWindow.on('closed', () => {

@@ -29,17 +29,17 @@ a:active {
 }
 
 ::-webkit-scrollbar {
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0.3);
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: white;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
+  border-radius: 5px;
   -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0.5);
   background-color: white;
 }
@@ -146,19 +146,15 @@ a:active {
     thead,
     tbody {
       min-width: 470px;
-      overflow: auto;
       display: block;
       width: 100%;
     }
     thead {
-      position: absolute;
       background-color: white;
-      left: 0;
-      right: 0;
-      padding: 0 25px 0 15px;
     }
     tbody {
-      margin-top: 24px;
+      max-height: 540px;
+      overflow: auto;
       tr {
         &.ng-enter {
           transition: 0.3s linear all;
@@ -204,6 +200,7 @@ a:active {
         overflow: hidden;
         text-align: right;
         float: left;
+        padding-right: 15px;
         &:nth-child(1) {
           width: 26px;
           img {
@@ -217,17 +214,12 @@ a:active {
         }
         &:nth-child(3) {
           width: 300px;
-          padding-right: 15px;
-          overflow: hidden;
         }
         &:nth-child(4) {
           width: 200px;
-          padding-right: 15px;
-          overflow: hidden;
         }
         &:nth-child(5) {
-          width: 120px;
-          overflow: hidden;
+          width: 160px;
         }
       }
       td {
@@ -301,7 +293,11 @@ a:active {
   border-left: 1px solid #eee;
   padding: 0 0 0 10px;
   label {
+    &:first-child {
+      padding-top: 5px;
+    }
     padding: 3px 0;
+    display: block;
     font-size: 14px;
   }
   img {

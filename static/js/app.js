@@ -1144,27 +1144,29 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
             return $q(function (resolve, reject) {
                 var path = src;
-                readFolder(src).then(function (files) {
-                    files.forEach(function (file) {
-                        _fs2.default.stat(path + file, function (err, stat) {
+                return readFolder(src).then(function (files) {
+                    var promises = files.map(function (file) {
+                        return _fs2.default.stat(path + file, function (err, stat) {
                             if (stat && stat.isDirectory()) {
                                 if (file.toLowerCase().includes(wanted.toLowerCase())) {
-                                    getFileInfo(path + file).then(function (stat) {
+                                    return getFileInfo(path + file).then(function (stat) {
                                         result.push(stat);
                                     });
                                 }
                                 search(path + file + "\\\\", wanted, result).then();
                             } else if (stat && stat.isFile()) {
                                 if (file.toLowerCase().includes(wanted.toLowerCase())) {
-                                    getFileInfo(path + file).then(function (stat) {
+                                    return getFileInfo(path + file).then(function (stat) {
                                         result.push(stat);
                                     });
                                 }
                             }
                         });
                     });
+                    $q.all(promises).then(function () {
+                        resolve(result);
+                    });
                 });
-                resolve(result);
             });
         }
 

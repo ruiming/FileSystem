@@ -399,27 +399,29 @@ import iconv from 'iconv-lite'
         function search(src, wanted, result=[]) {
             return $q((resolve, reject) => {
                 let path = src;
-                readFolder(src).then(files => {
-                    files.forEach(file => {
-                        fs.stat(path + file, (err, stat) => {
+                return readFolder(src).then(files => {
+                    let promises = files.map(file => {
+                        return fs.stat(path + file, (err, stat) => {
                             if(stat && stat.isDirectory()){
                                 if(file.toLowerCase().includes(wanted.toLowerCase())) {
-                                    getFileInfo(path + file).then(stat => {
+                                    return getFileInfo(path + file).then(stat => {
                                         result.push(stat);
                                     });
                                 }
                                 search(path + file + "\\\\", wanted, result).then();
                             } else if (stat && stat.isFile()){
                                 if(file.toLowerCase().includes(wanted.toLowerCase())) {
-                                    getFileInfo(path + file).then(stat => {
+                                    return getFileInfo(path + file).then(stat => {
                                         result.push(stat);
                                     });
                                 }
                             }
                         })
                     });
+                    $q.all(promises).then(() => {
+                        resolve(result);
+                    })
                 });
-                resolve(result);
             })
         }
 
