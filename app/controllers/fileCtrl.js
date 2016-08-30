@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import {remote} from 'electron'
 import wmic from 'node-wmic'
+import childProcess from 'child_process'
 
 (function() {
     'use strict';
@@ -10,13 +11,14 @@ import wmic from 'node-wmic'
         .module('app')
         .controller('FileCtrl', FileCtrl);
 
-    FileCtrl.$inject = ['$scope', 'FileService', '$timeout', 'diskdrive', 'disks', '$q', '$interval'];
+    FileCtrl.$inject = ['$scope', 'FileService', '$timeout', 'diskdrive', 'disks', '$q', '$interval', 'icon'];
 
-    function FileCtrl($scope, FileService, $timeout, diskdrive, disks, $q, $interval) {
+    function FileCtrl($scope, FileService, $timeout, diskdrive, disks, $q, $interval, icon) {
         var Menu = remote.Menu,
             MenuItem = remote.MenuItem,
             result = [],
             length = 0;
+        var worker = null;
 
         $scope.path = "Computer";
         $scope.files = [];
@@ -29,7 +31,8 @@ import wmic from 'node-wmic'
         $scope.diskdrive = diskdrive;
         $scope.last = false;
         $scope.disks = disks;
-        $scope.FileTypeIcon = FileTypeIcon;
+        $scope.icon = icon;
+        $scope.searching = false;
 
         $scope.search = search;
         $scope.listenEnter = listenEnter;
@@ -110,20 +113,20 @@ import wmic from 'node-wmic'
             label: '新建',
             accelerator: 'CmdOrCtrl+N',
             submenu: [{
-                    label: '文件夹',
-                    click() {
-                        FileService.createNewFolder($scope.path).then((stat) => {
-                            $scope.files.push(stat);
-                        });
-                    }
-                }, {
-                    label: '文件',
-                    click() {
-                        FileService.createNewTxt($scope.path).then((stat) => {
-                            $scope.files.push(stat);
-                        })
-                    }
+                label: '文件夹',
+                click() {
+                    FileService.createNewFolder($scope.path).then((stat) => {
+                        $scope.files.push(stat);
+                    });
                 }
+            }, {
+                label: '文件',
+                click() {
+                    FileService.createNewTxt($scope.path).then((stat) => {
+                        $scope.files.push(stat);
+                    })
+                }
+            }
             ]
         }), renameFile = new MenuItem({
             'label': '重命名',
@@ -189,13 +192,35 @@ import wmic from 'node-wmic'
             }
         }, false);
 
-        /** 搜索 */
+        /** 搜索 子进程 */
         function search(wanted) {
-            $scope.backwardStore.push($scope.path);
-            $scope.forwardStore = [];
-            FileService.search($scope.path, wanted).then(result => {
-                $scope.files = result;
-            });
+            if(worker) {
+                worker.kill();
+            } else {
+                worker = childProcess.fork('./static/js/worker.js');
+                let data = {
+                    src: $scope.path,
+                    wanted: wanted,
+                    caps: false,
+                    icon: icon
+                };
+                result = [];
+                worker.on('message', data => {
+                    if(data === 'over') {
+                        console.log(data);
+                    } else {
+                        result.push(data);
+                        console.log(data);
+                        if(result.length > 30) {
+                            $scope.files = result.slice(0, 30);
+                        } else {
+                            $scope.files = result;
+                        }
+                        $scope.length = result.length;
+                    }
+                });
+                worker.send(data);
+            }
         }
 
         /** 监听Enter键 */
@@ -240,6 +265,7 @@ import wmic from 'node-wmic'
 
         /** 跳转至相应磁盘 */
         function forward(x) {
+            if(worker) worker.kill();
             if(x.Description == '光盘')   return;
             $scope.path = x.Name + "\\\\";
             $scope.backwardStore.push($scope.path);
@@ -248,7 +274,8 @@ import wmic from 'node-wmic'
 
         /** 跳转至相应文件夹 */
         function forward_folder(x) {
-            if(x.isDirectory()) {
+            if(worker) worker.kill();
+            if(x.type === '文件夹' || x.isDirectory()) {
                 $scope.path = x.path + "\\\\";
                 $scope.backwardStore.push($scope.path);
                 $scope.forwardStore = [];
@@ -260,6 +287,7 @@ import wmic from 'node-wmic'
 
         /** 导航栏跳转 */
         function turnto(x) {
+            if(worker) worker.kill();
             let currentPath = $scope.path;
             if(x == "Computer" && currentPath != "Computer") {
                 $scope.home();
@@ -286,6 +314,7 @@ import wmic from 'node-wmic'
 
         /** 跳到主页 */
         function home() {
+            if(worker) worker.kill();
             $scope.path = "Computer";
             $scope.backwardStore.push($scope.path);
             $scope.files = [];
@@ -306,6 +335,7 @@ import wmic from 'node-wmic'
             if($scope.backwardStore == null || $scope.backwardStore.length == 1) {
                 return;
             }
+            if(worker) worker.kill();
             $scope.forwardStore.push($scope.path);
             $scope.backwardStore.pop();
             while($scope.backwardStore[$scope.backwardStore.length-1] != "Computer" &&!fs.existsSync($scope.backwardStore[$scope.backwardStore.length-1])) {
@@ -326,6 +356,7 @@ import wmic from 'node-wmic'
             if($scope.forwardStore == null || $scope.forwardStore.length < 1) {
                 return;
             }
+            if(worker) worker.kill();
             $scope.path = $scope.forwardStore[$scope.forwardStore.length - 1];
             $scope.backwardStore.push($scope.path);
             $scope.forwardStore.pop();
@@ -337,6 +368,7 @@ import wmic from 'node-wmic'
             }
         }
 
+        /** Lazrload 懒加载文件列表 */
         function lazyload(start) {
             if($scope.files.length < result.length) {
                 let end = result.length - start > 30 ? start + 30 : result.length;
@@ -348,6 +380,7 @@ import wmic from 'node-wmic'
 
         /** 获取目录里面的文件列表并监控 */
         function readFolder() {
+            if(worker) worker.kill();
             FileService.readFolder($scope.path).then(filenames => {
                 $scope.files = [];
                 result = [];
@@ -412,13 +445,14 @@ import wmic from 'node-wmic'
             }, err => { })
         }
 
+        /** 剪切文件后的操作 */
         function cut() {
             if($scope.deletePath && $scope.srcType) {
-                    FileService.deleteFile($scope.deletePath, false).then(() => {
-                        if($scope.path === $scope.prePath)  $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1)
-                    }, err => {
-                        console.log(err);
-                    })
+                FileService.deleteFile($scope.deletePath, false).then(() => {
+                    if($scope.path === $scope.prePath)  $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1)
+                }, err => {
+                    console.log(err);
+                })
             } else if($scope.deletePath && !$scope.srcTyp) {
                 FileService.deleteFolder($scope.deletePath, false).then(() => {
                     if($scope.path === $scope.prePath)  $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1)

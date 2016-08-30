@@ -1,6 +1,6 @@
 $hover: #e8e8e8;
 $bgColor: #fdfdfd;
-body{
+body {
   font-family: "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   -webkit-user-select: none;
   -webkit-app-region: drag;
@@ -136,11 +136,7 @@ a:active {
     }
   }
 }
-.fileboard {
-  height: 520px;
-}
 .files {
-  min-width: 510px;
   .disks-files{
     table,
     thead,
@@ -153,7 +149,7 @@ a:active {
       background-color: white;
     }
     tbody {
-      max-height: 540px;
+      height: 520px;
       overflow: auto;
       tr {
         &.ng-enter {
@@ -308,7 +304,7 @@ a:active {
     overflow: auto;
     color: #000000;
     white-space: pre;
-    max-height: 450px;
+    max-height: 280px;
     overflow-y: auto;
     padding-right: 10px;
     font-size: 12px;

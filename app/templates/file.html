@@ -17,7 +17,9 @@
                     <input type="text" ng-model="wanted" class="form-control" id="search" placeholder="请输入您要搜索的内容">
                 </div>
                 <button class="btn btn-info" ng-click="search(wanted)">
-                    <i class="material-icons">search</i>
+                    <!-- TODO -->
+                    <i class="material-icons" ng-if="!searching">search</i>
+                    <i class="material-icons" ng-if="searching">cancel</i>
                 </button>
             </form>
         </div>
@@ -39,7 +41,7 @@
                     ng-click="selectDisk(x.index)"
                     ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"
                     class="list">
-                    <td><img ng-src='{{FileTypeIcon[x.Description].src}}'></td>
+                    <td><img ng-src="{{icon[x.Description].src}}"></td>
                     <td>{{x.Name}}</td>
                     <td>{{x.FileSystem}}</td>
                     <td>{{x.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</td>
@@ -58,7 +60,7 @@
                 </tr>
             </thead>
             <tbody id="file" infinite-scroll="lazyload(files.length)" infinite-scroll-distance='2'
-                infinite-scroll-immediate-check='false' infinite-scroll-parent="true" >
+                infinite-scroll-immediate-check='false' infinite-scroll-container="'#file'">
                 <tr class="list"
                     ng-repeat="x in files | index | orderBy:col:desc track by $index"
                     ng-dblclick="forward_folder(x)"
@@ -73,9 +75,7 @@
                     <td ng-if="!x.rename" ng-bind="x.name"></td>
                     <td ng-bind="x.atime | date:'yyyy-MM-dd HH:mm:ss'" class="hidden-xs"></td>    <!--修改时间 修改文件内容-->
                     <td ng-bind="x.type"></td>
-                    <td ng-if="x.size < 1024 && x.size >= 0 && x.isFile()">{{x.size | number: 2}} B</td>
-                    <td ng-if="x.size >= 1024 && x.size < 1024*1024">{{x.size / 1024 | number: 2}} KB</td>
-                    <td ng-if="x.size >= 1024*1024">{{x.size / 1024 / 1024 | number: 2}} MB</td>
+                    <td ng-if="x.isFile()">{{x.size | size}}</td>
                     <td ng-if="x.isDirectory()">&nbsp;</td>
                 </tr>
             </tbody>
@@ -97,13 +97,13 @@
     </section>
     <section class="preview col-md-2 hidden-xs hidden-sm" ng-show="diskDetail && (path == 'Computer'||!last)">
         <div class="preview-text">
-            <img ng-src='{{FileTypeIcon[diskDetail.Description].src}}'>
+            <img ng-src='{{icon[diskDetail.Description].src}}'>
             <p>{{diskDetail.VolumeName}}</p>
             <p>{{diskDetail.Caption}}</p>
         </div>
         <div class="preview-info">
-            <label>剩余容量:</label><p>{{diskDetail.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</p>
-            <label>总容量:</label><p>{{diskDetail.Size / 1024 / 1024 / 1024 | number: 0}} GB</p>
+            <label>剩余容量:</label><p>{{diskDetail.FreeSpace | size}}</p>
+            <label>总容量:</label><p>{{diskDetail.Size | size}}</p>
             <label>使用率:</label>
             <uib-progressbar class="progress-striped active" max="diskDetail.Size" value="diskDetail.Size - diskDetail.FreeSpace" type="danger">
                 <i>{{diskDetail.Size - diskDetail.FreeSpace}}</i>
@@ -118,7 +118,7 @@
              ng-show="!diskDetail && (path == 'Computer'||!last)">
         <div ng-repeat="x in diskdrive">
             <div class="preview-text">
-                <img ng-src='{{FileTypeIcon[x.Description].src}}'>
+                <img ng-src='{{icon[x.Description].src}}'>
                 <p>{{x.Caption}}</p>
                 <p>{{x.Manufacturer}}</p>
             </div>
@@ -139,5 +139,5 @@
     <p class="message message-show-hide" ng-show="checked">{{message}}</p>
     <li><a href="javascript:void(0)" ng-click="turnto('Computer')">Computer</a></li>
     <li ng-repeat="bread in breadcrumbs track by $index" ng-if="bread != 'Computer'"><a href="javascript:void(0)" ng-click="turnto(bread)">{{bread}}</a></li>
-    <li class="number" ng-show="path != 'Computer'">共{{files.length ? files.length : length}}个项目</li>
+    <li class="number" ng-show="path != 'Computer'">共{{length}}个项目</li>
 </ul>

@@ -11,9 +11,10 @@ import iconv from 'iconv-lite'
         .module('app')
         .factory('FileService', FileService);
 
-    FileService.$inject = ['$q'];
+    FileService.$inject = ['$q', 'icon'];
 
-    function FileService($q) {
+    function FileService($q, icon) {
+
         const buttons = ['OK', 'Cancel'];
         const dialog = remote.dialog;
 
@@ -285,11 +286,11 @@ import iconv from 'iconv-lite'
                         stat.name = temp[temp.length-1];
                         if(stat.isDirectory()) {
                             type = 'folder'
-                        } else if(FileTypeIcon.hasOwnProperty(mime.toLowerCase())) {
+                        } else if(icon.hasOwnProperty(mime.toLowerCase())) {
                             type = mime.toLowerCase();
                         }
-                        stat.type = FileTypeIcon[type].type;
-                        stat.src = FileTypeIcon[type].src;
+                        stat.type = icon[type].type;
+                        stat.src = icon[type].src;
                         stat.path = src;
                         stat.rename = false;
                         stat.hover = false;

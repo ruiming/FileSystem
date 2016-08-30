@@ -28,9 +28,9 @@
     <article class="memory">
         <header><i class="material-icons">memory</i>内存</header>
         <section>
-            <p>已用内存: {{(system.totalmem - system.freemen) / 1024 | number: 0}} KB</p>
-            <p>空闲内存: {{system.freemen / 1024 | number: 0}} KB</p>
-            <p>总内存: {{system.totalmem / 1024 | number: 0}} KB</p>
+            <p>已用内存: {{(system.totalmem - system.freemen)| size}}</p>
+            <p>空闲内存: {{system.freemen | size}}</p>
+            <p>总内存: {{system.totalmem | size}}</p>
         </section>
     </article>
     <article class="usedbar">
