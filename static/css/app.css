@@ -65,7 +65,7 @@ a:active {
 
 .system,
 .files {
-  padding: 20px;
+  padding: 10px 20px;
   color: #000;
   overflow: hidden; }
   .system header,
@@ -94,7 +94,7 @@ a:active {
 
 .system {
   max-width: 262px;
-  padding: 20px 0 0 20px;
+  padding: 10px 0 0 20px;
   float: left; }
   .system .arrow-left,
   .system .arrow-right {
@@ -153,9 +153,12 @@ a:active {
       background-color: #b3e4ff !important; }
     .files .disks-files tbody .tr-inactive {
       background-color: #fdfdfd; }
-  .files .disks-files .list:hover,
-  .files .disks-files .menu th:hover {
-    background-color: #d7f1ff; }
+  .files .disks-files .list,
+  .files .disks-files .menu th {
+    background-color: #fdfdfd; }
+    .files .disks-files .list:hover,
+    .files .disks-files .menu th:hover {
+      background-color: #d7f1ff; }
   .files .disks-files tr {
     min-width: 470px;
     overflow: hidden;

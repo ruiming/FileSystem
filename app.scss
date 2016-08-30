@@ -71,7 +71,7 @@ a:active {
 }
 .system,
 .files {
-  padding: 20px;
+  padding: 10px 20px;
   color: #000;
   overflow: hidden;
   header {
@@ -100,7 +100,7 @@ a:active {
 }
 .system {
   max-width: 262px;
-  padding: 20px 0 0 20px;
+  padding: 10px 0 0 20px;
   float: left;
   .arrow-left,
   .arrow-right {
@@ -177,6 +177,7 @@ a:active {
     }
     .list,
     .menu th {
+      background-color: $bgColor;
       &:hover {
         background-color: #d7f1ff;
       }
