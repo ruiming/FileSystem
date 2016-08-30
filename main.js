@@ -47,7 +47,7 @@ app.on('ready', () => {
     mainWindow.loadURL('file://' + __dirname + '/index.html');
     
     // 打开开发工具
-    mainWindow.openDevTools();
+    // mainWindow.openDevTools();
     
     // 当window被关闭，触发下面事件
     mainWindow.on('closed', () => {
