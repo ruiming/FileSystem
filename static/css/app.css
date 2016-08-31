@@ -135,7 +135,7 @@ a:active {
   background-color: white; }
 
 .files .disks-files tbody {
-  height: 520px;
+  height: 500px;
   overflow: auto; }
   .files .disks-files tbody tr.ng-enter {
     transition: 0.3s linear all;
@@ -254,6 +254,8 @@ a:active {
   right: 20px; }
 
 .preview {
+  max-height: 600px;
+  overflow-y: auto;
   border-left: 1px solid #eee;
   padding: 0 0 0 10px; }
   .preview label {
@@ -291,13 +293,15 @@ a:active {
 
 .search-option {
   overflow: hidden;
+  width: 100%;
   margin-top: 0;
   float: right; }
-  .search-option .btn {
-    padding: 0.5px 10px;
-    margin: 0; }
+  .search-option button {
+    padding: 5px 10px !important;
+    margin: 0 !important;
+    float: right !important; }
   .search-option .checkbox {
-    float: left;
+    float: right;
     margin: 5px; }
 
 .cssload-wrap {

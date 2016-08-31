@@ -1,10 +1,10 @@
 {
   "name": "explorer",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "FileSystem",
   "main": "main.js",
   "scripts": {
-    "start": "electron-packager . build --platform=win32 --arch=ia32 --overwrite --icon=./static/icon.ico"
+    "start": "electron-packager . build --platform=win32 --arch=ia32 --asar --overwrite --icon=./static/pikachu.icns"
   },
   "repository": {
     "type": "git",

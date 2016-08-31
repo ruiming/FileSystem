@@ -221,6 +221,8 @@ import childProcess from 'child_process'
                 $scope.searching = false;
             } else {
                 worker = childProcess.fork('./static/js/worker.js');
+                // If use electron-packager, take attention to the worker.js file.
+                // worker = childProcess.fork('./resources/worker.js');
                 let data = {
                     src: $scope.path,
                     wanted: wanted,
@@ -229,7 +231,6 @@ import childProcess from 'child_process'
                     folderOnly: $scope.options.folderOnly,
                     icon: icon
                 };
-                console.log(data);
                 result = [];
                 worker.on('message', data => {
                     if(data === 'over') {

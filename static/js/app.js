@@ -452,6 +452,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 $scope.searching = false;
             } else {
                 worker = _child_process2.default.fork('./static/js/worker.js');
+                // If use electron-packager, take attention to the worker.js file.
+                // worker = childProcess.fork('./resources/worker.js');
                 var data = {
                     src: $scope.path,
                     wanted: wanted,
@@ -460,7 +462,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     folderOnly: $scope.options.folderOnly,
                     icon: icon
                 };
-                console.log(data);
                 result = [];
                 worker.on('message', function (data) {
                     if (data === 'over') {

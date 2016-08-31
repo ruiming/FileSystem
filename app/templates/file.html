@@ -23,6 +23,9 @@
                 </div>
             </form>
             <div class="search-option" abm-form-group ng-show="show && path !== 'Computer'">
+                <button class="btn btn-success" ng-click="hideSearchOption()">
+                    <i class="material-icons">arrow_upward</i>
+                </button>
                 <div class="checkbox" abm-checkbox label="区分大小写">
                     <input type="checkbox" ng-model="options.caps">
                 </div>
@@ -32,9 +35,6 @@
                 <div class="checkbox" abm-checkbox label="仅限文件夹" ng-click="options.fileOnly=false">
                     <input type="checkbox" ng-model="options.folderOnly">
                 </div>
-                <button class="btn btn-success" ng-click="hideSearchOption()">
-                    <i class="material-icons">arrow_upward</i>
-                </button>
             </div>
         </div>
         <table ng-show="path == 'Computer'">

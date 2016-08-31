@@ -149,7 +149,7 @@ a:active {
       background-color: white;
     }
     tbody {
-      height: 520px;
+      height: 500px;
       overflow: auto;
       tr {
         &.ng-enter {
@@ -289,6 +289,8 @@ a:active {
   }
 }
 .preview {
+  max-height: 600px;
+  overflow-y: auto;
   border-left: 1px solid #eee;
   padding: 0 0 0 10px;
   label {
@@ -334,14 +336,16 @@ a:active {
 }
 .search-option {
   overflow: hidden;
+  width: 100%;
   margin-top: 0;
   float: right;
-  .btn {
-    padding: 0.5px 10px;
-    margin: 0;
+  button {
+    padding: 5px 10px !important;
+    margin: 0 !important;
+    float: right !important;
   }
   .checkbox {
-    float: left;
+    float: right;
     margin: 5px;
   }
 }
