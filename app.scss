@@ -235,6 +235,9 @@ a:active {
       padding: 6px 15px;
       float: right;
       display: flex;
+      .form-group {
+        display: flex;
+      }
       .form-group,
       #search {
         margin: 0;
@@ -327,6 +330,19 @@ a:active {
     .progress-striped {
       margin-bottom: 0;
     }
+  }
+}
+.search-option {
+  overflow: hidden;
+  margin-top: 0;
+  float: right;
+  .btn {
+    padding: 0.5px 10px;
+    margin: 0;
+  }
+  .checkbox {
+    float: left;
+    margin: 5px;
   }
 }
 .cssload-wrap {

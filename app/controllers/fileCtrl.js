@@ -30,10 +30,16 @@ import childProcess from 'child_process'
         $scope.disk = {};
         $scope.diskdrive = diskdrive;
         $scope.last = false;
+        $scope.show = false;
         $scope.disks = disks;
         $scope.icon = icon;
         $scope.searching = false;                       // 判断当前搜索状态
         $scope.searchPage = false;                      // 判断是否停留在搜索页面
+        $scope.options = {
+            caps: false,
+            fileOnly: false,
+            folderOnly: false
+        };
 
         $scope.search = search;
         $scope.listenEnter = listenEnter;
@@ -48,6 +54,8 @@ import childProcess from 'child_process'
         $scope.Hbackward = Hbackward;
         $scope.Hforward = Hforward;
         $scope.lazyload = lazyload;
+        $scope.showSearchOption = () => $scope.show = true;
+        $scope.hideSearchOption = () => $scope.show = false;
 
         breadcrumb();
 
@@ -89,9 +97,11 @@ import childProcess from 'child_process'
                             }
                         }
                         return result;
-                    }).then(result => {
-                        if(result !== 1) {
-                            $scope.files.push(result);
+                    }).then(re => {
+                        if(re !== 1) {
+                            $scope.files.push(re);
+                            result.splice($scope.files.length + 1, 0, re);
+                            $scope.length = result.length;
                         }
                     }).then(() => {cut()});
                 } else {
@@ -103,9 +113,11 @@ import childProcess from 'child_process'
                             }
                         }
                         return result;
-                    }).then(result => {
-                        if(result !== 1) {
-                            $scope.files.push(result);
+                    }).then(re => {
+                        if(re !== 1) {
+                            $scope.files.push(re);
+                            result.splice($scope.files.length + 1, 0, re);
+                            $scope.length = result.length;
                         }
                     }).then(() => {cut()});
                 }
@@ -116,15 +128,19 @@ import childProcess from 'child_process'
             submenu: [{
                 label: '文件夹',
                 click() {
-                    FileService.createNewFolder($scope.path).then((stat) => {
+                    FileService.createNewFolder($scope.path).then(stat => {
                         $scope.files.push(stat);
+                        result.splice($scope.files.length + 1, 0, stat);
+                        $scope.length = result.length;
                     });
                 }
             }, {
                 label: '文件',
                 click() {
-                    FileService.createNewTxt($scope.path).then((stat) => {
+                    FileService.createNewTxt($scope.path).then(stat => {
                         $scope.files.push(stat);
+                        result.splice($scope.files.length + 1, 0, stat);
+                        $scope.length = result.length;
                     })
                 }
             }
@@ -148,13 +164,17 @@ import childProcess from 'child_process'
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);
                 let src = $scope.path + $scope.files[id].name;
-                if($scope.files[id].isFile()) {
-                    FileService.deleteFile(src).then(() => {
-                        $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
+                if($scope.files[id].type !== '文件夹') {
+                    FileService.deleteFile($scope.files[id].path, true).then(() => {
+                        $scope.files.splice($scope.files.indexOf($scope.files[id]), 1);
+                        result.splice($scope.files.indexOf($scope.files[id]), 1);
+                        $scope.length = result.length;
                     })
                 } else {
-                    FileService.deleteFolder(src).then(() => {
-                        $scope.files.splice($scope.files.indexOf($scope.files[id]), 1)
+                    FileService.deleteFolder($scope.files[id].path, true).then(() => {
+                        $scope.files.splice($scope.files.indexOf($scope.files[id]), 1);
+                        result.splice($scope.files.indexOf($scope.files[id]), 1);
+                        $scope.length = result.length;
                     })
                 }
                 if(path === $scope.forwardStore[$scope.forwardStore.length-1] || path + "\\\\" === $scope.forwardStore[$scope.forwardStore.length-1]) {
@@ -184,11 +204,12 @@ import childProcess from 'child_process'
             rightClickPosition = {x: e.x, y: e.y};
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
             let id = selectedElement.attributes.id && +selectedElement.attributes.id.nodeValue;
-            if(isNaN(id) || (!$scope.searchPage && !$scope.files[id].hover)) {
-                menu2.items[0].enabled = $scope.src ? true : false;
+            if(!$scope.searchPage && (isNaN(id) || !$scope.files[id].hover)) {
+                menu2.items[0].enabled = ($scope.deletePath || $scope.src) && !$scope.searchPage;
                 menu2.popup(remote.getCurrentWindow());
-            } else {
-                menu1.items[1].enabled = $scope.src && !$scope.searchPage;
+            } else if($scope.files[id]) {
+                menu1.items[1].enabled = ($scope.deletePath || $scope.src) && !$scope.searchPage;
+                if($scope.files[id].type !== '文件夹') menu1.items[1].enabled = false;
                 menu1.popup(remote.getCurrentWindow());
             }
         }, false);
@@ -203,20 +224,24 @@ import childProcess from 'child_process'
                 let data = {
                     src: $scope.path,
                     wanted: wanted,
-                    caps: false,
+                    caps: $scope.options.caps,
+                    fileOnly: $scope.options.fileOnly,
+                    folderOnly: $scope.options.folderOnly,
                     icon: icon
                 };
+                console.log(data);
                 result = [];
                 worker.on('message', data => {
                     if(data === 'over') {
                         console.log(data);
+                        $scope.searching = false;
                     } else {
                         result.push(data);
                         console.log(data);
                         if(result.length > 30) {
                             $scope.files = result.slice(0, 30);
                         } else {
-                            $scope.files = result;
+                            $scope.files = result.slice(0, result.length);
                         }
                         $scope.length = result.length;
                     }
@@ -263,7 +288,14 @@ import childProcess from 'child_process'
             $scope.files[index].rename = false;
             $scope.dist = $scope.files[index].location + $scope.files[index].name;
             FileService.rename($scope.files[index].path, $scope.dist).then(stat => {
+                console.log(stat.path);
+                if($scope.src === $scope.files[index].path || $scope.deletePath === $scope.files[index].path) {
+                    $scope.src = stat.path;
+                    $scope.srcName = stat.name;
+                    $scope.deletePath = stat.path;
+                }
                 $scope.files[index] = stat;
+                result[index] = stat;
             }, err => {
                 $scope.files[index].name = $scope.name;
             });
@@ -273,6 +305,7 @@ import childProcess from 'child_process'
         function forward(x) {
             if(worker) {
                 worker.kill();
+                $scope.wanted = '';
                 $scope.searching = false;
                 $scope.searchPage = false;
             }
@@ -287,6 +320,7 @@ import childProcess from 'child_process'
             if(x.type === '文件夹' || x.isDirectory()) {
                 if(worker) {
                     worker.kill();
+                    $scope.wanted = '';
                     $scope.searching = false;
                     $scope.searchPage = false;
                 }
@@ -303,6 +337,7 @@ import childProcess from 'child_process'
         function turnto(x) {
             if(worker) {
                 worker.kill();
+                $scope.wanted = '';
                 $scope.searching = false;
                 $scope.searchPage = false;
             }
@@ -334,6 +369,7 @@ import childProcess from 'child_process'
         function home() {
             if(worker) {
                 worker.kill();
+                $scope.wanted = '';
                 $scope.searching = false;
                 $scope.searchPage = false;
             }
@@ -359,6 +395,7 @@ import childProcess from 'child_process'
             }
             if(worker) {
                 worker.kill();
+                $scope.wanted = '';
                 $scope.searchPage = false;
                 $scope.searching = false;
             }
@@ -384,6 +421,7 @@ import childProcess from 'child_process'
             }
             if(worker) {
                 worker.kill();
+                $scope.wanted = '';
                 $scope.searchPage = false;
                 $scope.searching = false;
             }
@@ -399,10 +437,10 @@ import childProcess from 'child_process'
         }
 
         /** Lazrload 懒加载文件列表 */
-        function lazyload(start) {
+        function lazyload() {
             if($scope.files.length < result.length) {
-                let end = result.length - start > 30 ? start + 30 : result.length;
-                for(let i=start; i<end; i++) {
+                let end = result.length - $scope.files.length > 30 ? $scope.files.length + 30 : result.length;
+                for(let i=$scope.files.length; i<end; i++) {
                     $scope.files.push(result[i]);
                 }
             }
@@ -412,6 +450,7 @@ import childProcess from 'child_process'
         function readFolder() {
             if(worker) {
                 worker.kill();
+                $scope.wanted = '';
                 $scope.searching = false;
                 $scope.searchPage = false;
             }
@@ -430,7 +469,7 @@ import childProcess from 'child_process'
                     if(result.length > 30) {
                         $scope.files = result.slice(0, 30);
                     } else {
-                        $scope.files = result;
+                        $scope.files = result.slice(0, result.length);
                     }
                     $scope.length = result.length;
                 })
@@ -483,16 +522,29 @@ import childProcess from 'child_process'
         function cut() {
             if($scope.deletePath && $scope.srcType) {
                 FileService.deleteFile($scope.deletePath, false).then(() => {
-                    if($scope.path === $scope.prePath)  $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1)
+                    if($scope.path === $scope.prePath) {
+                        $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1);
+                        result.splice($scope.files.indexOf($scope.files[$scope.preId]), 1);
+                        $scope.length = result.length;
+                    }
                 }, err => {
                     console.log(err);
                 })
-            } else if($scope.deletePath && !$scope.srcTyp) {
+            } else if($scope.deletePath && !$scope.srcType) {
                 FileService.deleteFolder($scope.deletePath, false).then(() => {
-                    if($scope.path === $scope.prePath)  $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1)
+                    if($scope.path === $scope.prePath)  {
+                        $scope.files.splice($scope.files.indexOf($scope.files[$scope.preId]), 1);
+                        result.splice($scope.files.indexOf($scope.files[$scope.preId]), 1);
+                        $scope.length = result.length;
+                        $scope.length = result.length;
+                    }
                 }, err => {
                     console.log(err);
                 })
+            }
+            if($scope.deletePath) {
+                $scope.src = null;
+                $scope.deletePath = null;
             }
         }
     }

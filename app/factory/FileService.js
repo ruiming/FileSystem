@@ -154,6 +154,7 @@ import iconv from 'iconv-lite'
          * @returns {*}
          */
         function deleteFile(src, alert) {
+            console.log(src);
             let buttons = ['OK', 'Cancel'];
             let title = '删除文件';
             let infoSuccess = '删除 ' + src + ' 成功!';
@@ -179,7 +180,6 @@ import iconv from 'iconv-lite'
                         if (err) {
                             reject(err);
                         } else {
-                            dialog.showMessageBox({title: infoSuccess, detail: infoSuccess, type: 'info', buttons: ['OK']});
                             resolve();
                         }
                     })
@@ -194,11 +194,14 @@ import iconv from 'iconv-lite'
          * @returns {*}
          */
         function deleteFolder(src, alert) {
+            console.log(src);
             let buttons = ['OK', 'Cancel'];
             let title = '删除文件夹';
+            let infoSuccess = '删除 ' + src + ' 成功!';
             let message = '确认要删除吗? 此操作不可逆!';
             return $q((resolve, reject) => {
                 if(alert !== false) {
+                    console.log(alert);
                    dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
                         if(index == 0) {
                             exec(`rmdir "${src}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
@@ -206,6 +209,7 @@ import iconv from 'iconv-lite'
                                     dialog.showErrorBox(iconv.decode(stderr, 'GB2312'),  iconv.decode(stdout, 'GB2312'));
                                     reject(iconv.decode(stderr, 'GB2312'));
                                 } else {
+                                    dialog.showMessageBox({title: infoSuccess, detail: infoSuccess, type: 'info', buttons: ['OK']});
                                     resolve();
                                 }
                             });
@@ -364,13 +368,12 @@ import iconv from 'iconv-lite'
          */
         function rename(src, dist) {
             return $q((resolve, reject) => {
-                console.log(src, dist);
                 fs.rename(src, dist, err => {
                     if(err) {
                         alert(err);
                         reject(err);
                     } else {
-                        getFileInfo(dist).then(stat => {
+                        return getFileInfo(dist).then(stat => {
                             resolve(stat);
                         });
                     }
@@ -435,7 +438,7 @@ import iconv from 'iconv-lite'
         }
 
         function readFile(stat) {
-            let img = ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'svg', 'psd', 'ico'];
+            let img = ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'psd', 'ico'];
             let src = stat.path;
             let temp = src.split('.');
             if(img.indexOf(temp[temp.length - 1].toLowerCase()) !== -1) {

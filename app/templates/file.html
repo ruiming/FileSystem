@@ -11,73 +11,87 @@
             <button class="btn btn-info" ng-click="Hforward()" ng-disabled="forwardStore.length==0">
                 <i class="material-icons">keyboard_arrow_right</i>
             </button>
-            <form>
-                <div class="form-group">
+            <form ng-if="path !== 'Computer'">
+                <div class="form-group search-option" abm-form-group>
                     <label for="search" hidden>搜索</label>
-                    <input type="text" ng-model="wanted" class="form-control" id="search" placeholder="请输入您要搜索的内容">
+                    <input type="text" ng-focus="showSearchOption()" abm-form-control
+                           ng-model="wanted" class="form-control" id="search" placeholder="请输入您要搜索的内容">
+                    <button class="btn btn-info" ng-click="search(wanted)">
+                        <i class="material-icons" ng-if="!searching">search</i>
+                        <i class="material-icons" ng-if="searching">cancel</i>
+                    </button>
                 </div>
-                <button class="btn btn-info" ng-click="search(wanted)">
-                    <!-- TODO -->
-                    <i class="material-icons" ng-if="!searching">search</i>
-                    <i class="material-icons" ng-if="searching">cancel</i>
-                </button>
             </form>
+            <div class="search-option" abm-form-group ng-show="show && path !== 'Computer'">
+                <div class="checkbox" abm-checkbox label="区分大小写">
+                    <input type="checkbox" ng-model="options.caps">
+                </div>
+                <div class="checkbox" abm-checkbox label="仅限文件">
+                    <input type="checkbox" ng-model="options.fileOnly" ng-click="options.folderOnly=false">
+                </div>
+                <div class="checkbox" abm-checkbox label="仅限文件夹" ng-click="options.fileOnly=false">
+                    <input type="checkbox" ng-model="options.folderOnly">
+                </div>
+                <button class="btn btn-success" ng-click="hideSearchOption()">
+                    <i class="material-icons">arrow_upward</i>
+                </button>
+            </div>
         </div>
         <table ng-show="path == 'Computer'">
             <thead>
-                <tr class="menu">
-                    <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                    <th>盘符名</th>
-                    <th>文件系统</th>
-                    <th>剩余总量</th>
-                    <th>总容量</th>
-                </tr>
+            <tr class="menu">
+                <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                <th>盘符名</th>
+                <th>文件系统</th>
+                <th>剩余总量</th>
+                <th>总容量</th>
+            </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="x in disks | index track by $index"
-                    ng-if="x.FileSystem"
-                    ng-dblclick="forward(x)"
-                    ng-init="x.hover = false"
-                    ng-click="selectDisk(x.index)"
-                    ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"
-                    class="list">
-                    <td><img ng-src="{{icon[x.Description].src}}"></td>
-                    <td>{{x.Name}}</td>
-                    <td>{{x.FileSystem}}</td>
-                    <td>{{x.FreeSpace | size}}</td>
-                    <td>{{x.Size | size}}</td>
-                </tr>
+            <tr ng-repeat="x in disks | index track by $index"
+                ng-if="x.FileSystem"
+                ng-dblclick="forward(x)"
+                ng-init="x.hover = false"
+                ng-click="selectDisk(x.index)"
+                ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"
+                class="list">
+                <td><img ng-src="{{icon[x.Description].src}}"></td>
+                <td>{{x.Name}}</td>
+                <td>{{x.FileSystem}}</td>
+                <td>{{x.FreeSpace | size}}</td>
+                <td>{{x.Size | size}}</td>
+            </tr>
             </tbody>
         </table>
         <table ng-show="path != 'Computer'" class="fileboard" id="center">
             <thead>
-                <tr class="menu">
-                    <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                    <th ng-click="col='name';desc=!desc">名称</th>
-                    <th ng-click="col='atime';desc=!desc" class="hidden-xs">修改时间</th>
-                    <th ng-click="col='type';desc=!desc">类型</th>
-                    <th ng-click="col='size';desc=!desc">大小</th>
-                </tr>
+            <tr class="menu">
+                <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                <th ng-click="col='name';desc=!desc">名称</th>
+                <th ng-click="col='atime';desc=!desc" class="hidden-xs">修改时间</th>
+                <th ng-click="col='type';desc=!desc">类型</th>
+                <th ng-click="col='size';desc=!desc">大小</th>
+            </tr>
             </thead>
-            <tbody id="file" infinite-scroll="lazyload(files.length)" infinite-scroll-distance='2'
-                infinite-scroll-immediate-check='false' infinite-scroll-container="'#file'">
-                <tr class="list"
-                    ng-repeat="x in files | index | orderBy:col:desc track by $index"
-                    ng-dblclick="forward_folder(x)"
-                    ng-if="path != 'Computer'"
-                    ng-click="select(x.index)"
-                    ng-mouseleave = "leave(x.index)"
-                    ng-keypress="listenEnter($event, x.index)"
-                    ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"
-                    id={{x.index}}>
-                    <td><img ng-src="{{x.src}}"></td>
-                    <td ng-if="x.rename"><input type="text" ng-model="x.name" focus-me="{{x.rename}}" ng-blur="rename(x.index)"></td>
-                    <td ng-if="!x.rename" ng-bind="x.name"></td>
-                    <td ng-bind="x.atime | date:'yyyy-MM-dd HH:mm:ss'" class="hidden-xs"></td>    <!--修改时间 修改文件内容-->
-                    <td ng-bind="x.type"></td>
-                    <td ng-if="x.isFile()">{{x.size | size}}</td>
-                    <td ng-if="x.isDirectory()">&nbsp;</td>
-                </tr>
+            <tbody id="file" infinite-scroll="lazyload()" infinite-scroll-distance='2'
+                   infinite-scroll-immediate-check='false' infinite-scroll-container="'#file'">
+            <tr class="list"
+                ng-repeat="x in files | index | orderBy:col:desc track by $index"
+                ng-dblclick="forward_folder(x)"
+                ng-if="path != 'Computer'"
+                ng-click="select(x.index)"
+                ng-mouseleave = "leave(x.index)"
+                ng-keypress="listenEnter($event, x.index)"
+                ng-class="{true: 'tr-active', false: 'tr-inactive'}[x.hover]"
+                id={{x.index}}>
+                <td><img ng-src="{{x.src}}"></td>
+                <td ng-if="x.rename"><input type="text" ng-model="x.name" focus-me="{{x.rename}}" ng-blur="rename(x.index)"></td>
+                <td ng-if="!x.rename" ng-bind="x.name"></td>
+                <td ng-bind="x.atime | date:'yyyy-MM-dd HH:mm:ss'" class="hidden-xs"></td>
+                <td ng-bind="x.type"></td>
+                <td ng-if="x.type !== '文件夹'">{{x.size | size}}</td>
+                <td ng-if="x.type === '文件夹'">&nbsp;</td>
+            </tr>
             </tbody>
         </table>
     </section>

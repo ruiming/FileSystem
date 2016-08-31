@@ -209,6 +209,8 @@ a:active {
     padding: 6px 15px;
     float: right;
     display: flex; }
+    .files .action form .form-group {
+      display: flex; }
     .files .action form .form-group,
     .files .action form #search {
       margin: 0;
@@ -286,6 +288,17 @@ a:active {
     font-size: 12px; }
     .preview .preview-info .progress-striped {
       margin-bottom: 0; }
+
+.search-option {
+  overflow: hidden;
+  margin-top: 0;
+  float: right; }
+  .search-option .btn {
+    padding: 0.5px 10px;
+    margin: 0; }
+  .search-option .checkbox {
+    float: left;
+    margin: 5px; }
 
 .cssload-wrap {
   text-align: center;

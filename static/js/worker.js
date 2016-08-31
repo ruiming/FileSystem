@@ -2,35 +2,66 @@ var fs = require('fs');
 
 (function() {
     var startTime = null;
-    var result = [];
     var wanted = null;
-    var caps = false;
+    var src = null;
     var icon = null;
+    var length = 0;
+
+    var caps = false;
+    var fileOnly = false;
+    var folderOnly = false;
+
+    let check = setInterval(() => {
+        let before = length;
+        let after = null;
+        Promise.resolve(setTimeout(() => {
+            after = length;
+            if(before === after) {
+                process.send('over');
+                clearInterval(check);
+            }
+        }, 250));
+    }, 300);
+
 
     process.on('message', data => {
         startTime = new Date().getTime();
         wanted = data.wanted;
         icon = data.icon;
-        if(data.caps) caps = data.caps;
+        caps = data.caps;
+        fileOnly = data.fileOnly;
+        folderOnly = data.folderOnly;
+        src = data.src;
         let path = data.src;
         search(path).then();
     });
 
     function search(path) {
         return readdir(path).then(files => {
-            files.forEach(fileName => {
+            return Promise.all(files.map(fileName =>
                 detail(path + fileName).then(stat => {
+                    length++;
                     if(name(fileName).includes(name(wanted))) {
-                        process.send(stat);
-                        result.push(stat);
+                        if(fileOnly && stat.isFile()) {
+                            process.send(stat);
+                        } else if (folderOnly && stat.isDirectory()) {
+                            process.send(stat);
+                        } else if (!folderOnly && !fileOnly){
+                            process.send(stat);
+                        }
                     }
                     if(stat && stat.isDirectory()) {
-                        search(path + fileName + '\\\\').then();
+                        return search(path + fileName + '\\\\')
+                    } else {
+                        return stat;
                     }
-                });
-            })
-        })
+                })
+            )).catch(err => {
+                console.log(err);
+            });
+        });
     }
+
 
     function detail(src) {
         return new Promise((resolve, reject) => {
@@ -63,7 +94,7 @@ var fs = require('fs');
     }
 
     function name(fileName) {
-        return caps ? fileName.toLowerCase() : fileName;
+        return caps ? fileName : fileName.toLowerCase();
     }
 
     function readdir(src) {
