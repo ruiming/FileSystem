@@ -55,6 +55,7 @@ var fs = require('fs');
                     stat.path = src;
                     stat.rename = false;
                     stat.hover = false;
+                    stat.location = stat.path.slice(0, stat.path.indexOf(stat.name));
                     resolve(stat);
                 }
             })

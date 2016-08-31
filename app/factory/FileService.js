@@ -153,13 +153,13 @@ import iconv from 'iconv-lite'
          * @param src
          * @returns {*}
          */
-        function deleteFile(src, alert=true) {
+        function deleteFile(src, alert) {
             let buttons = ['OK', 'Cancel'];
             let title = '删除文件';
             let infoSuccess = '删除 ' + src + ' 成功!';
             let message = '确认要删除吗? 此操作不可逆!';
             return $q((resolve, reject) => {
-                if(alert) {
+                if(alert !== false) {
                     dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
                         if(index == 0) {
                             fs.unlink(src, err => {
@@ -193,12 +193,12 @@ import iconv from 'iconv-lite'
          * @param src   路径
          * @returns {*}
          */
-        function deleteFolder(src, alert=true) {
+        function deleteFolder(src, alert) {
             let buttons = ['OK', 'Cancel'];
             let title = '删除文件夹';
             let message = '确认要删除吗? 此操作不可逆!';
             return $q((resolve, reject) => {
-                if(alert) {
+                if(alert !== false) {
                    dialog.showMessageBox({type: 'question', title: title, buttons: buttons, message: message}, index => {
                         if(index == 0) {
                             exec(`rmdir "${src}" /S /Q`, {encoding: 'GB2312'}, (err, stdout, stderr) => {
@@ -294,6 +294,7 @@ import iconv from 'iconv-lite'
                         stat.path = src;
                         stat.rename = false;
                         stat.hover = false;
+                        stat.location = stat.path.slice(0, stat.path.indexOf(stat.name));
                         resolve(stat);
                     }
                 });
@@ -363,12 +364,15 @@ import iconv from 'iconv-lite'
          */
         function rename(src, dist) {
             return $q((resolve, reject) => {
+                console.log(src, dist);
                 fs.rename(src, dist, err => {
                     if(err) {
                         alert(err);
                         reject(err);
                     } else {
-                        resolve();
+                        getFileInfo(dist).then(stat => {
+                            resolve(stat);
+                        });
                     }
                 });
             })

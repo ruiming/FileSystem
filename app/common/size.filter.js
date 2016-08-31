@@ -5,7 +5,8 @@
         let kb = 1024;
         let mb = 1024 * 1024;
         let gb = mb * 1024;
-        if(size === void 0) return;
+        size = +size;
+        if(!size) return 0;
         if(size > gb) return (size / gb).toFixed(2) + "GB";
         else if(size > mb) return (size / mb).toFixed(2) + "MB";
         else if(size > kb) return (size / kb).toFixed(2) + "KB";

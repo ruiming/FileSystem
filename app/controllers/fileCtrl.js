@@ -32,7 +32,8 @@ import childProcess from 'child_process'
         $scope.last = false;
         $scope.disks = disks;
         $scope.icon = icon;
-        $scope.searching = false;
+        $scope.searching = false;                       // 判断当前搜索状态
+        $scope.searchPage = false;                      // 判断是否停留在搜索页面
 
         $scope.search = search;
         $scope.listenEnter = listenEnter;
@@ -62,7 +63,7 @@ import childProcess from 'child_process'
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);
                 $scope.src = $scope.files[id].path;                                 // 路径
-                $scope.srcType = $scope.files[id].isFile();                         // 文件类别
+                $scope.srcType = $scope.files[id].type !== '文件夹';                 // 文件类别
                 $scope.srcName = $scope.files[id].name;                             // 文件名称
             }
         }), pasteIn = new MenuItem({
@@ -167,7 +168,7 @@ import childProcess from 'child_process'
                 let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
                 let id = JSON.parse(selectedElement.attributes.id.nodeValue);
                 $scope.src = $scope.files[id].path;                                 // 路径
-                $scope.srcType = $scope.files[id].isFile();                         // 文件类别
+                $scope.srcType = $scope.files[id].type !== '文件夹';                 // 文件类别
                 $scope.srcName = $scope.files[id].name;                             // 文件名称
                 $scope.deletePath = $scope.files[id].path;                          // 剪切标志
                 $scope.prePath = $scope.path;
@@ -182,20 +183,21 @@ import childProcess from 'child_process'
             e.preventDefault();
             rightClickPosition = {x: e.x, y: e.y};
             let selectedElement = document.elementFromPoint(rightClickPosition.x, rightClickPosition.y).parentNode;
-            let id = (selectedElement.attributes.id && JSON.parse(selectedElement.attributes.id.nodeValue)) || null;
-            if(id && $scope.files[id].hover) {
-                menu1.items[1].enabled = $scope.src ? true : false;
-                menu1.popup(remote.getCurrentWindow());
-            } else {
+            let id = selectedElement.attributes.id && +selectedElement.attributes.id.nodeValue;
+            if(isNaN(id) || (!$scope.searchPage && !$scope.files[id].hover)) {
                 menu2.items[0].enabled = $scope.src ? true : false;
                 menu2.popup(remote.getCurrentWindow());
+            } else {
+                menu1.items[1].enabled = $scope.src && !$scope.searchPage;
+                menu1.popup(remote.getCurrentWindow());
             }
         }, false);
 
         /** 搜索 子进程 */
         function search(wanted) {
-            if(worker) {
+            if($scope.searching) {
                 worker.kill();
+                $scope.searching = false;
             } else {
                 worker = childProcess.fork('./static/js/worker.js');
                 let data = {
@@ -220,6 +222,8 @@ import childProcess from 'child_process'
                     }
                 });
                 worker.send(data);
+                $scope.searchPage = true;
+                $scope.searching = true;
             }
         }
 
@@ -238,7 +242,7 @@ import childProcess from 'child_process'
             });
             $scope.files[index].hover = !status;
             if($scope.files[index].hover) {
-                getSideBar($scope.path + $scope.files[index].name);
+                getSideBar($scope.files[index].path);
             }
         }
 
@@ -257,15 +261,21 @@ import childProcess from 'child_process'
         /** 重命名 */
         function rename(index) {
             $scope.files[index].rename = false;
-            $scope.dist = $scope.path + $scope.files[index].name;
-            FileService.rename($scope.src, $scope.dist).catch(() =>{
+            $scope.dist = $scope.files[index].location + $scope.files[index].name;
+            FileService.rename($scope.files[index].path, $scope.dist).then(stat => {
+                $scope.files[index] = stat;
+            }, err => {
                 $scope.files[index].name = $scope.name;
             });
         }
 
         /** 跳转至相应磁盘 */
         function forward(x) {
-            if(worker) worker.kill();
+            if(worker) {
+                worker.kill();
+                $scope.searching = false;
+                $scope.searchPage = false;
+            }
             if(x.Description == '光盘')   return;
             $scope.path = x.Name + "\\\\";
             $scope.backwardStore.push($scope.path);
@@ -274,9 +284,13 @@ import childProcess from 'child_process'
 
         /** 跳转至相应文件夹 */
         function forward_folder(x) {
-            if(worker) worker.kill();
             if(x.type === '文件夹' || x.isDirectory()) {
-                $scope.path = x.path + "\\\\";
+                if(worker) {
+                    worker.kill();
+                    $scope.searching = false;
+                    $scope.searchPage = false;
+                }
+                $scope.path = x.path + '\\\\';
                 $scope.backwardStore.push($scope.path);
                 $scope.forwardStore = [];
                 readFolder();
@@ -287,7 +301,11 @@ import childProcess from 'child_process'
 
         /** 导航栏跳转 */
         function turnto(x) {
-            if(worker) worker.kill();
+            if(worker) {
+                worker.kill();
+                $scope.searching = false;
+                $scope.searchPage = false;
+            }
             let currentPath = $scope.path;
             if(x == "Computer" && currentPath != "Computer") {
                 $scope.home();
@@ -314,7 +332,11 @@ import childProcess from 'child_process'
 
         /** 跳到主页 */
         function home() {
-            if(worker) worker.kill();
+            if(worker) {
+                worker.kill();
+                $scope.searching = false;
+                $scope.searchPage = false;
+            }
             $scope.path = "Computer";
             $scope.backwardStore.push($scope.path);
             $scope.files = [];
@@ -335,7 +357,11 @@ import childProcess from 'child_process'
             if($scope.backwardStore == null || $scope.backwardStore.length == 1) {
                 return;
             }
-            if(worker) worker.kill();
+            if(worker) {
+                worker.kill();
+                $scope.searchPage = false;
+                $scope.searching = false;
+            }
             $scope.forwardStore.push($scope.path);
             $scope.backwardStore.pop();
             while($scope.backwardStore[$scope.backwardStore.length-1] != "Computer" &&!fs.existsSync($scope.backwardStore[$scope.backwardStore.length-1])) {
@@ -356,7 +382,11 @@ import childProcess from 'child_process'
             if($scope.forwardStore == null || $scope.forwardStore.length < 1) {
                 return;
             }
-            if(worker) worker.kill();
+            if(worker) {
+                worker.kill();
+                $scope.searchPage = false;
+                $scope.searching = false;
+            }
             $scope.path = $scope.forwardStore[$scope.forwardStore.length - 1];
             $scope.backwardStore.push($scope.path);
             $scope.forwardStore.pop();
@@ -380,7 +410,11 @@ import childProcess from 'child_process'
 
         /** 获取目录里面的文件列表并监控 */
         function readFolder() {
-            if(worker) worker.kill();
+            if(worker) {
+                worker.kill();
+                $scope.searching = false;
+                $scope.searchPage = false;
+            }
             FileService.readFolder($scope.path).then(filenames => {
                 $scope.files = [];
                 result = [];

@@ -44,8 +44,8 @@
                     <td><img ng-src="{{icon[x.Description].src}}"></td>
                     <td>{{x.Name}}</td>
                     <td>{{x.FileSystem}}</td>
-                    <td>{{x.FreeSpace / 1024 / 1024 / 1024 | number: 0}} GB</td>
-                    <td>{{x.Size / 1024 / 1024 / 1024 | number: 0}} GB</td>
+                    <td>{{x.FreeSpace | size}}</td>
+                    <td>{{x.Size | size}}</td>
                 </tr>
             </tbody>
         </table>
